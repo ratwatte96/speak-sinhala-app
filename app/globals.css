@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-text-base: rgb(214, 214, 214);
+    --color-text-muted: rgb(136, 136, 136);
+    --color-text-inverted: rgb(214, 214, 214);
+    --color-fill: #000;
+    --color-accent: #1f75ec;
+    --color-accent-20: #2e2b93;
+    --color-border: hsla(0, 0%, 100%, 0.14);
+    --color-background-muted: rgb(10, 10, 10);
+  }
+}
+
+/* CSS RESET TEMPLATE STARTS  */
+
+html,
+body,
+div,
+ul,
+ol,
+li,
+a,
+img,
+span,
+p,
+b,
+input,
+label {
+  font-family: var(--font-geist-sans);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+/* CSS RESET TEMPLATE END  */
+
+/* ANIMATIONS START */
+.fade-in {
+  animation: fade-in 2s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-quick {
+  animation: fade-in 0.25s;
+}
+
+@keyframes fade-in-quick {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+/* ANIMATIONS END */
+
+@layer utilities {
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  .delay-400 {
+    animation-delay: 0.4s;
+  }
+}
