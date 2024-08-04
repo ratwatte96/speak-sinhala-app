@@ -31,7 +31,6 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   // audioPath,
   nextStep,
 }) => {
-  console.log("answers", answers);
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
 
@@ -57,17 +56,19 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   // const handleAudioEnd = useCallback(() => {
   //   console.log("Audio finished playing");
   // }, []);
+
   return (
     <div>
       <p>{question}</p>
-      <Image src={imagePath} alt="Example Image" width={100} height={200} />
+      <Image src={imagePath} alt="Example Image" width={160} height={250} />
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
-      <div className="w-1/2 flex flex-wrap justify-around items-center">
+      <div className="w-40 flex flex-wrap justify-around items-center mt-4">
         {answers.map((answer) => (
           <Button
             key={answer.buttonLabel}
             callback={() => handleAnswer(answer.value)}
             buttonLabel={answer.buttonLabel}
+            tailwindOverride="w-full my-1"
           />
         ))}
       </div>

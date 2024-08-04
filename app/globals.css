@@ -8,8 +8,8 @@
     --color-text-muted: rgb(136, 136, 136);
     --color-text-inverted: rgb(214, 214, 214);
     --color-fill: #000;
-    --color-accent: #1f75ec;
-    --color-accent-20: #2e2b93;
+    --color-accent: #d00033;
+    --color-accent-20: #d00033;
     --color-border: hsla(0, 0%, 100%, 0.14);
     --color-background-muted: rgb(10, 10, 10);
   }
