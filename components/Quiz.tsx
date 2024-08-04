@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { QuizData, QuizStep, QuizStepProps } from "./QuizStep";
+import { Button } from "./Button";
+import Link from "next/link";
 
 interface QuizProps {
   steps: QuizData[];
@@ -9,10 +11,28 @@ interface QuizProps {
 
 const Quiz: React.FC<QuizProps> = ({ steps }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const nextStep = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
+    if (currentStep === steps.length - 1) {
+      setQuizCompleted(true);
+    } else {
+      setCurrentStep((prevStep) => prevStep + 1);
+    }
   };
+
+  if (quizCompleted) {
+    return (
+      <div className="text-center">
+        <h2 className="text-2xl font-bold mb-4">
+          Congratulations! You've completed the quiz.
+        </h2>
+        <Link href="/">
+          <Button buttonLabel="Back to Home" callback={() => null} />
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div>
