@@ -16,7 +16,11 @@ const Quiz: React.FC<QuizProps> = ({ steps }) => {
 
   return (
     <div>
-      <QuizStep {...steps[currentStep]} nextStep={nextStep} />
+      <QuizStep
+        {...steps[currentStep]}
+        nextStep={nextStep}
+        answers={steps[currentStep].answers.sort(() => Math.random() - 0.5)}
+      />
     </div>
   );
 };

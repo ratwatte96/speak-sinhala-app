@@ -9,10 +9,16 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base">
       <button
-        onClick={() => handleRouting("letters")}
+        onClick={() => handleRouting("vowels")}
         className="w-24 rounded-lg border border-skin-base px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
       >
-        Letters
+        Vowels
+      </button>
+      <button
+        onClick={() => handleRouting("consonants")}
+        className="w-24 rounded-lg border border-skin-base px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+      >
+        Consonants
       </button>
     </main>
   );

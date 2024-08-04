@@ -1,7 +1,6 @@
 "use client";
-"use client";
 
-import { AudioPlayer } from "@/components/AudioPlayer";
+// import { AudioPlayer } from "@/components/AudioPlayer";
 import { Button } from "@/components/Button";
 import Image from "next/image";
 import { useRef, useState, useCallback } from "react";
@@ -17,7 +16,7 @@ export interface QuizData {
   answers: Answer[];
   correctAnswer: string;
   imagePath: string;
-  audioPath: string;
+  // audioPath: string;
 }
 
 export interface QuizStepProps extends QuizData {
@@ -29,9 +28,10 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   answers,
   correctAnswer,
   imagePath,
-  audioPath,
+  // audioPath,
   nextStep,
 }) => {
+  console.log("answers", answers);
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
 
@@ -54,15 +54,14 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     [correctAnswer, nextStep]
   );
 
-  const handleAudioEnd = useCallback(() => {
-    console.log("Audio finished playing");
-  }, []);
-
+  // const handleAudioEnd = useCallback(() => {
+  //   console.log("Audio finished playing");
+  // }, []);
   return (
     <div>
       <p>{question}</p>
       <Image src={imagePath} alt="Example Image" width={100} height={200} />
-      <AudioPlayer src={audioPath} onEnd={handleAudioEnd} />
+      {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
       <div className="w-1/2 flex flex-wrap justify-around items-center">
         {answers.map((answer) => (
           <Button
