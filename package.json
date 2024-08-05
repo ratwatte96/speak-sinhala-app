@@ -14,7 +14,8 @@
     "next": "^14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-howler": "^5.2.0"
+    "react-howler": "^5.2.0",
+    "sinhala-unicode": "^2.0.0"
   },
   "devDependencies": {
     "@types/howler": "^2.2.11",
