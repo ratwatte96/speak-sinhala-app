@@ -60,7 +60,9 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   return (
     <div>
       <p>{question}</p>
-      <SinhalaDisplay phonetic={phonetic} />
+      <div className="flex justify-center">
+        <p className="my-2 text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
+      </div>
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
       <div className="w-40 flex flex-wrap justify-around items-center mt-4">
         {answers.map((answer) => (
