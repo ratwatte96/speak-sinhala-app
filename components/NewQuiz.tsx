@@ -22,7 +22,25 @@ const NewQuiz: React.FC<QuizProps> = ({ steps }) => {
     }
   };
 
+  const updateStreak = () => {
+    try {
+      fetch("/api/streak", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((streakData) => {
+          console.log(streakData);
+        });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   if (quizCompleted) {
+    updateStreak();
     return (
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">

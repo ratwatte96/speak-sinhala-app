@@ -1,4 +1,5 @@
 "use client";
+import { StreakCounter } from "@/components/StreakCounter";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -6,8 +7,12 @@ export default function Home() {
   const handleRouting = (value: string) => {
     router.push(`/${value}`);
   };
+
   return (
-    <main className="flex items-center justify-center min-h-screen bg-skin-base">
+    <main className="flex items-center flex-col justify-center min-h-screen bg-skin-base">
+      <div className="flex w-52 justify-start text-skin-base">
+        Streak: <StreakCounter />
+      </div>
       <div className="flex flex-row flex-wrap w-80 items-center justify-center">
         <button
           onClick={() => handleRouting("vowels")}
