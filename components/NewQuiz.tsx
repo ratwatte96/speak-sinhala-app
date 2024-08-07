@@ -6,6 +6,7 @@ import { Button } from "./Button";
 import Link from "next/link";
 import { NewQuizData, NewQuizStep } from "./NewQuizStep";
 import { LivesCounter } from "./LivesCounter";
+import { StreakCounter } from "./StreakCounter";
 
 interface QuizProps {
   steps: NewQuizData[];
@@ -82,7 +83,10 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
     </div>
   ) : (
     <div>
-      <LivesCounter startingLives={lives} setMainLives={setLives} />
+      <div className="flex justify-start w-56 sm:w-40">
+        <StreakCounter />
+        <LivesCounter startingLives={lives} setMainLives={setLives} />
+      </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
         <div
           className="bg-skin-accent h-2.5 rounded-full"

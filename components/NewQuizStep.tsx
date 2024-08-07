@@ -84,11 +84,11 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   return (
     <div>
       <p>{question}</p>
-      <div className="flex justify-center">
-        <p className="my-2 text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
+      <div className="flex justify-center items-center my-4">
+        <p className=" text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
       </div>
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
-      <div className="w-40 flex flex-wrap justify-around items-center mt-4">
+      <div className="w-80 flex flex-wrap justify-around items-center">
         {answers.map((answer) =>
           Object.hasOwn(answer, "sinhala") ? (
             <div
@@ -104,7 +104,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
               key={answer.buttonLabel}
               callback={() => handleAnswer(answer.value)}
               buttonLabel={answer.buttonLabel}
-              tailwindOverride=""
+              tailwindOverride="sm:w-full w-1/3 mx-2 mb-4"
             />
           )
         )}
