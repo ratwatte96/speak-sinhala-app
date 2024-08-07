@@ -16,5 +16,10 @@ export const StreakCounter: React.FC = () => {
       console.log(error);
     }
   }, []);
-  return <p className="text-skin-base">{streak}</p>;
+  return (
+    <p className="flex items-center text-skin-base">
+      {streak}
+      <span className="text-xl">&#128293;</span>
+    </p>
+  );
 };

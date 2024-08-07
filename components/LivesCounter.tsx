@@ -26,5 +26,10 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
     }
   }, [startingLives]);
 
-  return <p className="text-skin-base">{lives === 100 ? "loading" : lives}</p>;
+  return (
+    <p className="flex items-center text-skin-base">
+      {lives === 100 ? "loading" : lives}
+      <span className="text-xl ml-1 text-skin-accent">&#x2764;</span>
+    </p>
+  );
 };

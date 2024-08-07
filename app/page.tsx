@@ -11,11 +11,13 @@ export default function Home() {
 
   return (
     <main className="flex items-center flex-col justify-center min-h-screen bg-skin-base">
-      <div className="flex w-52 justify-start text-skin-base">
-        Streak: <StreakCounter />
-      </div>
-      <div className="flex w-52 justify-start text-skin-base">
-        Lives: <LivesCounter />
+      <div className="flex justify-start w-56 sm:w-40">
+        <div className="flex justify-start text-skin-base">
+          <StreakCounter />
+        </div>
+        <div className="flex justify-start text-skin-base">
+          <LivesCounter />
+        </div>
       </div>
       <div className="flex flex-row flex-wrap w-80 items-center justify-center">
         <button
