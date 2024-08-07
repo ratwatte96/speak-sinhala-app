@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { QuizData, QuizStep, QuizStepProps } from "./QuizStep";
 import { Button } from "./Button";
 import Link from "next/link";
 import { NewQuizData, NewQuizStep } from "./NewQuizStep";
@@ -20,11 +19,14 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
   const [lives, setLives] = useState(startingLives);
 
   useEffect(() => {
-    if (lives === 0) setQuizFailed(true);
+    if (lives === 0) {
+      console.log("NewQuiz lives", lives);
+      setQuizFailed(true);
+    }
   }, [lives]);
 
   const nextStep = () => {
-    if (lives - 1 === 1) {
+    if (lives === 0) {
       setQuizFailed(true);
     } else if (currentStep === steps.length - 1) {
       setQuizCompleted(true);
