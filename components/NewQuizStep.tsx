@@ -7,6 +7,7 @@ import Toast, { ToastType } from "./Toast";
 import { SinhalaDisplay } from "./SinhalaDisplay";
 
 type Answer = {
+  sinhala?: string;
   buttonLabel: string;
   value: string;
 };
@@ -65,14 +66,25 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
       </div>
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
       <div className="w-40 flex flex-wrap justify-around items-center mt-4">
-        {answers.map((answer) => (
-          <Button
-            key={answer.buttonLabel}
-            callback={() => handleAnswer(answer.value)}
-            buttonLabel={answer.buttonLabel}
-            tailwindOverride="w-full my-1"
-          />
-        ))}
+        {answers.map((answer) =>
+          Object.hasOwn(answer, "sinhala") ? (
+            <div
+              key={answer.buttonLabel}
+              onClick={() => handleAnswer(answer.value)}
+              className="cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs text-skin-muted  focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+            >
+              <p>{answer.buttonLabel}</p>
+              <p className="text-skin-base">{answer.sinhala}</p>
+            </div>
+          ) : (
+            <Button
+              key={answer.buttonLabel}
+              callback={() => handleAnswer(answer.value)}
+              buttonLabel={answer.buttonLabel}
+              tailwindOverride=""
+            />
+          )
+        )}
       </div>
       {toastMessage && (
         <Toast

@@ -33,7 +33,7 @@ export default function Home() {
           Numbers (0-10)
         </button>
         <button
-          onClick={() => handleRouting("numbers/10")}
+          onClick={() => handleRouting("numbers/1")}
           className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
         >
           Numbers (10-20)
