@@ -29,3 +29,9 @@ model Streak {
   current_streak   Int @default(0)
   last_active_date   DateTime
 }
+
+model Lives {
+  id    Int    @id @default(autoincrement())
+  total_lives   Int @default(5)
+  last_active_time   DateTime
+}
