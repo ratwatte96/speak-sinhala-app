@@ -1,21 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { QuizData, QuizStep, QuizStepProps } from "./QuizStep";
 import { Button } from "./Button";
 import Link from "next/link";
 import { NewQuizData, NewQuizStep } from "./NewQuizStep";
+import { LivesCounter } from "./LivesCounter";
 
 interface QuizProps {
   steps: NewQuizData[];
+  startingLives: number;
 }
 
-const NewQuiz: React.FC<QuizProps> = ({ steps }) => {
+const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizFailed, setQuizFailed] = useState(false);
+  const [lives, setLives] = useState(startingLives);
+
+  useEffect(() => {
+    if (lives === 0) setQuizFailed(true);
+  }, [lives]);
 
   const nextStep = () => {
-    if (currentStep === steps.length - 1) {
+    if (lives - 1 === 1) {
+      setQuizFailed(true);
+    } else if (currentStep === steps.length - 1) {
       setQuizCompleted(true);
     } else {
       setCurrentStep((prevStep) => prevStep + 1);
@@ -39,10 +49,15 @@ const NewQuiz: React.FC<QuizProps> = ({ steps }) => {
     }
   };
 
+  if (quizFailed) {
+    updateStreak();
+  }
+
   if (quizCompleted) {
     updateStreak();
     return (
       <div className="text-center">
+        <LivesCounter startingLives={lives} />
         <h2 className="text-2xl font-bold mb-4">
           Congratulations! You&apos;ve completed the quiz.
         </h2>
@@ -55,8 +70,19 @@ const NewQuiz: React.FC<QuizProps> = ({ steps }) => {
 
   const progress = ((currentStep + 1) / steps.length) * 100;
 
-  return (
+  return quizFailed ? (
+    <div className="text-center">
+      <LivesCounter startingLives={lives} setMainLives={setLives} />
+      <h2 className="text-2xl font-bold mb-4">
+        Sorry! You&apos;ve run out of lives.
+      </h2>
+      <Link href="/">
+        <Button buttonLabel="Back to Home" callback={() => null} />
+      </Link>
+    </div>
+  ) : (
     <div>
+      <LivesCounter startingLives={lives} setMainLives={setLives} />
       <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
         <div
           className="bg-skin-accent h-2.5 rounded-full"
@@ -64,6 +90,8 @@ const NewQuiz: React.FC<QuizProps> = ({ steps }) => {
         ></div>
       </div>
       <NewQuizStep
+        setLives={setLives}
+        lives={lives}
         {...steps[currentStep]}
         nextStep={nextStep}
         answers={steps[currentStep].answers.sort(() => Math.random() - 0.5)}

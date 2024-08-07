@@ -9,18 +9,16 @@ function isToday(date: Date) {
   );
 }
 
-function isYesterday(date: Date) {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  return (
-    date.getFullYear() === yesterday.getFullYear() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getDate() === yesterday.getDate()
-  );
-}
-
 export async function GET(req: any) {
+  // await prisma.lives.update({
+  //   where: {
+  //     id: 1,
+  //   },
+  //   data: {
+  //     last_active_time: new Date(),
+  //     total_lives: 5,
+  //   },
+  // });
   const lives = await prisma.lives.findUnique({
     where: {
       id: 1,

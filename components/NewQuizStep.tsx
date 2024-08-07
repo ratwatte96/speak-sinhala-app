@@ -4,7 +4,6 @@
 import { Button } from "@/components/Button";
 import { useRef, useState, useCallback } from "react";
 import Toast, { ToastType } from "./Toast";
-import { SinhalaDisplay } from "./SinhalaDisplay";
 
 type Answer = {
   sinhala?: string;
@@ -22,6 +21,8 @@ export interface NewQuizData {
 
 export interface NewQuizStepProps extends NewQuizData {
   nextStep: () => void;
+  setLives: (lives: number) => void;
+  lives: number;
 }
 
 export const NewQuizStep: React.FC<NewQuizStepProps> = ({
@@ -29,6 +30,8 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   answers,
   correctAnswer,
   phonetic,
+  setLives,
+  lives,
   // audioPath,
   nextStep,
 }) => {
@@ -38,6 +41,23 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<ToastType>("");
 
+  const updateLives = () => {
+    try {
+      fetch(`/api/lives`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((livesData) => {
+          setLives(livesData.total_lives);
+        });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   const handleAnswer = useCallback(
     (answer: string) => {
       if (answer === correctAnswer) {
@@ -45,6 +65,9 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
         toastTypeRef.current = "Correct";
         nextStep();
       } else {
+        updateLives();
+        console.log("NewQuizStep", lives);
+        if (lives - 1 === 0) nextStep();
         toastMessageRef.current = "Incorrect";
         toastTypeRef.current = "Incorrect";
       }

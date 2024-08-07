@@ -1,4 +1,5 @@
 "use client";
+import { LivesCounter } from "@/components/LivesCounter";
 import { StreakCounter } from "@/components/StreakCounter";
 import { useRouter } from "next/navigation";
 
@@ -12,6 +13,9 @@ export default function Home() {
     <main className="flex items-center flex-col justify-center min-h-screen bg-skin-base">
       <div className="flex w-52 justify-start text-skin-base">
         Streak: <StreakCounter />
+      </div>
+      <div className="flex w-52 justify-start text-skin-base">
+        Lives: <LivesCounter />
       </div>
       <div className="flex flex-row flex-wrap w-80 items-center justify-center">
         <button
