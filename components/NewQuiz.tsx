@@ -71,7 +71,7 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
     );
   }
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const progress = (currentStep / steps.length) * 100;
 
   return quizFailed ? (
     <div className="text-center">
