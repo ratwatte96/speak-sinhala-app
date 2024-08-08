@@ -62,6 +62,24 @@ export default function Home() {
         >
           Numbers (40-50)
         </button>
+        <button
+          onClick={() => handleRouting("numbers/5")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (50-60)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/6")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (60-70)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/7")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (70-80)
+        </button>
       </div>
     </main>
   );
