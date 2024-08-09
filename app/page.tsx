@@ -19,7 +19,7 @@ export default function Home() {
           <LivesCounter />
         </div>
       </div>
-      <div className="flex flex-row flex-wrap w-80 items-center justify-center">
+      <div className="flex flex-row flex-wrap w-80 sm:w-1/2 items-center justify-center">
         <button
           onClick={() => handleRouting("vowels")}
           className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
@@ -79,6 +79,42 @@ export default function Home() {
           className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
         >
           Numbers (70-80)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/8")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (80-90)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/9")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (90-100)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/10")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (100-1000)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/11")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (1000-10000)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/12")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (10000-20000)
+        </button>
+        <button
+          onClick={() => handleRouting("numbers/13")}
+          className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+        >
+          Numbers (30000-1000000)
         </button>
       </div>
     </main>
