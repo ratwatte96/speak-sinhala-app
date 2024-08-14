@@ -38,7 +38,7 @@ export async function GET(req: any) {
     });
   }
 
-  return new Response(JSON.stringify(streak), {
+  return new Response(JSON.stringify(newStreak), {
     status: 200,
     headers: { "Content-Type": "application/json" },
   });
@@ -52,6 +52,21 @@ export async function POST(req: any) {
   });
 
   let newStreak = streak;
+  if (
+    isToday(new Date(streak!.last_active_date)) &&
+    streak!.current_streak === 0
+  ) {
+    newStreak = await prisma.streak.update({
+      where: {
+        id: 1,
+      },
+      data: {
+        last_active_date: new Date(),
+        current_streak: streak!.current_streak + 1,
+      },
+    });
+  }
+
   if (isYesterday(new Date(streak!.last_active_date))) {
     newStreak = await prisma.streak.update({
       where: {
