@@ -35,3 +35,30 @@ model Lives {
   total_lives   Int @default(5)
   last_active_time   DateTime
 }
+
+model Quiz {
+  id    Int    @id @default(autoincrement())
+  question   String
+  questions   Question[]
+  audio String?
+}
+
+model Question {
+  id    Int    @id @default(autoincrement())
+  phonetic   String
+  quiz Quiz @relation(fields: [quizId], references: [id])
+  quizId Int 
+  correctAnswer   String
+  answers  Answer[]
+  audio String?
+}
+
+model Answer {
+  id    Int    @id @default(autoincrement())
+  question Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  buttonLabel   String
+  value   String
+  sinhala  String?
+  audio String?
+}
