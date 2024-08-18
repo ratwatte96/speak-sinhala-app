@@ -47,7 +47,7 @@ const Quiz: React.FC<QuizProps> = ({ steps }) => {
       <QuizStep
         {...steps[currentStep]}
         nextStep={nextStep}
-        answers={steps[currentStep].answers.sort(() => Math.random() - 0.5)}
+        answers={steps[currentStep].answers}
       />
     </div>
   );

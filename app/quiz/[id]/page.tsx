@@ -27,6 +27,14 @@ function convertQuizDataToArray(data: any): ConvertedQuestion[] {
   );
 }
 
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export default async function Days({ params }: { params: { id: string } }) {
   const { id } = params;
   let lives = 100;
@@ -67,9 +75,15 @@ export default async function Days({ params }: { params: { id: string } }) {
     },
   });
 
-  const convertedArray = convertQuizDataToArray(quizItemsData);
+  quizItemsData.forEach((quizItem) => {
+    quizItem.questions.forEach((question) => {
+      question.question.answers = shuffleArray(question.question.answers);
+    });
+  });
 
-  const daySteps = convertedArray;
+  const daySteps = convertQuizDataToArray(quizItemsData).sort(
+    () => Math.random() - 0.5
+  );
   const dayQuestion = quizData!.question;
 
   return (

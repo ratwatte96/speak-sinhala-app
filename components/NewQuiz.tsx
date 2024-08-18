@@ -120,7 +120,7 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives, question }) => {
           lives={lives}
           {...steps[currentStep]}
           nextStep={nextStep}
-          answers={steps[currentStep].answers.sort(() => Math.random() - 0.5)}
+          answers={steps[currentStep].answers}
         />
       ) : (
         <p>Loading...</p>

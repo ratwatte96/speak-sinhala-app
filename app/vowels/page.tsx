@@ -3,7 +3,7 @@ import { NewQuizData } from "@/components/NewQuizStep";
 import { vowels } from "@/lib/quizItem";
 
 export default function Vowels() {
-  const vowelSteps: NewQuizData[] = vowels.sort(() => Math.random() - 0.5);
+  const vowelSteps: NewQuizData[] = vowels;
 
   let lives = 100;
   try {
