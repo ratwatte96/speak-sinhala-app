@@ -8,7 +8,7 @@ export default function Consonants() {
   );
   let lives = 100;
   try {
-    fetch(`/api/lives`)
+    fetch(`${process.env.API_URL}api/lives`)
       .then((res) => res.json())
       .then((livesData) => {
         lives = livesData.total_lives;

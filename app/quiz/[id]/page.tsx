@@ -31,7 +31,7 @@ export default async function Days({ params }: { params: { id: string } }) {
   const { id } = params;
   let lives = 100;
   try {
-    fetch(`/api/lives`)
+    fetch(`${process.env.API_URL}api/lives`)
       .then((res) => res.json())
       .then((livesData) => {
         lives = livesData.total_lives;
