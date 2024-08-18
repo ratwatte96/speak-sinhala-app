@@ -39,26 +39,44 @@ model Lives {
 model Quiz {
   id    Int    @id @default(autoincrement())
   question   String
-  questions   Question[]
+  questions   QuestionsOnQuizes[]
   audio String?
 }
 
 model Question {
   id    Int    @id @default(autoincrement())
   phonetic   String
-  quiz Quiz @relation(fields: [quizId], references: [id])
-  quizId Int 
+  quiz QuestionsOnQuizes[]
   correctAnswer   String
-  answers  Answer[]
+  answers  AnswersOnQuestions[]
+  questionType Int
   audio String?
+}
+
+model QuestionsOnQuizes {
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int 
+  quiz     Quiz     @relation(fields: [quizId], references: [id])
+  quizId   Int
+
+
+  @@id([questionId, quizId])
 }
 
 model Answer {
   id    Int    @id @default(autoincrement())
-  question Question @relation(fields: [questionId], references: [id])
-  questionId Int
+  questions AnswersOnQuestions[]
   buttonLabel   String
   value   String
   sinhala  String?
   audio String?
+}
+
+model AnswersOnQuestions {
+  answer     Answer     @relation(fields: [answerId], references: [id])
+  answerId   Int
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int 
+
+  @@id([answerId, questionId])
 }

@@ -12,7 +12,7 @@ type Answer = {
 };
 
 export interface NewQuizData {
-  question: string;
+  question?: string;
   answers: Answer[];
   correctAnswer: string;
   phonetic: string;
@@ -21,7 +21,7 @@ export interface NewQuizData {
 
 export interface NewQuizStepProps extends NewQuizData {
   nextStep: () => void;
-  setLives: (lives: number) => void;
+  updateLives: () => void;
   lives: number;
 }
 
@@ -30,7 +30,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   answers,
   correctAnswer,
   phonetic,
-  setLives,
+  updateLives,
   lives,
   // audioPath,
   nextStep,
@@ -40,23 +40,6 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<ToastType>("");
-
-  const updateLives = () => {
-    try {
-      fetch(`/api/lives`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((livesData) => {
-          setLives(livesData.total_lives);
-        });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
 
   const handleAnswer = useCallback(
     (answer: string) => {

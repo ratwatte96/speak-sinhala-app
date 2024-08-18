@@ -8,11 +8,12 @@ import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 
 interface QuizProps {
-  steps: NewQuizData[];
+  steps?: NewQuizData[];
   startingLives: number;
+  question?: string;
 }
 
-const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
+const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives, question }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
@@ -28,7 +29,7 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
   const nextStep = () => {
     if (lives === 0) {
       setQuizFailed(true);
-    } else if (currentStep === steps.length - 1) {
+    } else if (steps !== undefined && currentStep === steps.length - 1) {
       setQuizCompleted(true);
     } else {
       setCurrentStep((prevStep) => prevStep + 1);
@@ -71,7 +72,24 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
     );
   }
 
-  const progress = (currentStep / steps.length) * 100;
+  const updateLives = () => {
+    try {
+      fetch(`/api/lives`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((livesData) => {
+          setLives(livesData.total_lives);
+        });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const progress = steps !== undefined ? (currentStep / steps.length) * 100 : 0;
 
   return quizFailed ? (
     <div className="text-center">
@@ -95,13 +113,18 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives }) => {
           style={{ width: `${progress}%` }}
         ></div>
       </div>
-      <NewQuizStep
-        setLives={setLives}
-        lives={lives}
-        {...steps[currentStep]}
-        nextStep={nextStep}
-        answers={steps[currentStep].answers.sort(() => Math.random() - 0.5)}
-      />
+      {steps !== undefined ? (
+        <NewQuizStep
+          question={question}
+          updateLives={updateLives}
+          lives={lives}
+          {...steps[currentStep]}
+          nextStep={nextStep}
+          answers={steps[currentStep].answers.sort(() => Math.random() - 0.5)}
+        />
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };
