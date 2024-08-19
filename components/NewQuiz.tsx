@@ -121,6 +121,7 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives, question }) => {
           {...steps[currentStep]}
           nextStep={nextStep}
           answers={steps[currentStep].answers}
+          questionType={steps[currentStep].questionType}
         />
       ) : (
         <p>Loading...</p>

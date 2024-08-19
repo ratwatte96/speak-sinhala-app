@@ -16,6 +16,7 @@ export interface NewQuizData {
   answers: Answer[];
   correctAnswer: string;
   phonetic: string;
+  questionType?: number;
   // audioPath: string;
 }
 
@@ -34,6 +35,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   lives,
   // audioPath,
   nextStep,
+  questionType = 1,
 }) => {
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
@@ -71,26 +73,33 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
         <p className=" text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
       </div>
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
-      <div className="w-80 flex flex-wrap justify-around items-center pt-4">
-        {answers.map((answer) =>
-          Object.hasOwn(answer, "sinhala") ? (
-            <div
-              key={answer.buttonLabel}
-              onClick={() => handleAnswer(answer.value)}
-              className="cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs text-skin-muted  focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
-            >
-              <p>{answer.buttonLabel}</p>
-              <p className="text-skin-base">{answer.sinhala}</p>
-            </div>
-          ) : (
-            <Button
-              key={answer.buttonLabel}
-              callback={() => handleAnswer(answer.value)}
-              buttonLabel={answer.buttonLabel}
-              tailwindOverride="sm:w-full w-1/3 mx-2 mb-4"
-            />
-          )
-        )}
+      <div className="flex flex-col pt-4 items-center">
+        <p>
+          {questionType === 1
+            ? "Choose the corresponding english word"
+            : "Choose the corresponding sinhala word"}
+        </p>
+        <div className="w-80 flex flex-wrap justify-around items-center pt-2">
+          {answers.map((answer) =>
+            Object.hasOwn(answer, "sinhala") ? (
+              <div
+                key={answer.buttonLabel}
+                onClick={() => handleAnswer(answer.value)}
+                className="cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs text-skin-muted  focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+              >
+                <p>{answer.buttonLabel}</p>
+                <p className="text-skin-base">{answer.sinhala}</p>
+              </div>
+            ) : (
+              <Button
+                key={answer.buttonLabel}
+                callback={() => handleAnswer(answer.value)}
+                buttonLabel={answer.buttonLabel}
+                tailwindOverride="sm:w-full w-1/3 mx-2 mb-4"
+              />
+            )
+          )}
+        </div>
       </div>
       {toastMessage && (
         <Toast
