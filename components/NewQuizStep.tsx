@@ -71,7 +71,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
         <p className=" text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
       </div>
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
-      <div className="w-80 flex flex-wrap justify-around items-center">
+      <div className="w-80 flex flex-wrap justify-around items-center pt-4">
         {answers.map((answer) =>
           Object.hasOwn(answer, "sinhala") ? (
             <div
