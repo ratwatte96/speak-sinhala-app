@@ -1,8 +1,7 @@
 "use client";
 
 // import { AudioPlayer } from "@/components/AudioPlayer";
-import { Button } from "@/components/Button";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState } from "react";
 import Toast, { ToastType } from "./Toast";
 
 type Answer = {
@@ -42,25 +41,23 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<ToastType>("");
+  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
 
-  const handleAnswer = useCallback(
-    (answer: string) => {
-      if (answer === correctAnswer) {
-        toastMessageRef.current = "Correct";
-        toastTypeRef.current = "Correct";
-        nextStep();
-      } else {
-        updateLives();
-        console.log("NewQuizStep", lives);
-        if (lives - 1 === 0) nextStep();
-        toastMessageRef.current = "Incorrect";
-        toastTypeRef.current = "Incorrect";
-      }
-      setToastMessage(toastMessageRef.current);
-      setToastType(toastTypeRef.current);
-    },
-    [correctAnswer, nextStep]
-  );
+  const handleAnswer = () => {
+    if (selectedAnswer === correctAnswer) {
+      toastMessageRef.current = "Correct";
+      toastTypeRef.current = "Correct";
+      nextStep();
+    } else {
+      updateLives();
+      console.log("NewQuizStep", lives);
+      if (lives - 1 === 0) nextStep();
+      toastMessageRef.current = "Incorrect";
+      toastTypeRef.current = "Incorrect";
+    }
+    setToastMessage(toastMessageRef.current);
+    setToastType(toastTypeRef.current);
+  };
 
   // const handleAudioEnd = useCallback(() => {
   //   console.log("Audio finished playing");
@@ -84,22 +81,38 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
             Object.hasOwn(answer, "sinhala") ? (
               <div
                 key={answer.buttonLabel}
-                onClick={() => handleAnswer(answer.value)}
-                className="cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs text-skin-muted  focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+                onClick={() => setSelectedAnswer(answer.value)}
+                className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
+                  selectedAnswer === answer.value
+                    ? "text-skin-accent"
+                    : "text-skin-muted"
+                }`}
               >
                 <p>{answer.buttonLabel}</p>
                 <p className="text-skin-base">{answer.sinhala}</p>
               </div>
             ) : (
-              <Button
+              <button
                 key={answer.buttonLabel}
-                callback={() => handleAnswer(answer.value)}
-                buttonLabel={answer.buttonLabel}
-                tailwindOverride="sm:w-full w-1/3 mx-2 mb-4"
-              />
+                onClick={() => setSelectedAnswer(answer.value)}
+                className={`rounded-lg border border-skin-base px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:ml-2 sm:text-base sm:w-full w-1/3 mx-2 mb-4 ${
+                  selectedAnswer === answer.value
+                    ? "text-skin-accent"
+                    : "text-skin-muted"
+                }`}
+              >
+                {answer.buttonLabel}
+              </button>
             )
           )}
         </div>
+        <button
+          key="confirm-button"
+          onClick={() => handleAnswer()}
+          className="sm:w-full w-1/3 mx-2 my-4 bg-skin-accent rounded-lg border border-skin-base px-3 py-1"
+        >
+          Confirm
+        </button>
       </div>
       {toastMessage && (
         <Toast
