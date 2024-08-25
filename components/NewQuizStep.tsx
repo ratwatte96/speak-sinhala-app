@@ -64,7 +64,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   // }, []);
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <p>{question}</p>
       <div className="flex justify-center items-center my-4">
         <p className=" text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
@@ -109,7 +109,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
         <button
           key="confirm-button"
           onClick={() => handleAnswer()}
-          className="sm:w-full w-1/3 mx-2 my-4 bg-skin-accent rounded-lg border border-skin-base px-3 py-1"
+          className="sm:w-80 w-1/3 mx-2 my-4 bg-skin-accent rounded-lg border border-skin-base px-3 py-1"
         >
           Confirm
         </button>

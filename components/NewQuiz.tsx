@@ -102,12 +102,12 @@ const NewQuiz: React.FC<QuizProps> = ({ steps, startingLives, question }) => {
       </Link>
     </div>
   ) : (
-    <div>
+    <div className="flex flex-col items-center">
       <div className="flex justify-start w-56 sm:w-40">
         <StreakCounter />
         <LivesCounter startingLives={lives} setMainLives={setLives} />
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+      <div className="w-80 bg-gray-200 rounded-full h-2.5 mb-4">
         <div
           className="bg-skin-accent h-2.5 rounded-full"
           style={{ width: `${progress}%` }}
