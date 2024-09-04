@@ -84,7 +84,7 @@ export default async function Days({ params }: { params: { id: string } }) {
   const daySteps = convertQuizDataToArray(quizItemsData).sort(
     () => Math.random() - 0.5
   );
-  const dayQuestion = quizData!.question;
+  const dayQuestion = quizData!.quiz_name ?? "";
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
