@@ -1,8 +1,9 @@
 "use client";
 
 // import { AudioPlayer } from "@/components/AudioPlayer";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Toast, { ToastType } from "./Toast";
+import { AudioPlayer } from "./AudioPlayer";
 
 type Answer = {
   sinhala?: string;
@@ -16,7 +17,7 @@ export interface NewQuizData {
   correctAnswer: string;
   question_word: string;
   questionType?: number;
-  // audioPath: string;
+  audio?: string;
 }
 
 export interface NewQuizStepProps extends NewQuizData {
@@ -32,7 +33,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   question_word,
   updateLives,
   lives,
-  // audioPath,
+  audio,
   nextStep,
   questionType = 1,
 }) => {
@@ -59,9 +60,9 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
     setToastType(toastTypeRef.current);
   };
 
-  // const handleAudioEnd = useCallback(() => {
-  //   console.log("Audio finished playing");
-  // }, []);
+  const handleAudioEnd = useCallback(() => {
+    console.log("Audio finished playing");
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
@@ -69,7 +70,12 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
       <div className="flex justify-center items-center my-4">
         <p className=" text-skin-base text-5xl sm:text-9xl">{question_word}</p>
       </div>
-      {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
+      {audio !== null && (
+        <AudioPlayer
+          audioPath={`/audioClips/${audio}.mp3`}
+          onEnd={handleAudioEnd}
+        />
+      )}
       <div className="flex flex-col pt-4 items-center">
         <p>
           {questionType === 1

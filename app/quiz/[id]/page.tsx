@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 type Answer = {
   buttonLabel: string;
   value: string;
+  audio?: string;
 };
 
 type ConvertedQuestion = {
@@ -11,6 +12,7 @@ type ConvertedQuestion = {
   correctAnswer: string;
   questionType: number;
   answers: Answer[];
+  audio?: string;
 };
 
 function convertQuizDataToArray(data: any): ConvertedQuestion[] {
@@ -22,7 +24,9 @@ function convertQuizDataToArray(data: any): ConvertedQuestion[] {
       answers: q.question.answers.map((a: any) => ({
         buttonLabel: a.answer.buttonLabel,
         value: a.answer.value,
+        audio: a.answer.audio,
       })),
+      audio: q.question.audio,
     }))
   );
 }
@@ -80,7 +84,6 @@ export default async function Days({ params }: { params: { id: string } }) {
       question.question.answers = shuffleArray(question.question.answers);
     });
   });
-  console.log("quizItemsData", JSON.stringify(quizItemsData));
   const daySteps = convertQuizDataToArray(quizItemsData).sort(
     () => Math.random() - 0.5
   );
