@@ -14,7 +14,7 @@ export interface NewQuizData {
   question?: string;
   answers: Answer[];
   correctAnswer: string;
-  phonetic: string;
+  question_word: string;
   questionType?: number;
   // audioPath: string;
 }
@@ -29,7 +29,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
   question,
   answers,
   correctAnswer,
-  phonetic,
+  question_word,
   updateLives,
   lives,
   // audioPath,
@@ -67,7 +67,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
     <div className="flex flex-col items-center">
       <p>{question}</p>
       <div className="flex justify-center items-center my-4">
-        <p className=" text-skin-base text-5xl sm:text-9xl">{phonetic}</p>
+        <p className=" text-skin-base text-5xl sm:text-9xl">{question_word}</p>
       </div>
       {/* {<AudioPlayer src={audioPath} onEnd={handleAudioEnd} />} */}
       <div className="flex flex-col pt-4 items-center">

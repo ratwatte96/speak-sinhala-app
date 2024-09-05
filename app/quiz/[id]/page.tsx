@@ -7,7 +7,7 @@ type Answer = {
 };
 
 type ConvertedQuestion = {
-  phonetic: string;
+  question_word: string;
   correctAnswer: string;
   questionType: number;
   answers: Answer[];
@@ -16,7 +16,7 @@ type ConvertedQuestion = {
 function convertQuizDataToArray(data: any): ConvertedQuestion[] {
   return data.flatMap((item: any) =>
     item.questions.map((q: any) => ({
-      phonetic: q.question.phonetic,
+      question_word: q.question.question_word,
       correctAnswer: q.question.correctAnswer,
       questionType: q.question.questionType,
       answers: q.question.answers.map((a: any) => ({
@@ -80,7 +80,7 @@ export default async function Days({ params }: { params: { id: string } }) {
       question.question.answers = shuffleArray(question.question.answers);
     });
   });
-
+  console.log("quizItemsData", JSON.stringify(quizItemsData));
   const daySteps = convertQuizDataToArray(quizItemsData).sort(
     () => Math.random() - 0.5
   );
