@@ -6,11 +6,13 @@ import { Howl } from "howler";
 interface AudioPlayerProps {
   audioPath: string;
   onEnd: () => void;
+  playOnLoad?: boolean;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioPath,
   onEnd,
+  playOnLoad = false,
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
@@ -47,8 +49,10 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     });
 
     setSound(newSound);
-    newSound.play();
-
+    if (playOnLoad) {
+      console.log(playOnLoad);
+      newSound.play();
+    }
     return () => {
       newSound.unload();
       URL.revokeObjectURL(src); // Clean up the object URL after it's used

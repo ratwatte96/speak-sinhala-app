@@ -9,6 +9,7 @@ type Answer = {
   sinhala?: string;
   buttonLabel: string;
   value: string;
+  audio?: string;
 };
 
 export interface NewQuizData {
@@ -74,6 +75,7 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
         <AudioPlayer
           audioPath={`/audioClips/${audio}.mp3`}
           onEnd={handleAudioEnd}
+          playOnLoad={true}
         />
       )}
       <div className="flex flex-col pt-4 items-center">
@@ -98,17 +100,25 @@ export const NewQuizStep: React.FC<NewQuizStepProps> = ({
                 <p className="text-skin-base">{answer.sinhala}</p>
               </div>
             ) : (
-              <button
-                key={answer.buttonLabel}
-                onClick={() => setSelectedAnswer(answer.value)}
-                className={`rounded-lg border border-skin-base px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:ml-2 sm:text-base sm:w-full w-1/3 mx-2 mb-4 ${
-                  selectedAnswer === answer.value
-                    ? "text-skin-accent"
-                    : "text-skin-muted"
-                }`}
-              >
-                {answer.buttonLabel}
-              </button>
+              <>
+                <button
+                  key={answer.buttonLabel}
+                  onClick={() => setSelectedAnswer(answer.value)}
+                  className={`rounded-lg border border-skin-base px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:ml-2 sm:text-base sm:w-full w-1/3 mx-2 mb-4 ${
+                    selectedAnswer === answer.value
+                      ? "text-skin-accent"
+                      : "text-skin-muted"
+                  }`}
+                >
+                  {answer.buttonLabel}
+                </button>
+                {answer.audio !== null && (
+                  <AudioPlayer
+                    audioPath={`/audioClips/${answer.audio}.mp3`}
+                    onEnd={handleAudioEnd}
+                  />
+                )}
+              </>
             )
           )}
         </div>
