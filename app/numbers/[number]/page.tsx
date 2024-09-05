@@ -4,7 +4,7 @@ import { numbers } from "@/lib/quizItem";
 
 export default function Numbers({ params }: { params: { number: string } }) {
   const numberIndex = parseInt(params.number);
-  const numbersSteps: NewQuizData[] = numbers[numberIndex].sort(
+  const numbersSteps: any[] = numbers[numberIndex].sort(
     () => Math.random() - 0.5
   );
   let lives = 100;

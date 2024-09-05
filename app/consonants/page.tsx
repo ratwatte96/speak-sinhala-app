@@ -3,9 +3,7 @@ import { NewQuizData } from "@/components/NewQuizStep";
 import { consonants } from "@/lib/quizItem";
 
 export default function Consonants() {
-  const consonantSteps: NewQuizData[] = consonants.sort(
-    () => Math.random() - 0.5
-  );
+  const consonantSteps: any[] = consonants.sort(() => Math.random() - 0.5);
   let lives = 100;
   try {
     fetch(`${process.env.API_URL}api/lives`)
