@@ -1,4 +1,4 @@
-import NewQuiz from "@/components/NewQuiz";
+import Quiz from "@/components/Quiz";
 import prisma from "@/lib/prisma";
 
 type Answer = {
@@ -91,7 +91,7 @@ export default async function Days({ params }: { params: { id: string } }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <NewQuiz steps={daySteps} startingLives={lives} question={dayQuestion} />
+      <Quiz steps={daySteps} startingLives={lives} question={dayQuestion} />
     </main>
   );
 }
