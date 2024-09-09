@@ -3,12 +3,50 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const quizQuestion = "Introducing Yourself";
+  const quizQuestion = "Consonants";
   const dataPairs = [
-    ["My name is Jack", "Magē Nama Jæk"],
-    ["What is your name?", "oyāgē nama mokakda da?"],
-    ["How are you?", "Kohomada"],
-    ["I'm fine", "Mama hondin"],
+    ["ka", "ක"],
+    ["kha", "ඛ"],
+    ["ga", "ග"],
+    ["gha", "ඝ"],
+    ["nga", "ඞ"],
+    ["ṅga", "ඟ"],
+    ["ca", "ච"],
+    ["cha", "ඡ"],
+    ["ja", "ජ"],
+    ["jha", "ඣ"],
+    ["ñya", "ඤ"],
+    ["jñya", "ඥ"],
+    ["ñja", "ඦ"],
+    ["ṭa", "ට"],
+    ["ṭha", "ඨ"],
+    ["ḍa", "ඩ"],
+    ["ḍha", "ඪ"],
+    ["ṇa", "ණ"],
+    ["ṇḍa", "ඬ"],
+    ["ta", "ත"],
+    ["tha", "ථ"],
+    ["da", "ද"],
+    ["dha", "ධ"],
+    ["na", "න"],
+    ["nda", "ඳ"],
+    ["pa", "ප"],
+    ["pha", "ඵ"],
+    ["ba", "බ"],
+    ["bha", "භ"],
+    ["ma", "ම"],
+    ["mba", "ඹ"],
+    ["ya", "ය"],
+    ["ra", "ර"],
+    ["la", "ල"],
+    ["va", "ව"],
+    ["śa", "ශ"],
+    ["ṣa", "ෂ"],
+    ["ṣa", "ක්‍ෂ"],
+    ["sa", "ස"],
+    ["ha", "හ"],
+    ["ḷa", "ළ"],
+    ["fa", "ෆ"],
   ];
 
   try {
@@ -21,7 +59,7 @@ async function main() {
       },
     });
     let quiz = existingQuizes[0];
-
+    console.log("quiz", quiz);
     if (!quiz) {
       quiz = await prisma.quiz.create({
         data: {
@@ -155,13 +193,16 @@ async function main() {
       //Connect questions and answers
       relevantQuestions.forEach((question) => {
         const existingAnswerId = question.answers[0].id;
-        let count = 0;
+        let count = question.answers.length;
+        console.log("question.answers", question.answers.length);
         potentialAnswers
           .sort((a, b) => 0.5 - Math.random())
           .forEach(async (answer, index) => {
             if (count === 4) return;
             if (answer.id === existingAnswerId) return;
             count++;
+            console.log("question", question.question_word);
+            console.log("answer", answer.value);
             const updatedQuestion = await prisma.answersOnQuestions.upsert({
               where: {
                 answerId_questionId: {
