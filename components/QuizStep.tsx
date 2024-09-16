@@ -17,6 +17,7 @@ export interface QuizData {
   answers: Answer[];
   correctAnswer: string;
   question_word: string;
+  additional_infomation?: string;
   questionType?: number;
   audio?: string;
 }
@@ -32,6 +33,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   answers,
   correctAnswer,
   question_word,
+  additional_infomation,
   updateLives,
   lives,
   audio,
@@ -68,8 +70,14 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   return (
     <div className="flex flex-col items-center">
       <p>{question}</p>
-      <div className="flex justify-center items-center my-4">
+      <div className="flex flex-col justify-center items-center my-4">
         <p className=" text-skin-base text-5xl sm:text-9xl">{question_word}</p>
+        {additional_infomation && (
+          <div className="flex flex-col w-80">
+            <h3>Additional Context:</h3>
+            <p className=" text-skin-muted text-lg">{additional_infomation}</p>
+          </div>
+        )}
       </div>
       {audio !== null && (
         <AudioPlayer
@@ -78,13 +86,13 @@ export const QuizStep: React.FC<QuizStepProps> = ({
           playOnLoad={true}
         />
       )}
-      <div className="flex flex-col pt-4 items-center">
+      <div className="flex flex-col pt-4 items-start w-80">
         <p>
           {questionType === 1
             ? "Choose the corresponding english word"
             : "Choose the corresponding sinhala word"}
         </p>
-        <div className="w-80 flex flex-wrap justify-around items-center pt-2">
+        <div className="flex flex-wrap justify-around items-start pt-2">
           {answers.map((answer) =>
             Object.hasOwn(answer, "sinhala") ? (
               <div
@@ -100,7 +108,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                 <p className="text-skin-base">{answer.sinhala}</p>
               </div>
             ) : (
-              <>
+              <div key={answer.buttonLabel}>
                 <button
                   key={answer.buttonLabel}
                   onClick={() => setSelectedAnswer(answer.value)}
@@ -118,7 +126,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                     onEnd={handleAudioEnd}
                   />
                 )}
-              </>
+              </div>
             )
           )}
         </div>

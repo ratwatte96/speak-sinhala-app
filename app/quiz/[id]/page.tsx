@@ -9,6 +9,7 @@ type Answer = {
 
 type ConvertedQuestion = {
   question_word: string;
+  additional_infomation?: string;
   correctAnswer: string;
   questionType: number;
   answers: Answer[];
@@ -17,17 +18,20 @@ type ConvertedQuestion = {
 
 function convertQuizDataToArray(data: any): ConvertedQuestion[] {
   return data.flatMap((item: any) =>
-    item.questions.map((q: any) => ({
-      question_word: q.question.question_word,
-      correctAnswer: q.question.correctAnswer,
-      questionType: q.question.questionType,
-      answers: q.question.answers.map((a: any) => ({
-        buttonLabel: a.answer.buttonLabel,
-        value: a.answer.value,
-        audio: a.answer.audio,
-      })),
-      audio: q.question.audio,
-    }))
+    item.questions.map((q: any) => {
+      return {
+        question_word: q.question.question_word,
+        additional_infomation: q.question.additonal_information,
+        correctAnswer: q.question.correctAnswer,
+        questionType: q.question.questionType,
+        answers: q.question.answers.map((a: any) => ({
+          buttonLabel: a.answer.buttonLabel,
+          value: a.answer.value,
+          audio: a.answer.audio,
+        })),
+        audio: q.question.audio,
+      };
+    })
   );
 }
 

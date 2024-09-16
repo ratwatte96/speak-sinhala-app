@@ -47,6 +47,7 @@ model Quiz {
 model Question {
   id    Int    @id @default(autoincrement())
   question_word   String
+  additonal_information   String?
   quizes QuestionsOnQuizes[]
   correctAnswer   String
   answers  AnswersOnQuestions[]
