@@ -1,25 +1,12 @@
 import Quiz from "@/components/Quiz";
+import { Step } from "@/components/Step";
 import prisma from "@/lib/prisma";
 
-type Answer = {
-  buttonLabel: string;
-  value: string;
-  audio?: string;
-};
-
-type ConvertedQuestion = {
-  question_word: string;
-  additional_infomation?: string;
-  correctAnswer: string;
-  questionType: number;
-  answers: Answer[];
-  audio?: string;
-};
-
-function convertQuizDataToArray(data: any): ConvertedQuestion[] {
+function convertQuizDataToQuestionType(data: any): Step[] {
   return data.flatMap((item: any) =>
-    item.questions.map((q: any) => {
-      return {
+    item.questions.map((q: any) => ({
+      type: "question",
+      content: {
         question_word: q.question.question_word,
         additional_infomation: q.question.additonal_information,
         correctAnswer: q.question.correctAnswer,
@@ -30,8 +17,8 @@ function convertQuizDataToArray(data: any): ConvertedQuestion[] {
           audio: a.answer.audio,
         })),
         audio: q.question.audio,
-      };
-    })
+      },
+    }))
   );
 }
 
@@ -43,7 +30,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return array;
 }
 
-export default async function Days({ params }: { params: { id: string } }) {
+export default async function QuizPage({ params }: { params: { id: string } }) {
   const { id } = params;
   let lives = 100;
   try {
@@ -88,14 +75,15 @@ export default async function Days({ params }: { params: { id: string } }) {
       question.question.answers = shuffleArray(question.question.answers);
     });
   });
-  const daySteps = convertQuizDataToArray(quizItemsData).sort(
+  const daySteps = convertQuizDataToQuestionType(quizItemsData).sort(
     () => Math.random() - 0.5
   );
+  daySteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
   const dayQuestion = quizData!.quiz_name ?? "";
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <Quiz steps={daySteps} startingLives={lives} question={dayQuestion} />
+      <Quiz steps={daySteps} startingLives={lives} quiz_title={dayQuestion} />
     </main>
   );
 }

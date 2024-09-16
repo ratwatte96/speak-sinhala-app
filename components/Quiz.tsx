@@ -6,14 +6,15 @@ import Link from "next/link";
 import { QuizData, QuizStep } from "./QuizStep";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
+import { Step } from "./Step";
 
 interface QuizProps {
-  steps?: QuizData[];
+  steps?: Step[];
   startingLives: number;
-  question?: string;
+  quiz_title?: string;
 }
 
-const Quiz: React.FC<QuizProps> = ({ steps, startingLives, question }) => {
+const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
@@ -113,15 +114,13 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, question }) => {
           style={{ width: `${progress}%` }}
         ></div>
       </div>
+      <p>{quiz_title}</p>
       {steps !== undefined ? (
-        <QuizStep
-          question={question}
+        <Step
+          step={steps[currentStep]}
+          nextStep={nextStep}
           updateLives={updateLives}
           lives={lives}
-          {...steps[currentStep]}
-          nextStep={nextStep}
-          answers={steps[currentStep].answers}
-          questionType={steps[currentStep].questionType}
         />
       ) : (
         <p>Loading...</p>

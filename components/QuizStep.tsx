@@ -13,7 +13,6 @@ type Answer = {
 };
 
 export interface QuizData {
-  question?: string;
   answers: Answer[];
   correctAnswer: string;
   question_word: string;
@@ -29,7 +28,6 @@ export interface QuizStepProps extends QuizData {
 }
 
 export const QuizStep: React.FC<QuizStepProps> = ({
-  question,
   answers,
   correctAnswer,
   question_word,
@@ -40,6 +38,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   nextStep,
   questionType = 1,
 }) => {
+  console.log(audio);
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
 
@@ -69,7 +68,6 @@ export const QuizStep: React.FC<QuizStepProps> = ({
 
   return (
     <div className="flex flex-col items-center">
-      <p>{question}</p>
       <div className="flex flex-col justify-center items-center my-4">
         <p className=" text-skin-base text-5xl mb-4">{question_word}</p>
         {additional_infomation && (
@@ -81,7 +79,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
           </div>
         )}
       </div>
-      {audio !== null && (
+      {audio && (
         <AudioPlayer
           audioPath={`/audioClips/${audio}.mp3`}
           onEnd={handleAudioEnd}
