@@ -9,8 +9,8 @@
     --color-text-inverted: rgb(214, 214, 214);
     --color-fill: #000;
     --color-accent: #d00033;
-    --color-accent-20: #d00033;
-    --color-border: hsla(0, 0%, 100%, 0.14);
+    --color-accent-20: #cc204b;
+    --color-border: hsla(0, 0%, 100%, 0.418);
     --color-background-muted: rgb(10, 10, 10);
   }
 }

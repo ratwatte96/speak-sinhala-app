@@ -71,11 +71,13 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     <div className="flex flex-col items-center">
       <p>{question}</p>
       <div className="flex flex-col justify-center items-center my-4">
-        <p className=" text-skin-base text-5xl sm:text-9xl">{question_word}</p>
+        <p className=" text-skin-base text-5xl mb-4">{question_word}</p>
         {additional_infomation && (
           <div className="flex flex-col w-80">
             <h3>Additional Context:</h3>
-            <p className=" text-skin-muted text-lg">{additional_infomation}</p>
+            <p className="text-xs sm:text-base text-skin-muted">
+              {additional_infomation}
+            </p>
           </div>
         )}
       </div>
@@ -86,11 +88,12 @@ export const QuizStep: React.FC<QuizStepProps> = ({
           playOnLoad={true}
         />
       )}
-      <div className="flex flex-col pt-4 items-start w-80">
+      <div className="flex flex-col items-start w-80">
         <p>
           {questionType === 1
             ? "Choose the corresponding english word"
-            : "Choose the corresponding sinhala word"}
+            : "Choose the corresponding sinhala word"}{" "}
+          and click confirm
         </p>
         <div className="flex flex-wrap justify-around items-start pt-2">
           {answers.map((answer) =>
@@ -112,10 +115,10 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                 <button
                   key={answer.buttonLabel}
                   onClick={() => setSelectedAnswer(answer.value)}
-                  className={`rounded-lg border border-skin-base px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:ml-2 sm:text-base sm:w-full w-1/3 mx-2 mb-4 ${
+                  className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
                     selectedAnswer === answer.value
-                      ? "text-skin-accent"
-                      : "text-skin-muted"
+                      ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
+                      : "text-skin-muted border-skin-base border-b-4"
                   }`}
                 >
                   {answer.buttonLabel}
@@ -133,7 +136,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
         <button
           key="confirm-button"
           onClick={() => handleAnswer()}
-          className="sm:w-80 w-1/3 mx-2 my-4 bg-skin-accent rounded-lg border border-skin-base px-3 py-1"
+          className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
         >
           Confirm
         </button>

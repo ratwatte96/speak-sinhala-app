@@ -30,6 +30,7 @@ const config: Config = {
           base: "var(--color-border)",
           inverted: "var(--color-text-inverted)",
           accent: "var(--color-accent)",
+          accent20: "var(--color-accent-20)",
         },
       },
       extend: {
