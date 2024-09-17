@@ -42,6 +42,7 @@ model Quiz {
   questions   QuestionsOnQuizes[]
   sinhala String?
   audio String?
+  lessonContent Json?
 }
 
 model Question {

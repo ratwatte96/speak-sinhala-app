@@ -31,7 +31,6 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default async function QuizPage({ params }: { params: { id: string } }) {
-  const { id } = params;
   let lives = 100;
   try {
     fetch(`${process.env.API_URL}api/lives`)
@@ -43,6 +42,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     console.log(error);
   }
 
+  const { id } = params;
   const quizData = await prisma.quiz.findFirst({
     where: {
       id: parseInt(id),
@@ -78,7 +78,9 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const daySteps = convertQuizDataToQuestionType(quizItemsData).sort(
     () => Math.random() - 0.5
   );
-  daySteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
+  if (quizData?.lessonContent) {
+    daySteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
+  }
   const dayQuestion = quizData!.quiz_name ?? "";
 
   return (
