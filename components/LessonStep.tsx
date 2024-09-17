@@ -6,10 +6,11 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
   return (
     <div className="sm:w-2/3 w-full text-sm sm:text-base">
       <p className="flex flex-col items-center text-skin-base w-full">
-        Unfortunately using the words 'this' and 'that' are more complicated in
-        sinhala than in english.
+        Unfortunately using the words &apos;this&apos; and &apos;that&apos; are
+        more complicated in sinhala than in english.
         <div className="mt-4">
-          There is 1 one word for 'this' but 3 word for 'that':
+          There is 1 one word for &apos;this&apos; but 3 word for
+          &apos;that&apos;:
           <ul className="list-disc list-inside">
             <li>this = mē</li>
             <li>
