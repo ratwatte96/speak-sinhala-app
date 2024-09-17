@@ -17,6 +17,7 @@ function convertQuizDataToQuestionType(data: any): Step[] {
           audio: a.answer.audio,
         })),
         audio: q.question.audio,
+        specific_note: q.question.specific_note,
       },
     }))
   );

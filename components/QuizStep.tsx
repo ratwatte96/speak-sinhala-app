@@ -4,6 +4,7 @@
 import { useCallback, useRef, useState } from "react";
 import Toast, { ToastType } from "./Toast";
 import { AudioPlayer } from "./AudioPlayer";
+import Modal from "./Modal";
 
 type Answer = {
   sinhala?: string;
@@ -19,6 +20,7 @@ export interface QuizData {
   additional_infomation?: string;
   questionType?: number;
   audio?: string;
+  specific_note?: string;
 }
 
 export interface QuizStepProps extends QuizData {
@@ -37,6 +39,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   audio,
   nextStep,
   questionType = 1,
+  specific_note,
 }) => {
   console.log(audio);
   const toastMessageRef = useRef<string | null>("");
@@ -45,12 +48,14 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<ToastType>("");
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleAnswer = () => {
     if (selectedAnswer === correctAnswer) {
       toastMessageRef.current = "Correct";
       toastTypeRef.current = "Correct";
       nextStep();
+      setShowModal(true);
     } else {
       updateLives();
       console.log("QuizStep", lives);
@@ -65,7 +70,6 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   const handleAudioEnd = useCallback(() => {
     console.log("Audio finished playing");
   }, []);
-
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-col justify-center items-center my-4">
@@ -145,6 +149,17 @@ export const QuizStep: React.FC<QuizStepProps> = ({
           onClose={() => setToastMessage(null)}
           toastType={toastType}
         />
+      )}
+      {specific_note && (
+        <Modal
+          show={showModal}
+          onClose={() => {
+            setShowModal(false);
+          }}
+          heading={"Note"}
+        >
+          {specific_note}
+        </Modal>
       )}
     </div>
   );
