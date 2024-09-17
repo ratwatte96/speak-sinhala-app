@@ -114,7 +114,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
           style={{ width: `${progress}%` }}
         ></div>
       </div>
-      <p>{quiz_title}</p>
+      <h1 className="text-xl mb-2">{quiz_title}</h1>
       {steps !== undefined ? (
         <Step
           step={steps[currentStep]}
