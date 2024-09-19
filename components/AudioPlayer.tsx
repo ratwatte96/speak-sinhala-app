@@ -16,7 +16,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioPath,
   onEnd,
   playOnLoad = false,
-  display_text = "Play",
+  display_text,
   onClick,
   additionalClasses,
 }) => {
@@ -86,10 +86,16 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         onClick={togglePlay}
         disabled={!sound}
       >
-        {display_text}
-        <button className="flex justify-end">
-          <span className="text-base ml-1 text-skin-accent"> &#x1F50A;</span>
-        </button>
+        {display_text ? (
+          <>
+            {display_text}
+            <div className="flex justify-end">
+              <span className="text-base ml-1 text-skin-accent">&#x1F50A;</span>
+            </div>
+          </>
+        ) : (
+          <span className="ml-1 text-skin-accent"> &#x1F50A;</span>
+        )}
       </button>
     </>
   );

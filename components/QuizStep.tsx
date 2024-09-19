@@ -82,12 +82,12 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     <div className="flex flex-col items-center">
       <div className="flex flex-col justify-center items-center my-4">
         {isNew && <p>New!!!</p>}
-        {isNew && audio ? (
+        {(questionType === 3 || isNew) && audio ? (
           <AudioPlayer
             audioPath={`/audioClips/${audio}.mp3`}
             onEnd={handleAudioEnd}
             playOnLoad={true}
-            display_text={question_word}
+            display_text={questionType === 3 ? undefined : question_word}
           />
         ) : (
           <p className="text-skin-base text-5xl mb-4">{question_word}</p>
@@ -117,7 +117,9 @@ export const QuizStep: React.FC<QuizStepProps> = ({
         <p>
           {questionType === 1
             ? "Choose the corresponding english word and click confirm"
-            : `Select the correct character for the '${question_word}'`}
+            : questionType === 2
+            ? `Select the correct character for the '${question_word}'`
+            : "What sound does this make?"}
         </p>
         <div className="flex flex-wrap justify-around items-start pt-2">
           {answers.map((answer) =>
@@ -136,7 +138,8 @@ export const QuizStep: React.FC<QuizStepProps> = ({
               </div>
             ) : (
               <div key={answer.id}>
-                {questionType === 2 && answer.audio !== null ? (
+                {(questionType === 2 || questionType === 3) &&
+                answer.audio !== null ? (
                   <AudioPlayer
                     audioPath={`/audioClips/${answer.audio}.mp3`}
                     onEnd={handleAudioEnd}
