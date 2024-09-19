@@ -8,6 +8,8 @@ interface AudioPlayerProps {
   onEnd: () => void;
   playOnLoad?: boolean;
   display_text?: string;
+  onClick?: () => void;
+  additionalClasses?: string;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -15,6 +17,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onEnd,
   playOnLoad = false,
   display_text = "Play",
+  onClick,
+  additionalClasses,
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
@@ -67,13 +71,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else {
       sound?.play();
     }
+    if (onClick) onClick();
     setPlaying(!playing);
   };
 
   return (
     <>
       <button
-        className="rounded-lg border border-2 border-skin-base text-5xl mb-4 p-4 flex flex-col min-w-32"
+        className={
+          "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32" +
+          " " +
+          additionalClasses
+        }
         onClick={togglePlay}
         disabled={!sound}
       >

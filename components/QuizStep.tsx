@@ -116,9 +116,8 @@ export const QuizStep: React.FC<QuizStepProps> = ({
       <div className="flex flex-col items-start w-80">
         <p>
           {questionType === 1
-            ? "Choose the corresponding english word"
-            : "Choose the corresponding sinhala word"}{" "}
-          and click confirm
+            ? "Choose the corresponding english word and click confirm"
+            : `Select the correct character for the '${question_word}'`}
         </p>
         <div className="flex flex-wrap justify-around items-start pt-2">
           {answers.map((answer) =>
@@ -137,21 +136,29 @@ export const QuizStep: React.FC<QuizStepProps> = ({
               </div>
             ) : (
               <div key={answer.id}>
-                <button
-                  onClick={() => setSelectedAnswer(answer.value)}
-                  className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
-                    selectedAnswer === answer.value
-                      ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                      : "text-skin-muted border-skin-base border-b-4"
-                  }`}
-                >
-                  {answer.buttonLabel}
-                </button>
-                {answer.audio !== null && (
+                {questionType === 2 && answer.audio !== null ? (
                   <AudioPlayer
                     audioPath={`/audioClips/${answer.audio}.mp3`}
                     onEnd={handleAudioEnd}
+                    display_text={answer.buttonLabel}
+                    onClick={() => setSelectedAnswer(answer.value)}
+                    additionalClasses={
+                      selectedAnswer === answer.value
+                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
+                        : "text-skin-muted border-skin-base border-b-4"
+                    }
                   />
+                ) : (
+                  <button
+                    onClick={() => setSelectedAnswer(answer.value)}
+                    className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
+                      selectedAnswer === answer.value
+                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
+                        : "text-skin-muted border-skin-base border-b-4"
+                    }`}
+                  >
+                    {answer.buttonLabel}
+                  </button>
                 )}
               </div>
             )
