@@ -7,12 +7,14 @@ interface AudioPlayerProps {
   audioPath: string;
   onEnd: () => void;
   playOnLoad?: boolean;
+  display_text?: string;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioPath,
   onEnd,
   playOnLoad = false,
+  display_text = "Play",
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
@@ -69,10 +71,17 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   return (
-    <div className="bg-white w-10">
-      <button onClick={togglePlay} disabled={!sound}>
-        {playing ? "Pause" : "Play"}
+    <>
+      <button
+        className="rounded-lg border border-2 border-skin-base text-5xl mb-4 p-4 flex flex-col min-w-32"
+        onClick={togglePlay}
+        disabled={!sound}
+      >
+        {display_text}
+        <button className="flex justify-end">
+          <span className="text-base ml-1 text-skin-accent"> &#x1F50A;</span>
+        </button>
       </button>
-    </div>
+    </>
   );
 };

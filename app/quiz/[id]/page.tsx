@@ -8,10 +8,11 @@ function convertQuizDataToQuestionType(data: any): Step[] {
       type: "question",
       content: {
         question_word: q.question.question_word,
-        additional_infomation: q.question.additonal_information,
+        additonal_information: q.question.additonal_information,
         correctAnswer: q.question.correctAnswer,
         questionType: q.question.questionType,
         answers: q.question.answers.map((a: any) => ({
+          id: a.answer.id,
           buttonLabel: a.answer.buttonLabel,
           value: a.answer.value,
           audio: a.answer.audio,
@@ -76,6 +77,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
       question.question.answers = shuffleArray(question.question.answers);
     });
   });
+
   const daySteps = convertQuizDataToQuestionType(quizItemsData).sort(
     () => Math.random() - 0.5
   );

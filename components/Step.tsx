@@ -41,6 +41,7 @@ export const Step: React.FC<StepProps> = ({
           answers={step.content.answers}
           questionType={step.content.questionType}
           specific_note={step.content.specific_note}
+          additonal_information={step.content.additonal_information}
         />
       ) : (
         <LessonStep nextStep={nextStep} />

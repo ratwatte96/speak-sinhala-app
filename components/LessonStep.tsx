@@ -27,8 +27,8 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
       </p>
       <p className="flex flex-col items-center text-skin-base w-full mt-4">
         <div className="mt-4">
-          Each of these four word has 3 variations to refer to a person, an
-          thing or an animal:
+          Each of these four word has 3 variations to refer to a person, a thing
+          or an animal:
           <table className="w-full border-t border-skin-base text-left text-xs my-2">
             <thead className="text-xs uppercase">
               <tr>
