@@ -23,6 +23,7 @@ const config: Config = {
           accent: "var(--color-accent)",
           accent20: "var(--color-accent-20)",
           muted: "var(--color-background-muted)",
+          disabled: "var(--color-background-disabled)",
         },
       },
       borderColor: {

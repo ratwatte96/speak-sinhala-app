@@ -6,6 +6,7 @@
   :root {
     --color-text-base: rgb(214, 214, 214);
     --color-text-muted: rgb(136, 136, 136);
+    --color-background-disabled: rgb(66, 66, 66);
     --color-text-inverted: rgb(214, 214, 214);
     --color-fill: #000;
     --color-accent: #d00033;

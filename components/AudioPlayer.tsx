@@ -10,6 +10,7 @@ interface AudioPlayerProps {
   display_text?: string;
   onClick?: () => void;
   additionalClasses?: string;
+  disabledOveride?: boolean;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -19,6 +20,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   display_text,
   onClick,
   additionalClasses,
+  disabledOveride = false,
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
@@ -79,12 +81,12 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     <>
       <button
         className={
-          "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32" +
+          "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28" +
           " " +
           additionalClasses
         }
         onClick={togglePlay}
-        disabled={!sound}
+        disabled={!sound || disabledOveride}
       >
         {display_text ? (
           <>
