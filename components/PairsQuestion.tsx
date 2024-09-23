@@ -5,12 +5,14 @@ import { AudioPlayer } from "./AudioPlayer";
 import { ToastType } from "./Toast";
 
 interface PairsQuestionProps {
+  nextStep: () => void;
   pairs: any[];
   sounds: string[];
   handleToast: (message: string, type: string) => void;
 }
 
 export const PairsQuestion: React.FC<PairsQuestionProps> = ({
+  nextStep,
   pairs,
   sounds,
   handleToast,
@@ -112,10 +114,18 @@ export const PairsQuestion: React.FC<PairsQuestionProps> = ({
         </div>
         <button
           key="confirm-button"
-          onClick={() => {}}
-          className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
+          onClick={() => {
+            nextStep();
+            completePairs.current = [];
+          }}
+          className={`w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1 ${
+            completePairs.current.length !== 5
+              ? "text-skin-muted border-skin-base bg-skin-disabled"
+              : ""
+          }`}
+          disabled={completePairs.current.length !== 5}
         >
-          Confirm
+          Next
         </button>
       </div>
     </>

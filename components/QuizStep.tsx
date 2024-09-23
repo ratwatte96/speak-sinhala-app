@@ -190,6 +190,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
         <>
           <div className="flex flex-col items-start w-80">
             <PairsQuestion
+              nextStep={nextStep}
               pairs={tempTestPairs}
               sounds={tempTestPairs
                 .map((pair) => pair[0])
