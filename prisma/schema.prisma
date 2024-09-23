@@ -47,12 +47,13 @@ model Quiz {
 
 model Question {
   id    Int    @id @default(autoincrement())
-  question_word   String
+  question_word   String?
   additonal_information   String?
   specific_note   String?
   quizes QuestionsOnQuizes[]
-  correctAnswer   String
+  correctAnswer   String?
   answers  AnswersOnQuestions[]
+  pairs  PairsOnQuestions[]
   questionType Int
   audio String?
 }
@@ -83,4 +84,21 @@ model AnswersOnQuestions {
   questionId Int 
 
   @@id([answerId, questionId])
+}
+
+model Pair {
+  id    Int    @id @default(autoincrement())
+  english String?
+  sinhala  String?
+  sound String?
+  questions PairsOnQuestions[]
+}
+
+model PairsOnQuestions {
+  pair     Pair     @relation(fields: [pairId], references: [id])
+  pairId   Int
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int 
+
+  @@id([pairId, questionId])
 }
