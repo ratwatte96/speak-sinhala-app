@@ -49,6 +49,7 @@ export const Step: React.FC<StepProps> = ({
           nextStep={nextStep}
           pairs={step.content.pairs}
           sounds={step.content.sounds}
+          updateLives={updateLives}
         />
       ) : (
         <LessonStep nextStep={nextStep} />

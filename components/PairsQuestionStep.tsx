@@ -8,17 +8,20 @@ interface PairsQuestionStepProps {
   nextStep: () => void;
   pairs: any[];
   sounds: string[];
+  updateLives: () => void;
 }
 
 export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   nextStep,
   pairs,
   sounds,
+  updateLives,
 }) => {
   console.log(pairs, "pais");
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
   const completePairs = useRef<string[]>([]);
+  const wrongGuessCount = useRef<number>(0);
 
   const handleAudioEnd = useCallback(() => {
     console.log("Audio finished playing");
@@ -42,6 +45,11 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
         toastTypeRef.current = "Correct";
         completePairs.current.push(value);
       } else {
+        wrongGuessCount.current += 1;
+        if (wrongGuessCount.current === 2) {
+          updateLives();
+          wrongGuessCount.current = 0;
+        }
         toastMessageRef.current = "Incorrect";
         toastTypeRef.current = "Incorrect";
       }
@@ -57,6 +65,11 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
         toastTypeRef.current = "Correct";
         completePairs.current.push(selectedSound);
       } else {
+        wrongGuessCount.current += 1;
+        if (wrongGuessCount.current === 2) {
+          updateLives();
+          wrongGuessCount.current = 0;
+        }
         toastMessageRef.current = "Incorrect";
         toastTypeRef.current = "Incorrect";
       }
@@ -72,7 +85,10 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   return (
     <>
       <div className="flex flex-col items-start w-80">
-        <p>Tap the matching pairs</p>
+        <p>
+          Tap the matching pairs. (You lose a heart each time you get two
+          guesses wrong.)
+        </p>
         <div className="flex justify-between w-full mt-4">
           <div>
             {pairs.map(({ id, sinhala, sound }) => (

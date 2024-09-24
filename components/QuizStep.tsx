@@ -64,7 +64,6 @@ export const QuizStep: React.FC<QuizStepProps> = ({
       }
     } else {
       updateLives();
-      console.log("QuizStep", lives);
       if (lives - 1 === 0) nextStep();
       toastMessageRef.current = "Incorrect";
       toastTypeRef.current = "Incorrect";
