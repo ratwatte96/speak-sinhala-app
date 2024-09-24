@@ -11,6 +11,7 @@ interface AudioPlayerProps {
   onClick?: () => void;
   additionalClasses?: string;
   disabledOveride?: boolean;
+  isButtonNoAudio?: boolean;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -21,6 +22,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onClick,
   additionalClasses,
   disabledOveride = false,
+  isButtonNoAudio = false,
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
@@ -68,13 +70,15 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [src, onEnd]);
 
   const togglePlay = () => {
-    if (playing) {
-      sound?.pause();
-    } else {
-      sound?.play();
-    }
     if (onClick) onClick();
-    setPlaying(!playing);
+    if (!isButtonNoAudio) {
+      if (playing) {
+        sound?.pause();
+      } else {
+        sound?.play();
+      }
+      setPlaying(!playing);
+    }
   };
 
   return (

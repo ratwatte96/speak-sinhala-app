@@ -20,6 +20,7 @@ function convertQuizDataToQuestionType(data: any): Step[] {
             sounds: pairs
               .map((pair: any) => pair.sound)
               .sort((a: any, b: any) => 0.5 - Math.random()),
+            isHard: false,
           },
         };
       } else {
@@ -38,6 +39,7 @@ function convertQuizDataToQuestionType(data: any): Step[] {
             })),
             audio: q.question.audio,
             specific_note: q.question.specific_note,
+            isHard: false,
           },
         };
       }

@@ -9,6 +9,7 @@ interface PairsQuestionStepProps {
   pairs: any[];
   sounds: string[];
   updateLives: () => void;
+  isHard?: boolean;
 }
 
 export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
@@ -16,8 +17,8 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   pairs,
   sounds,
   updateLives,
+  isHard,
 }) => {
-  console.log(pairs, "pais");
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
   const completePairs = useRef<string[]>([]);
@@ -81,7 +82,6 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
     setToastType(toastTypeRef.current);
   };
 
-  console.log("completePairs", completePairs.current);
   return (
     <>
       <div className="flex flex-col items-start w-80">
@@ -110,6 +110,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                       : "text-skin-muted border-skin-base border-b-4"
                   }
                   disabledOveride={completePairs.current.includes(sound)}
+                  isButtonNoAudio={isHard}
                 />
               </div>
             ))}

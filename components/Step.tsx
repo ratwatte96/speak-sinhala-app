@@ -15,6 +15,7 @@ interface PairsData {
   questionType: number;
   pairs: any[];
   sounds: any[];
+  isHard: boolean;
 }
 
 export interface StepProps {
@@ -43,6 +44,7 @@ export const Step: React.FC<StepProps> = ({
           questionType={step.content.questionType}
           specific_note={step.content.specific_note}
           additonal_information={step.content.additonal_information}
+          isHard={step.content.isHard}
         />
       ) : step.type === "question" && "pairs" in step.content ? (
         <PairsQuestionStep
@@ -50,6 +52,7 @@ export const Step: React.FC<StepProps> = ({
           pairs={step.content.pairs}
           sounds={step.content.sounds}
           updateLives={updateLives}
+          isHard={step.content.isHard}
         />
       ) : (
         <LessonStep nextStep={nextStep} />
