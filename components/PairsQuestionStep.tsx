@@ -2,21 +2,20 @@
 
 import { useCallback, useRef, useState } from "react";
 import { AudioPlayer } from "./AudioPlayer";
-import { ToastType } from "./Toast";
+import Toast, { ToastType } from "./Toast";
 
-interface PairsQuestionProps {
+interface PairsQuestionStepProps {
   nextStep: () => void;
   pairs: any[];
   sounds: string[];
-  handleToast: (message: string, type: string) => void;
 }
 
-export const PairsQuestion: React.FC<PairsQuestionProps> = ({
+export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   nextStep,
   pairs,
   sounds,
-  handleToast,
 }) => {
+  console.log(pairs, "pais");
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
   const completePairs = useRef<string[]>([]);
@@ -24,16 +23,21 @@ export const PairsQuestion: React.FC<PairsQuestionProps> = ({
   const handleAudioEnd = useCallback(() => {
     console.log("Audio finished playing");
   }, []);
+
   const [selectedSinhala, setSelectedSinhala] = useState<string>("");
   const [selectedSound, setSelectedSound] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<ToastType>("");
 
   const checkPair = (value: string, type: string) => {
-    const correctPair = pairs.find((element) => element.includes(value));
-
     if (type === "sound") {
       if (selectedSinhala === "") return;
+      const correctPair = pairs.find((element) => element.sound === value);
 
-      if (correctPair[0] === value && correctPair[1] === selectedSinhala) {
+      if (
+        correctPair.sound === value &&
+        correctPair.sinhala === selectedSinhala
+      ) {
         toastMessageRef.current = "Correct";
         toastTypeRef.current = "Correct";
         completePairs.current.push(value);
@@ -43,8 +47,12 @@ export const PairsQuestion: React.FC<PairsQuestionProps> = ({
       }
     } else {
       if (selectedSound === "") return;
+      const correctPair = pairs.find((element) => element.sinhala === value);
 
-      if (correctPair[0] === selectedSound && correctPair[1] === value) {
+      if (
+        correctPair.sound === selectedSound &&
+        correctPair.sinhala === value
+      ) {
         toastMessageRef.current = "Correct";
         toastTypeRef.current = "Correct";
         completePairs.current.push(selectedSound);
@@ -56,8 +64,8 @@ export const PairsQuestion: React.FC<PairsQuestionProps> = ({
 
     setSelectedSinhala("");
     setSelectedSound("");
-    // console.log("toastMessageRef", toastMessageRef);
-    handleToast(toastMessageRef.current, toastTypeRef.current);
+    setToastMessage(toastMessageRef.current);
+    setToastType(toastTypeRef.current);
   };
 
   console.log("completePairs", completePairs.current);
@@ -67,8 +75,8 @@ export const PairsQuestion: React.FC<PairsQuestionProps> = ({
         <p>Tap the matching pairs</p>
         <div className="flex justify-between w-full mt-4">
           <div>
-            {pairs.map(([sound, sinhala], i) => (
-              <div key={i}>
+            {pairs.map(({ id, sinhala, sound }) => (
+              <div key={id}>
                 <AudioPlayer
                   // audioPath={`/audioClips/${sound}.mp3`}
                   audioPath={`/audioClips/imFine.mp3`}
@@ -128,6 +136,13 @@ export const PairsQuestion: React.FC<PairsQuestionProps> = ({
           Next
         </button>
       </div>
+      {toastMessage && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setToastMessage(null)}
+          toastType={toastType}
+        />
+      )}
     </>
   );
 };

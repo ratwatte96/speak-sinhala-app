@@ -1,19 +1,20 @@
-"use client";
-
-// import { AudioPlayer } from "@/components/AudioPlayer";
-import { useCallback, useRef, useState } from "react";
-import Toast, { ToastType } from "./Toast";
-import { AudioPlayer } from "./AudioPlayer";
 import { QuizData, QuizStep } from "./QuizStep";
 import { LessonStep } from "./LessonStep";
+import { PairsQuestionStep } from "./PairsQuestionStep";
 
 export interface Step {
   type: "question" | "lesson" | "additional";
-  content: QuizData | LessonStep;
+  content: QuizData | LessonStep | PairsData;
 }
 
 interface LessonStep {
   stepType: string;
+}
+
+interface PairsData {
+  questionType: number;
+  pairs: any[];
+  sounds: any[];
 }
 
 export interface StepProps {
@@ -42,6 +43,12 @@ export const Step: React.FC<StepProps> = ({
           questionType={step.content.questionType}
           specific_note={step.content.specific_note}
           additonal_information={step.content.additonal_information}
+        />
+      ) : step.type === "question" && "pairs" in step.content ? (
+        <PairsQuestionStep
+          nextStep={nextStep}
+          pairs={step.content.pairs}
+          sounds={step.content.sounds}
         />
       ) : (
         <LessonStep nextStep={nextStep} />

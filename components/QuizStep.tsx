@@ -4,7 +4,6 @@ import { useCallback, useRef, useState } from "react";
 import Toast, { ToastType } from "./Toast";
 import { AudioPlayer } from "./AudioPlayer";
 import Modal from "./Modal";
-import { PairsQuestion } from "./PairsQuestion";
 
 type Answer = {
   sinhala?: string;
@@ -88,21 +87,19 @@ export const QuizStep: React.FC<QuizStepProps> = ({
 
   return (
     <div className="flex flex-col items-center">
-      {false ? (
-        <>
-          <div className="flex flex-col justify-center items-center my-4">
-            {isNew && <p>New!!!</p>}
-            {(questionType === 3 || isNew) && audio ? (
-              <AudioPlayer
-                audioPath={`/audioClips/${audio}.mp3`}
-                onEnd={handleAudioEnd}
-                playOnLoad={true}
-                display_text={questionType === 3 ? undefined : question_word}
-              />
-            ) : (
-              <p className="text-skin-base text-5xl mb-4">{question_word}</p>
-            )}
-            {/* <div
+      <div className="flex flex-col justify-center items-center my-4">
+        {isNew && <p>New!!!</p>}
+        {(questionType === 3 || isNew) && audio ? (
+          <AudioPlayer
+            audioPath={`/audioClips/${audio}.mp3`}
+            onEnd={handleAudioEnd}
+            playOnLoad={true}
+            display_text={questionType === 3 ? undefined : question_word}
+          />
+        ) : (
+          <p className="text-skin-base text-5xl mb-4">{question_word}</p>
+        )}
+        {/* <div
             onMouseEnter={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
             className="hover:text-skin-accent cursor-pointer text-skin-base text-5xl mb-4 relative"
@@ -113,96 +110,78 @@ export const QuizStep: React.FC<QuizStepProps> = ({
               </span>
             )}
           </div> */}
-            {additonal_information && (
-              <div className="flex flex-col w-80">
-                <h3>Additional Context:</h3>
-                <p className="text-xs sm:text-base text-skin-muted">
-                  {additonal_information}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col items-start w-80">
-            <p>
-              {questionType === 1
-                ? "Choose the corresponding english word and click confirm"
-                : questionType === 2
-                ? `Select the correct character for the '${question_word}'`
-                : "What sound does this make?"}
+        {additonal_information && (
+          <div className="flex flex-col w-80">
+            <h3>Additional Context:</h3>
+            <p className="text-xs sm:text-base text-skin-muted">
+              {additonal_information}
             </p>
-            <div className="flex flex-wrap justify-around items-start pt-2">
-              {answers.map((answer) =>
-                Object.hasOwn(answer, "sinhala") ? (
-                  <div
-                    key={answer.id}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col items-start w-80">
+        <p>
+          {questionType === 1
+            ? "Choose the corresponding english word and click confirm"
+            : questionType === 2
+            ? `Select the correct character for the '${question_word}'`
+            : "What sound does this make?"}
+        </p>
+        <div className="flex flex-wrap justify-around items-start pt-2">
+          {answers.map((answer) =>
+            Object.hasOwn(answer, "sinhala") ? (
+              <div
+                key={answer.id}
+                onClick={() => setSelectedAnswer(answer.value)}
+                className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
+                  selectedAnswer === answer.value
+                    ? "text-skin-accent"
+                    : "text-skin-muted"
+                }`}
+              >
+                <p>{answer.buttonLabel}</p>
+                <p className="text-skin-base">{answer.sinhala}</p>
+              </div>
+            ) : (
+              <div key={answer.id}>
+                {(questionType === 2 || questionType === 3) &&
+                answer.audio !== null ? (
+                  <AudioPlayer
+                    audioPath={`/audioClips/${answer.audio}.mp3`}
+                    onEnd={handleAudioEnd}
+                    display_text={answer.buttonLabel}
                     onClick={() => setSelectedAnswer(answer.value)}
-                    className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
+                    additionalClasses={
                       selectedAnswer === answer.value
-                        ? "text-skin-accent"
-                        : "text-skin-muted"
+                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
+                        : "text-skin-muted border-skin-base border-b-4"
+                    }
+                  />
+                ) : (
+                  <button
+                    onClick={() => setSelectedAnswer(answer.value)}
+                    className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
+                      selectedAnswer === answer.value
+                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
+                        : "text-skin-muted border-skin-base border-b-4"
                     }`}
                   >
-                    <p>{answer.buttonLabel}</p>
-                    <p className="text-skin-base">{answer.sinhala}</p>
-                  </div>
-                ) : (
-                  <div key={answer.id}>
-                    {(questionType === 2 || questionType === 3) &&
-                    answer.audio !== null ? (
-                      <AudioPlayer
-                        audioPath={`/audioClips/${answer.audio}.mp3`}
-                        onEnd={handleAudioEnd}
-                        display_text={answer.buttonLabel}
-                        onClick={() => setSelectedAnswer(answer.value)}
-                        additionalClasses={
-                          selectedAnswer === answer.value
-                            ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                            : "text-skin-muted border-skin-base border-b-4"
-                        }
-                      />
-                    ) : (
-                      <button
-                        onClick={() => setSelectedAnswer(answer.value)}
-                        className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
-                          selectedAnswer === answer.value
-                            ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                            : "text-skin-muted border-skin-base border-b-4"
-                        }`}
-                      >
-                        {answer.buttonLabel}
-                      </button>
-                    )}
-                  </div>
-                )
-              )}
-            </div>
-            <button
-              key="confirm-button"
-              onClick={() => handleAnswer()}
-              className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
-            >
-              Confirm
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex flex-col items-start w-80">
-            <PairsQuestion
-              nextStep={nextStep}
-              pairs={tempTestPairs}
-              sounds={tempTestPairs
-                .map((pair) => pair[0])
-                .sort((a, b) => 0.5 - Math.random())}
-              handleToast={(message, type: any) => {
-                setToastMessage(message);
-                setToastType(type);
-              }}
-            />
-          </div>
-        </>
-      )}
+                    {answer.buttonLabel}
+                  </button>
+                )}
+              </div>
+            )
+          )}
+        </div>
+        <button
+          key="confirm-button"
+          onClick={() => handleAnswer()}
+          className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
+        >
+          Confirm
+        </button>
+      </div>
       {toastMessage && (
         <Toast
           message={toastMessage}
