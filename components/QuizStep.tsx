@@ -79,6 +79,14 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     console.log("Audio finished playing");
   }, []);
 
+  const selectAnswer = (answer: string) => {
+    if (answer === selectedAnswer) {
+      setSelectedAnswer("");
+    } else {
+      setSelectedAnswer(answer);
+    }
+  };
+
   const tempTestPairs = [
     ["pa", "ප"],
     ["ta", "ත"],
@@ -135,7 +143,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
             Object.hasOwn(answer, "sinhala") ? (
               <div
                 key={answer.id}
-                onClick={() => setSelectedAnswer(answer.value)}
+                onClick={() => selectAnswer(answer.value)}
                 className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
                   selectedAnswer === answer.value
                     ? "text-skin-accent"
@@ -153,7 +161,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                     audioPath={`/audioClips/${answer.audio}.mp3`}
                     onEnd={handleAudioEnd}
                     display_text={answer.buttonLabel}
-                    onClick={() => setSelectedAnswer(answer.value)}
+                    onClick={() => selectAnswer(answer.value)}
                     additionalClasses={
                       selectedAnswer === answer.value
                         ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
@@ -163,7 +171,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                   />
                 ) : (
                   <button
-                    onClick={() => setSelectedAnswer(answer.value)}
+                    onClick={() => selectAnswer(answer.value)}
                     className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
                       selectedAnswer === answer.value
                         ? "text-skin-accent border-skin-accent20 bg-rose-500/20"

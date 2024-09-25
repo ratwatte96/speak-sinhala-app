@@ -82,6 +82,21 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
     setToastType(toastTypeRef.current);
   };
 
+  const selectSinhala = (answer: string) => {
+    if (answer === selectedSinhala) {
+      setSelectedSinhala("");
+    } else {
+      setSelectedSinhala(answer);
+    }
+  };
+
+  const selectSound = (answer: string) => {
+    if (answer === selectedSound) {
+      setSelectedSound("");
+    } else {
+      setSelectedSound(answer);
+    }
+  };
   return (
     <>
       <div className="flex flex-col items-start w-80">
@@ -99,7 +114,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                   onEnd={handleAudioEnd}
                   display_text={sinhala}
                   onClick={() => {
-                    setSelectedSinhala(sinhala);
+                    selectSinhala(sinhala);
                     checkPair(sinhala, "sinhala");
                   }}
                   additionalClasses={
@@ -120,7 +135,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
               <button
                 key={i}
                 onClick={() => {
-                  setSelectedSound(sound);
+                  selectSound(sound);
                   checkPair(sound, "sound");
                 }}
                 className={`rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28 ${
