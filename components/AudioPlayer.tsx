@@ -5,7 +5,7 @@ import { Howl } from "howler";
 
 interface AudioPlayerProps {
   audioPath: string;
-  onEnd: () => void;
+  onEnd?: () => void;
   playOnLoad?: boolean;
   display_text?: string;
   onClick?: () => void;

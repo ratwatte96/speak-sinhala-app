@@ -87,14 +87,6 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     }
   };
 
-  const tempTestPairs = [
-    ["pa", "ප"],
-    ["ta", "ත"],
-    ["ma", "ම"],
-    ["ba", "බ"],
-    ["tha", "ථ"],
-  ];
-
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-col justify-center items-center my-4">
