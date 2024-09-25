@@ -4,21 +4,20 @@ import { AudioPlayer } from "./AudioPlayer";
 
 interface NewLettersStepProps {
   nextStep: () => void;
+  data: any[];
 }
 
-export const NewLettersStep: React.FC<NewLettersStepProps> = ({ nextStep }) => {
-  const tempTestPairs = [
-    { sound: "ga", sinhala: "ග​", englishWord: "gun" },
-    { sound: "ma", sinhala: "ම", englishWord: "march" },
-    { sound: "sa", sinhala: "ස", englishWord: "sunday" },
-  ];
+export const NewLettersStep: React.FC<NewLettersStepProps> = ({
+  nextStep,
+  data,
+}) => {
   return (
     <div className="sm:w-2/3 w-full text-sm sm:text-base">
       <p className="flex flex-col items-center text-skin-base w-full">
         There are 42 consonants in sinhala. Checkout these three characters and
         how we write their sounds in English:
       </p>
-      {tempTestPairs.map(({ sound, sinhala, englishWord }, i) => (
+      {data.map(({ sound, sinhala, englishWord }, i) => (
         <div key={i} className="flex mt-4">
           <AudioPlayer
             // audioPath={`/audioClips/${sound}.mp3`}

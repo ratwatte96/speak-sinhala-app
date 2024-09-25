@@ -1,10 +1,11 @@
 import { QuizData, QuizStep } from "./QuizStep";
 import { LessonStep } from "./LessonStep";
 import { PairsQuestionStep } from "./PairsQuestionStep";
+import { NewLettersStep } from "./NewLettersStep";
 
 export interface Step {
-  type: "question" | "lesson" | "additional";
-  content: QuizData | LessonStep | PairsData;
+  type: "question" | "lesson" | "additional" | "newLetterData";
+  content: QuizData | LessonStep | PairsData | NewLetterData[];
 }
 
 interface LessonStep {
@@ -16,6 +17,12 @@ interface PairsData {
   pairs: any[];
   sounds: any[];
   isHard: boolean;
+}
+
+export interface NewLetterData {
+  sound: string;
+  sinhala: string;
+  englishWord: string;
 }
 
 export interface StepProps {
@@ -33,7 +40,9 @@ export const Step: React.FC<StepProps> = ({
 }) => {
   return (
     <>
-      {step.type === "question" && "answers" in step.content ? (
+      {step.type === "newLetterData" ? (
+        <NewLettersStep nextStep={nextStep} data={step.content as any} />
+      ) : step.type === "question" && "answers" in step.content ? (
         <QuizStep
           correctAnswer={step.content.correctAnswer}
           question_word={step.content.question_word}

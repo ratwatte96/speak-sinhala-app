@@ -1,5 +1,5 @@
 import Quiz from "@/components/Quiz";
-import { Step } from "@/components/Step";
+import { NewLetterData, Step } from "@/components/Step";
 import prisma from "@/lib/prisma";
 
 function convertQuizDataToQuestionType(data: any): Step[] {
@@ -45,6 +45,14 @@ function convertQuizDataToQuestionType(data: any): Step[] {
       }
     })
   );
+}
+
+function convertNewLetterData(data: any): NewLetterData[] {
+  return data.map((item: any) => ({
+    sound: item.newLetterData.sound,
+    sinhala: item.newLetterData.sinhala,
+    englishWord: item.newLetterData.englishWord,
+  }));
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -93,6 +101,11 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
           },
         },
       },
+      newLetterDatas: {
+        include: {
+          newLetterData: true,
+        },
+      },
     },
   });
 
@@ -108,10 +121,20 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     () => Math.random() - 0.5
   );
 
+  if (quizItemsData[0].newLetterDatas) {
+    const newLetterStepData = convertNewLetterData(
+      quizItemsData[0].newLetterDatas
+    );
+    questionSteps.unshift({
+      type: "newLetterData",
+      content: newLetterStepData,
+    });
+  }
+
   if (quizData?.lessonContent) {
     questionSteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
   }
-  console.log("questionSteps", JSON.stringify(questionSteps));
+
   const quizQuestion = quizData!.quiz_name ?? "";
 
   return (
