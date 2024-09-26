@@ -44,6 +44,7 @@ model Quiz {
   sinhala String?
   audio String?
   lessonContent Json?
+  order Json?
 }
 
 model NewLetterData {
@@ -81,7 +82,6 @@ model QuestionsOnQuizes {
   questionId Int 
   quiz     Quiz     @relation(fields: [quizId], references: [id])
   quizId   Int
-
 
   @@id([questionId, quizId])
 }

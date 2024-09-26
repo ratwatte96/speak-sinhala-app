@@ -13,6 +13,7 @@ function convertQuizDataToQuestionType(data: any): Step[] {
         }));
 
         return {
+          questionId: q.questionId,
           type: "question",
           content: {
             questionType: q.question.questionType,
@@ -25,6 +26,7 @@ function convertQuizDataToQuestionType(data: any): Step[] {
         };
       } else {
         return {
+          questionId: q.questionId,
           type: "question",
           content: {
             question_word: q.question.question_word,
@@ -53,6 +55,19 @@ function convertNewLetterData(data: any): NewLetterData[] {
     sinhala: item.newLetterData.sinhala,
     englishWord: item.newLetterData.englishWord,
   }));
+}
+
+function orderSteps(order: any, data: any): any {
+  let orderedSteps: any = [];
+
+  order.map(({ questionId, isHard }: any) => {
+    let orderedElement = data.find(
+      (element: any) => element.questionId === questionId
+    );
+    orderedElement.content.isHard = isHard;
+    orderedSteps.push(orderedElement);
+  });
+  return orderedSteps;
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -117,22 +132,22 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     });
   });
 
-  const questionSteps = convertQuizDataToQuestionType(quizItemsData).sort(
-    () => Math.random() - 0.5
-  );
+  const questionSteps = convertQuizDataToQuestionType(quizItemsData);
+
+  const orderedSteps = orderSteps(quizData?.order, questionSteps);
 
   if (quizItemsData[0].newLetterDatas) {
     const newLetterStepData = convertNewLetterData(
       quizItemsData[0].newLetterDatas
     );
-    questionSteps.unshift({
+    orderedSteps.unshift({
       type: "newLetterData",
       content: newLetterStepData,
     });
   }
 
   if (quizData?.lessonContent) {
-    questionSteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
+    orderedSteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
   }
 
   const quizQuestion = quizData!.quiz_name ?? "";
@@ -140,7 +155,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
       <Quiz
-        steps={questionSteps}
+        steps={orderedSteps}
         startingLives={lives}
         quiz_title={quizQuestion}
       />

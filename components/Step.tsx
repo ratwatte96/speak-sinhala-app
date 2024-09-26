@@ -4,6 +4,7 @@ import { PairsQuestionStep } from "./PairsQuestionStep";
 import { NewLettersStep } from "./NewLettersStep";
 
 export interface Step {
+  questionId?: number;
   type: "question" | "lesson" | "additional" | "newLetterData";
   content: QuizData | LessonStep | PairsData | NewLetterData[];
 }

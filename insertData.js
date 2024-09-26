@@ -3,50 +3,11 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const quizQuestion = "Consonants";
-  const dataPairs = [
-    ["ka", "ක"],
-    ["kha", "ඛ"],
-    ["ga", "ග"],
-    ["gha", "ඝ"],
-    ["nga", "ඞ"],
-    ["ṅga", "ඟ"],
-    ["ca", "ච"],
-    ["cha", "ඡ"],
-    ["ja", "ජ"],
-    ["jha", "ඣ"],
-    ["ñya", "ඤ"],
-    ["jñya", "ඥ"],
-    ["ñja", "ඦ"],
-    ["ṭa", "ට"],
-    ["ṭha", "ඨ"],
-    ["ḍa", "ඩ"],
-    ["ḍha", "ඪ"],
-    ["ṇa", "ණ"],
-    ["ṇḍa", "ඬ"],
-    ["ta", "ත"],
-    ["tha", "ථ"],
-    ["da", "ද"],
-    ["dha", "ධ"],
-    ["na", "න"],
-    ["nda", "ඳ"],
-    ["pa", "ප"],
-    ["pha", "ඵ"],
-    ["ba", "බ"],
-    ["bha", "භ"],
-    ["ma", "ම"],
-    ["mba", "ඹ"],
-    ["ya", "ය"],
-    ["ra", "ර"],
-    ["la", "ල"],
-    ["va", "ව"],
-    ["śa", "ශ"],
-    ["ṣa", "ෂ"],
-    ["ṣa", "ක්‍ෂ"],
-    ["sa", "ස"],
-    ["ha", "හ"],
-    ["ḷa", "ළ"],
-    ["fa", "ෆ"],
+  const quizQuestion = "Lesson 1";
+  const data = [
+    { question_word: "ma", correctAnswer: "ම", type: "3" },
+    { question_word: "sa", correctAnswer: "ස", type: "3" },
+    { question_word: "ga", correctAnswer: "ග", type: "3" },
   ];
 
   try {
@@ -69,94 +30,98 @@ async function main() {
     }
 
     // Create each answer, related question and link it to the quiz
-    dataPairs.forEach((pair) => {
-      pair.forEach(async (element, i) => {
-        const existingQuestions = await prisma.question.findMany({
-          where: {
-            correctAnswer: {
-              equals: element,
-            },
+    data.forEach(async ({ question_word, correctAnswer, type }) => {
+      const existingQuestions = await prisma.question.findMany({
+        where: {
+          correctAnswer: {
+            equals: correctAnswer,
+          },
+          questionType: {
+            equals: parseInt(type),
+          },
+        },
+        include: {
+          quizes: true,
+        },
+      });
+      let question = existingQuestions[0];
+
+      if (!question) {
+        question = await prisma.question.create({
+          data: {
+            question_word: question_word,
+            correctAnswer: correctAnswer,
+            questionType: parseInt(type),
           },
           include: {
             quizes: true,
           },
         });
-        let question = existingQuestions[0];
+      }
 
-        if (!question) {
-          question = await prisma.question.create({
-            data: {
-              question_word: i === 0 ? pair[1] : pair[0],
-              correctAnswer: element,
-              questionType: i + 1,
-            },
-            include: {
-              quizes: true,
-            },
-          });
-        }
-
-        if (question.quizes.length === 0) {
-          const connectQuiz = await prisma.question.update({
-            where: {
-              id: question.id,
-            },
-            data: {
-              quizes: {
-                create: {
-                  quiz: {
-                    connect: { id: quiz.id },
-                  },
+      if (!question.quizes.some((element) => element.quizId === quiz.id)) {
+        console.log("hello");
+        const connectQuiz = await prisma.question.update({
+          where: {
+            id: question.id,
+          },
+          data: {
+            quizes: {
+              create: {
+                quiz: {
+                  connect: { id: quiz.id },
                 },
               },
             },
-          });
-        }
+          },
+        });
+      }
 
-        const existingAnswers = await prisma.answer.findMany({
-          where: {
-            value: {
-              equals: element,
-            },
+      const existingAnswers = await prisma.answer.findMany({
+        where: {
+          value: {
+            equals: correctAnswer,
+          },
+        },
+        include: {
+          questions: true,
+        },
+      });
+      let answer = existingAnswers[0];
+
+      if (!answer) {
+        answer = await prisma.answer.create({
+          data: {
+            buttonLabel: correctAnswer,
+            value: correctAnswer,
           },
           include: {
             questions: true,
           },
         });
-        let answer = existingAnswers[0];
+      }
 
-        if (!answer) {
-          answer = await prisma.answer.create({
-            data: {
-              buttonLabel: element,
-              value: element,
-            },
-            include: {
-              questions: true,
-            },
-          });
-        }
-
-        if (answer.questions.length === 0) {
-          const connectQuestion = await prisma.answer.update({
-            where: {
-              id: answer.id,
-            },
-            data: {
-              questions: {
-                create: {
-                  question: {
-                    connect: { id: question.id },
-                  },
+      if (
+        !answer.questions.some((element) => element.questionId === question.id)
+      ) {
+        const connectQuestion = await prisma.answer.update({
+          where: {
+            id: answer.id,
+          },
+          data: {
+            questions: {
+              create: {
+                question: {
+                  connect: { id: question.id },
                 },
               },
             },
-          });
-        }
-      });
+          },
+        });
+      }
     });
 
-    for (i = 1; i <= 2; i++) {
+    for (i = 1; i <= 3; i++) {
       //Find questions for quiz for a specific question type
       const relevantQuestions = await prisma.question.findMany({
         where: {
@@ -176,7 +141,7 @@ async function main() {
       const potentialAnswers = await prisma.answer.findMany({
         where: {
           questions: {
-            every: {
+            some: {
               question: {
                 questionType: i,
                 quizes: {
@@ -189,6 +154,7 @@ async function main() {
           },
         },
       });
+      console.log("potentialAnswers", potentialAnswers);
 
       //Connect questions and answers
       relevantQuestions.forEach((question) => {
