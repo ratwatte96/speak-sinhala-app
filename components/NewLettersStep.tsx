@@ -20,10 +20,10 @@ export const NewLettersStep: React.FC<NewLettersStepProps> = ({
       {data.map(({ sound, sinhala, englishWord }, i) => (
         <div key={i} className="flex mt-4">
           <AudioPlayer
-            // audioPath={`/audioClips/${sound}.mp3`}
-            audioPath={`/audioClips/imFine.mp3`}
+            audioPath={`/audioClips/${sound}.mp3`}
             display_text={sinhala}
             onClick={() => {}}
+            additionalClasses={"text-skin-muted border-skin-base border-b-4"}
           />
           <div className="ml-4 min-h-28 flex flex-col justify-center">
             <p>{sound}</p>

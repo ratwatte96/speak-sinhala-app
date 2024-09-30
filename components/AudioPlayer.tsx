@@ -27,7 +27,22 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
   const [src, setSrc] = useState<string | null>(null); // Hold the fetched audio src URL
+  const [isPressed, setIsPressed] = useState(false);
 
+  // Event handler for when the mouse button is pressed down
+  const handleMouseDown = () => {
+    setIsPressed(true);
+  };
+
+  // Event handler for when the mouse button is released
+  const handleMouseUp = () => {
+    setIsPressed(false);
+  };
+
+  // Event handler for when the mouse leaves the button (in case the user moves the cursor away while clicking)
+  const handleMouseLeave = () => {
+    setIsPressed(false);
+  };
   useEffect(() => {
     const fetchAudioUrl = async () => {
       try {
@@ -84,8 +99,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   return (
     <>
       <button
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
         className={
-          "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28" +
+          isPressed
+            ? "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28"
+            : "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28" +
           " " +
           additionalClasses
         }
