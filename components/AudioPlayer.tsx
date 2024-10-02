@@ -47,9 +47,19 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   useEffect(() => {
     const fetchAudioUrl = async () => {
       try {
-        const response = await fetch(
-          `/api/audio?path=${encodeURIComponent(audioPath)}`
-        );
+        let response;
+        if (process.env.NODE_ENV === "development") {
+          response = await fetch(
+            `/api/audio?path=${encodeURIComponent(audioPath)}`
+          );
+        } else {
+          response = await fetch(
+            `${
+              process.env.NEXT_PUBLIC_API_URL
+            }/api/audio?path=${encodeURIComponent(audioPath)}`
+          );
+        }
+
         if (response.ok) {
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
