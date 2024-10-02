@@ -66,9 +66,9 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
         <h2 className="text-2xl font-bold mb-4">
           Congratulations! You&apos;ve completed the quiz.
         </h2>
-        <Link href="/">
+        {/* <Link href="/">
           <Button buttonLabel="Back to Home" callback={() => null} />
-        </Link>
+        </Link> */}
       </div>
     );
   }

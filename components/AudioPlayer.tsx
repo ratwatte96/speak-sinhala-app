@@ -24,6 +24,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   disabledOveride = false,
   isButtonNoAudio = false,
 }) => {
+  console.log(audioPath, "isButtonNoAudio", isButtonNoAudio);
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
   const [src, setSrc] = useState<string | null>(null); // Hold the fetched audio src URL
@@ -64,13 +65,21 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     fetchAudioUrl();
   }, [audioPath]);
 
+  const onEndCombined = () => {
+    if (onEnd) onEnd();
+    setPlaying(false);
+  };
+
   useEffect(() => {
     if (!src) return;
 
     const newSound = new Howl({
       src: [src],
       html5: true, // Enable HTML5 for better mobile support
-      onend: onEnd,
+      onend: onEndCombined,
+      onplay: () => setPlaying(true),
+      onpause: () => setPlaying(false),
+      onstop: () => setPlaying(false),
     });
 
     setSound(newSound);
@@ -106,8 +115,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           isPressed
             ? "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28"
             : "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28" +
-          " " +
-          additionalClasses
+              " " +
+              additionalClasses
         }
         onClick={togglePlay}
         disabled={!sound || disabledOveride}
