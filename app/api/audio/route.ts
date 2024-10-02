@@ -4,8 +4,9 @@ import fs from "fs";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
+  console.log("url", url);
   const audioPath = url.searchParams.get("path");
-
+  console.log("path", audioPath);
   if (!audioPath) {
     return NextResponse.json(
       { error: "No audio path provided" },
