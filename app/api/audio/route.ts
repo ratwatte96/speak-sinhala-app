@@ -4,9 +4,8 @@ import fs from "fs";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  console.log("url", url);
   const audioPath = url.searchParams.get("path");
-  console.log("path", audioPath);
+
   if (!audioPath) {
     return NextResponse.json(
       { error: "No audio path provided" },
@@ -16,18 +15,21 @@ export async function GET(req: Request) {
 
   // Construct the file path inside the public directory
   const filePath = path.join(process.cwd(), "public", audioPath);
+  console.log("filePath", filePath);
 
   try {
     const fileStat = fs.statSync(filePath);
+    console.log("fileStat", fileStat);
 
     // Stream the file if it exists
     const headers = new Headers();
     headers.append("Content-Type", "audio/mpeg");
     headers.append("Content-Length", fileStat.size.toString());
-
+    console.log("headers", headers);
     const fileStream: any = fs.createReadStream(filePath);
     return new NextResponse(fileStream, { headers });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: "File not found" }, { status: 404 });
   }
 }
