@@ -121,8 +121,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         onMouseLeave={handleMouseLeave}
         className={
           isPressed
-            ? "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28"
-            : "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28" +
+            ? "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28"
+            : "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28" +
               " " +
               additionalClasses
         }
@@ -132,9 +132,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         {display_text ? (
           <>
             {display_text}
-            <div className="flex justify-end">
-              <span className="text-base ml-1 text-skin-accent">&#x1F50A;</span>
-            </div>
+            {!isButtonNoAudio && (
+              <div className="flex justify-end">
+                <span className="text-base ml-1 text-skin-accent">
+                  &#x1F50A;
+                </span>
+              </div>
+            )}
           </>
         ) : (
           <span className="ml-1 text-skin-accent"> &#x1F50A;</span>

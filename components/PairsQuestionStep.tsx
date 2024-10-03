@@ -100,6 +100,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   return (
     <>
       <div className="flex flex-col items-start w-80">
+        {isHard && <p className="text-skin-accent">Hard!!!</p>}
         <p>
           Tap the matching pairs. (You lose a heart each time you get two
           guesses wrong.)

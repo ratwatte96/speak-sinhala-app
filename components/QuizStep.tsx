@@ -105,13 +105,13 @@ export const QuizStep: React.FC<QuizStepProps> = ({
             onMouseEnter={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
             className="hover:text-skin-accent cursor-pointer text-skin-base text-5xl mb-4 relative"
-          >
+            >
             {isNew && visible && (
               <span className="absolute top-3/4 left-full z-10 rounded-md border border-solid border-white px-3 py-1 text-base text-white shadow-lg bg-skin-base">
-                {correctAnswer}
+              {correctAnswer}
               </span>
-            )}
-          </div> */}
+              )}
+              </div> */}
         {additonal_information && (
           <div className="flex flex-col w-80">
             <h3>Additional Context:</h3>
@@ -123,6 +123,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
       </div>
 
       <div className="flex flex-col items-start w-80">
+        {isHard && <p className="text-skin-accent">Hard!!!</p>}
         <p>
           {questionType === 1
             ? "Choose the corresponding english word and click confirm"
