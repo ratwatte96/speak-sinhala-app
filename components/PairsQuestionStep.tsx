@@ -109,8 +109,8 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
             {pairs.map(({ id, sinhala, sound }) => (
               <div key={id}>
                 <AudioPlayer
-                  // audioPath={`/audioClips/${sound}.mp3`}
-                  audioPath={`/audioClips/imFine.mp3`}
+                  audioPath={`/audioClips/${sound}.mp3`}
+                  // audioPath={`/audioClips/imFine.mp3`}
                   onEnd={handleAudioEnd}
                   display_text={sinhala}
                   onClick={() => {
@@ -159,11 +159,11 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
             completePairs.current = [];
           }}
           className={`w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1 ${
-            completePairs.current.length !== 5
+            completePairs.current.length !== pairs.length
               ? "text-skin-muted border-skin-base bg-skin-disabled"
               : ""
           }`}
-          disabled={completePairs.current.length !== 5}
+          disabled={completePairs.current.length !== pairs.length}
         >
           Next
         </button>

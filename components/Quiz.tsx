@@ -22,7 +22,6 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
 
   useEffect(() => {
     if (lives === 0) {
-      console.log("Quiz lives", lives);
       setQuizFailed(true);
     }
   }, [lives]);

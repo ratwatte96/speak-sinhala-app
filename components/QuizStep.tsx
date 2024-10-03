@@ -44,7 +44,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   questionType = 1,
   specific_note,
   isNew = false,
-  isHard = false,
+  isHard,
 }) => {
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");

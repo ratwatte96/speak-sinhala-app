@@ -59,13 +59,13 @@ function convertNewLetterData(data: any): NewLetterData[] {
 
 function orderSteps(order: any, data: any): any {
   let orderedSteps: any = [];
-
   order.map(({ questionId, isHard }: any) => {
-    let orderedElement = data.find(
+    const orderedElement = data.find(
       (element: any) => element.questionId === questionId
     );
-    orderedElement.content.isHard = isHard;
-    orderedSteps.push(orderedElement);
+    let clone = structuredClone(orderedElement);
+    clone.content.isHard = isHard;
+    orderedSteps.push(clone);
   });
   return orderedSteps;
 }

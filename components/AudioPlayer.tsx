@@ -24,7 +24,6 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   disabledOveride = false,
   isButtonNoAudio = false,
 }) => {
-  console.log(audioPath, "isButtonNoAudio", isButtonNoAudio);
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
   const [src, setSrc] = useState<string | null>(null); // Hold the fetched audio src URL
@@ -94,7 +93,6 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     setSound(newSound);
     if (playOnLoad) {
-      console.log(playOnLoad);
       newSound.play();
     }
     return () => {
