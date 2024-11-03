@@ -41,6 +41,7 @@ model Quiz {
   quiz_name   String
   questions   QuestionsOnQuizes[]
   newLetterDatas   NewLetterDatasOnQuizes[]
+  pairs PairsOnQuizes[]
   sinhala String?
   audio String?
   lessonContent Json?
@@ -86,6 +87,15 @@ model QuestionsOnQuizes {
   @@id([questionId, quizId])
 }
 
+model PairsOnQuizes {
+  pair  Pair   @relation(fields: [pairId], references: [id])
+  pairId  Int 
+  quiz     Quiz     @relation(fields: [quizId], references: [id])
+  quizId   Int
+
+  @@id([pairId, quizId])
+}
+
 model Answer {
   id    Int    @id @default(autoincrement())
   questions AnswersOnQuestions[]
@@ -110,6 +120,7 @@ model Pair {
   sinhala  String?
   sound String?
   questions PairsOnQuestions[]
+  quizes PairsOnQuizes[]
 }
 
 model PairsOnQuestions {
