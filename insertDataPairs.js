@@ -3,12 +3,12 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const quizQuestion = "Lesson 1";
+  const quizQuestion = "New Rule: Word pronunciation";
   const data = [
-    ["ga", "ග"],
-    ["sa", "ස"],
-    ["ma", "ම"],
-    ["ta", "ත"],
+    ["gasuh", "ගස"],
+    ["mamuh", "මම"],
+    ["masuh", "මස"],
+    ["gamuh", "ගම"],
   ];
 
   try {
@@ -49,7 +49,19 @@ async function main() {
           data: {
             sinhala: element[1],
             sound: element[0],
+            english: element[0],
           },
+          include: {
+            quizes: true,
+          },
+        });
+      }
+
+      const connectQuiz = await prisma.pair.update({
+        where: {
+          id: pair.id,
+        },
+        data: {
           quizes: {
             create: {
               quiz: {
@@ -57,23 +69,8 @@ async function main() {
               },
             },
           },
-        });
-      } else {
-        const connectQuiz = await prisma.pair.update({
-          where: {
-            id: pair.id,
-          },
-          data: {
-            quizes: {
-              create: {
-                quiz: {
-                  connect: { id: quiz.id },
-                },
-              },
-            },
-          },
-        });
-      }
+        },
+      });
     });
   } catch (error) {
     console.error("Error creating user:", error);
