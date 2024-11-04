@@ -2,53 +2,6 @@ import Quiz from "@/components/Quiz";
 import { NewLetterData, Step } from "@/components/Step";
 import prisma from "@/lib/prisma";
 
-function convertQuizDataToQuestionType(data: any): Step[] {
-  return data.flatMap((item: any) =>
-    item.questions.map((q: any) => {
-      if (q.question.questionType === 4) {
-        const pairs = q.question.pairs.map((pair: any) => ({
-          id: pair.pair.id,
-          sinhala: pair.pair.sinhala,
-          sound: pair.pair.sound,
-        }));
-
-        return {
-          questionId: q.questionId,
-          type: "question",
-          content: {
-            questionType: q.question.questionType,
-            pairs: pairs,
-            sounds: pairs
-              .map((pair: any) => pair.sound)
-              .sort((a: any, b: any) => 0.5 - Math.random()),
-            isHard: false,
-          },
-        };
-      } else {
-        return {
-          questionId: q.questionId,
-          type: "question",
-          content: {
-            question_word: q.question.question_word,
-            additonal_information: q.question.additonal_information,
-            correctAnswer: q.question.correctAnswer,
-            questionType: q.question.questionType,
-            answers: q.question.answers.map((a: any) => ({
-              id: a.answer.id,
-              buttonLabel: a.answer.buttonLabel,
-              value: a.answer.value,
-              audio: a.answer.audio,
-            })),
-            audio: q.question.audio,
-            specific_note: q.question.specific_note,
-            isHard: false,
-          },
-        };
-      }
-    })
-  );
-}
-
 function convertNewLetterData(data: any): NewLetterData[] {
   return data.map((item: any) => ({
     sound: item.newLetterData.sound,
@@ -57,25 +10,78 @@ function convertNewLetterData(data: any): NewLetterData[] {
   }));
 }
 
-function orderSteps(order: any, data: any): any {
-  let orderedSteps: any = [];
-  order.map(({ questionId, isHard }: any) => {
-    const orderedElement = data.find(
-      (element: any) => element.questionId === questionId
-    );
-    let clone = structuredClone(orderedElement);
-    clone.content.isHard = isHard;
-    orderedSteps.push(clone);
-  });
-  return orderedSteps;
-}
+function createSteps(order: any, pairData: any): any {
+  let steps: any = [];
+  const pairs = order.pairs;
+  const mappedPairData = pairData.pairs.map((pair: any) => ({
+    id: pair.pair.id,
+    sinhala: pair.pair.sinhala,
+    sound: pair.pair.sound,
+    english: pair.pair.english,
+  }));
+  const englishAnswers = pairData.pairs.map((pair: any) => ({
+    id: pair.pair.id,
+    buttonLabel: pair.pair.english,
+    value: pair.pair.english,
+    audio: pair.pair.sound,
+  }));
+  const sinhalaAnswers = pairData.pairs.map((pair: any) => ({
+    id: pair.pair.id,
+    buttonLabel: pair.pair.sinhala,
+    value: pair.pair.sinhala,
+    audio: pair.pair.sound,
+  }));
 
-function shuffleArray<T>(array: T[]): T[] {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+  order.pairOrder.map(({ isHard, newLetter, questionType }: any) => {
+    let newQuestion: any;
+    const selectedPair = mappedPairData.find(
+      (pair: any) => pair.english == pairs[newLetter - 1]
+    );
+
+    if (questionType === 4) {
+      newQuestion = {
+        questionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, //Unique id
+        type: "question",
+        content: {
+          questionType: questionType,
+          pairs: mappedPairData,
+          sounds: mappedPairData
+            .map((pair: any) => pair.sound)
+            .sort((a: any, b: any) => 0.5 - Math.random()),
+          isHard: isHard,
+        },
+      };
+    } else {
+      newQuestion = {
+        questionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: "question",
+        content: {
+          question_word:
+            questionType === 3 || questionType === 2
+              ? selectedPair.english
+              : selectedPair.sinhala,
+          additonal_information: selectedPair?.additonal_information,
+          correctAnswer:
+            questionType === 3 || questionType === 2
+              ? selectedPair.sinhala
+              : selectedPair.english,
+          questionType: questionType,
+          answers:
+            questionType === 3 || questionType === 2
+              ? sinhalaAnswers
+              : englishAnswers,
+          audio: selectedPair.sound,
+          specific_note: selectedPair.specific_note,
+          isHard: isHard,
+        },
+      };
+    }
+    //! if isHard isn't working look here
+    // let clone = structuredClone(orderedElement);
+    // clone.content.isHard = isHard;
+    steps.push(newQuestion);
+  });
+  return steps;
 }
 
 export default async function QuizPage({ params }: { params: { id: string } }) {
@@ -102,18 +108,9 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
       id: parseInt(id),
     },
     include: {
-      questions: {
+      pairs: {
         include: {
-          question: {
-            include: {
-              answers: {
-                include: {
-                  answer: true,
-                },
-              },
-              pairs: { include: { pair: true } },
-            },
-          },
+          pair: true,
         },
       },
       newLetterDatas: {
@@ -124,41 +121,27 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     },
   });
 
-  quizItemsData.forEach((quizItem) => {
-    quizItem.questions.forEach((question) => {
-      if (question.question.questionType !== 4) {
-        question.question.answers = shuffleArray(question.question.answers);
-      }
-    });
-  });
-
-  const questionSteps = convertQuizDataToQuestionType(quizItemsData);
-
-  const orderedSteps = orderSteps(quizData?.order, questionSteps);
+  const quizSteps = createSteps(quizData?.order, quizItemsData[0]);
 
   if (quizItemsData[0].newLetterDatas) {
     const newLetterStepData = convertNewLetterData(
       quizItemsData[0].newLetterDatas
     );
-    orderedSteps.unshift({
+    quizSteps.unshift({
       type: "newLetterData",
       content: newLetterStepData,
     });
   }
 
   if (quizData?.lessonContent) {
-    orderedSteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
+    quizSteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
   }
 
   const quizQuestion = quizData!.quiz_name ?? "";
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <Quiz
-        steps={orderedSteps}
-        startingLives={lives}
-        quiz_title={quizQuestion}
-      />
+      <Quiz steps={quizSteps} startingLives={lives} quiz_title={quizQuestion} />
     </main>
   );
 }
