@@ -3,30 +3,12 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const quizQuestion = "Test for 5 pairs questions";
+  const quizQuestion = "Lesson 1";
   const data = [
-    {
-      question_word: `${quizQuestion}1`,
-      pairs: [
-        ["pa", "ප"],
-        ["ta", "ත"],
-        ["ma", "ම"],
-        ["ba", "බ"],
-        ["tha", "ථ"],
-      ],
-    },
-
-    {
-      question_word: `${quizQuestion}2`,
-      pairs: [
-        ["u", "උ"],
-        ["o", "ො"],
-        ["i", "ි"],
-        ["ba", "බ"],
-        ["tha", "ථ"],
-      ],
-    },
-    ,
+    ["ga", "ග"],
+    ["sa", "ස"],
+    ["ma", "ම"],
+    ["ta", "ත"],
   ];
 
   try {
@@ -39,7 +21,7 @@ async function main() {
       },
     });
     let quiz = existingQuizes[0];
-    console.log("quiz", quiz);
+
     if (!quiz) {
       quiz = await prisma.quiz.create({
         data: {
@@ -48,37 +30,38 @@ async function main() {
       });
     }
 
-    // Create question and pairs related to question
-    data.forEach(async (item) => {
-      const existingQuestions = await prisma.question.findMany({
+    //Find or create Pairs and connect quiz
+    data.forEach(async (element, i) => {
+      const existingPairs = await prisma.pair.findMany({
         where: {
-          question_word: {
-            equals: item.question_word,
+          sinhala: {
+            equals: element[1],
           },
-        },
-        include: {
-          quizes: true,
+          sound: {
+            equals: element[0],
+          },
         },
       });
+      let pair = existingPairs[0];
 
-      let newQuestion = existingQuestions[0];
-      console.log(newQuestion);
-      if (!newQuestion) {
-        newQuestion = await prisma.question.create({
+      if (!pair) {
+        pair = await prisma.pair.create({
           data: {
-            question_word: item.question_word,
-            questionType: 4,
+            sinhala: element[1],
+            sound: element[0],
           },
-          include: {
-            quizes: true,
+          quizes: {
+            create: {
+              quiz: {
+                connect: { id: quiz.id },
+              },
+            },
           },
         });
-      }
-
-      if (newQuestion.quizes.length === 0) {
-        const connectQuiz = await prisma.question.update({
+      } else {
+        const connectQuiz = await prisma.pair.update({
           where: {
-            id: newQuestion.id,
+            id: pair.id,
           },
           data: {
             quizes: {
@@ -91,58 +74,6 @@ async function main() {
           },
         });
       }
-
-      item.pairs.forEach(async (element, i) => {
-        const existingPairs = await prisma.pair.findMany({
-          where: {
-            sinhala: {
-              equals: element[1],
-            },
-            sound: {
-              equals: element[0],
-            },
-          },
-          include: {
-            questions: true,
-          },
-        });
-        let pair = existingPairs[0];
-
-        if (!pair) {
-          pair = await prisma.pair.create({
-            data: {
-              sinhala: element[1],
-              sound: element[0],
-            },
-            include: {
-              questions: true,
-            },
-          });
-        }
-
-        if (
-          !pair.questions.some(
-            (question) => question.questionId === newQuestion.id
-          )
-        ) {
-          console.log("pair", pair, new Date().toString());
-          console.log("newQuestion", newQuestion, new Date().toString());
-          const connectQuestion = await prisma.pair.update({
-            where: {
-              id: pair.id,
-            },
-            data: {
-              questions: {
-                create: {
-                  question: {
-                    connect: { id: newQuestion.id },
-                  },
-                },
-              },
-            },
-          });
-        }
-      });
     });
   } catch (error) {
     console.error("Error creating user:", error);
