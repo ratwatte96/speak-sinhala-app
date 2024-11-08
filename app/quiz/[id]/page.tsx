@@ -10,6 +10,52 @@ function convertNewLetterData(data: any): NewLetterData[] {
   }));
 }
 
+function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
+  let answers = isSinhala
+    ? pairsData.pairs
+        .sort((a: any, b: any) => 0.5 - Math.random())
+        .map((pair: any) => ({
+          id: pair.pair.id,
+          buttonLabel: pair.pair.sinhala,
+          value: pair.pair.sinhala,
+          audio: pair.pair.sound,
+        }))
+        .slice(0, 4)
+    : pairsData.pairs
+        .sort((a: any, b: any) => 0.5 - Math.random())
+        .map((pair: any) => ({
+          id: pair.pair.id,
+          buttonLabel: pair.pair.english,
+          value: pair.pair.english,
+          audio: pair.pair.sound,
+        }))
+        .slice(0, 4);
+
+  if (!answers.find((answer: any) => answer.audio === selectedPair.sound)) {
+    answers = isSinhala
+      ? [
+          ...answers.slice(1),
+          {
+            id: selectedPair.id,
+            buttonLabel: selectedPair.sinhala,
+            value: selectedPair.sinhala,
+            audio: selectedPair.sound,
+          },
+        ]
+      : [
+          ...answers.slice(1),
+          {
+            id: selectedPair.id,
+            buttonLabel: selectedPair.english,
+            value: selectedPair.english,
+            audio: selectedPair.sound,
+          },
+        ];
+  }
+
+  return answers;
+}
+
 function createSteps(order: any, pairData: any): any {
   let steps: any = [];
   const pairs = order.pairs;
@@ -19,18 +65,6 @@ function createSteps(order: any, pairData: any): any {
     sound: pair.pair.sound,
     english: pair.pair.english,
   }));
-  const englishAnswers = pairData.pairs.map((pair: any) => ({
-    id: pair.pair.id,
-    buttonLabel: pair.pair.english,
-    value: pair.pair.english,
-    audio: pair.pair.sound,
-  }));
-  const sinhalaAnswers = pairData.pairs.map((pair: any) => ({
-    id: pair.pair.id,
-    buttonLabel: pair.pair.sinhala,
-    value: pair.pair.sinhala,
-    audio: pair.pair.sound,
-  }));
 
   order.pairOrder.map(({ isHard, newLetter, questionType }: any) => {
     let newQuestion: any;
@@ -39,19 +73,27 @@ function createSteps(order: any, pairData: any): any {
     );
 
     if (questionType === 4) {
+      const randomisedPairs = mappedPairData
+        .sort((a: any, b: any) => 0.5 - Math.random())
+        .slice(0, 4);
       newQuestion = {
         questionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, //Unique id
         type: "question",
         content: {
           questionType: questionType,
-          pairs: mappedPairData,
-          sounds: mappedPairData
+          pairs: randomisedPairs,
+          sounds: randomisedPairs
             .map((pair: any) => pair.sound)
             .sort((a: any, b: any) => 0.5 - Math.random()),
           isHard: isHard,
         },
       };
     } else {
+      const answers =
+        questionType === 3 || questionType === 2
+          ? getAnswers(pairData, selectedPair, true)
+          : getAnswers(pairData, selectedPair, false);
+
       newQuestion = {
         questionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: "question",
@@ -66,10 +108,7 @@ function createSteps(order: any, pairData: any): any {
               ? selectedPair.sinhala
               : selectedPair.english,
           questionType: questionType,
-          answers:
-            questionType === 3 || questionType === 2
-              ? sinhalaAnswers
-              : englishAnswers,
+          answers: answers,
           audio: selectedPair.sound,
           specific_note: selectedPair.specific_note,
           isHard: isHard,
