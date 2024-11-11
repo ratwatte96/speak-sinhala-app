@@ -23,10 +23,11 @@ export interface QuizData {
   specific_note?: string;
   isNew?: boolean;
   isHard: boolean;
+  isMistake: boolean;
 }
 
 export interface QuizStepProps extends QuizData {
-  nextStep: () => void;
+  nextStep: (isMistake: boolean) => void;
   updateLives: () => void;
   lives: number;
   isHard: boolean;
@@ -45,6 +46,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   specific_note,
   isNew = false,
   isHard,
+  isMistake,
 }) => {
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
@@ -63,11 +65,11 @@ export const QuizStep: React.FC<QuizStepProps> = ({
       if (specific_note) {
         setShowModal(true);
       } else {
-        nextStep();
+        nextStep(false);
       }
     } else {
       updateLives();
-      if (lives - 1 === 0) nextStep();
+      nextStep(true);
       toastMessageRef.current = "Incorrect";
       toastTypeRef.current = "Incorrect";
     }
@@ -91,6 +93,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     <div className="flex flex-col items-center">
       <div className="flex flex-col justify-center items-center my-4">
         {isNew && <p>New!!!</p>}
+        {isMistake && <p>Previous Mistake!!!</p>}
         {(questionType === 3 || isNew) && audio ? (
           <AudioPlayer
             audioPath={`/audioClips/${audio}.mp3`}
@@ -198,7 +201,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
           show={showModal}
           onClose={() => {
             setShowModal(false);
-            nextStep();
+            nextStep(false);
           }}
           heading={"Note"}
         >

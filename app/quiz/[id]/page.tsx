@@ -86,6 +86,7 @@ function createSteps(order: any, pairData: any): any {
             .map((pair: any) => pair.sound)
             .sort((a: any, b: any) => 0.5 - Math.random()),
           isHard: isHard,
+          isMistake: false,
         },
       };
     } else {
@@ -112,6 +113,7 @@ function createSteps(order: any, pairData: any): any {
           audio: selectedPair.sound,
           specific_note: selectedPair.specific_note,
           isHard: isHard,
+          isMistake: false,
         },
       };
     }

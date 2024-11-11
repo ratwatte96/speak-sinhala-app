@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "./Button";
 import Link from "next/link";
-import { QuizData, QuizStep } from "./QuizStep";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { Step } from "./Step";
@@ -19,6 +18,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
   const [lives, setLives] = useState(startingLives);
+  const [mistakeCount, setMistakeCount] = useState(0);
 
   useEffect(() => {
     if (lives === 0) {
@@ -26,12 +26,25 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
     }
   }, [lives]);
 
-  const nextStep = () => {
+  const nextStep = (isMistake: boolean) => {
+    console.log("steps?.length", steps?.length);
     if (lives === 0) {
       setQuizFailed(true);
     } else if (steps !== undefined && currentStep === steps.length - 1) {
       setQuizCompleted(true);
     } else {
+      if (isMistake) {
+        setMistakeCount(mistakeCount + 1);
+        if (mistakeCount !== 3) {
+          console.log("mistakeCount", mistakeCount);
+          const mistakeStep =
+            steps !== undefined ? steps[currentStep] : ({} as Step);
+          let clone: Step = structuredClone(mistakeStep);
+          if (clone.type === "question" && "isMistake" in clone.content)
+            clone.content.isMistake = true;
+          steps?.push(clone);
+        }
+      }
       setCurrentStep((prevStep) => prevStep + 1);
     }
   };

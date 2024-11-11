@@ -5,7 +5,7 @@ import { AudioPlayer } from "./AudioPlayer";
 import Toast, { ToastType } from "./Toast";
 
 interface PairsQuestionStepProps {
-  nextStep: () => void;
+  nextStep: (isMistake: boolean) => void;
   pairs: any[];
   sounds: string[];
   updateLives: () => void;
@@ -156,7 +156,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
         <button
           key="confirm-button"
           onClick={() => {
-            nextStep();
+            nextStep(false);
             completePairs.current = [];
           }}
           className={`w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1 ${

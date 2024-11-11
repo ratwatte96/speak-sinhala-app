@@ -28,7 +28,7 @@ export interface NewLetterData {
 
 export interface StepProps {
   step: Step;
-  nextStep: () => void;
+  nextStep: (isMistake: boolean) => void;
   updateLives: () => void;
   lives: number;
 }
@@ -56,6 +56,7 @@ export const Step: React.FC<StepProps> = ({
           additonal_information={step.content.additonal_information}
           isHard={step.content.isHard}
           audio={step.content.audio}
+          isMistake={step.content.isMistake}
         />
       ) : step.type === "question" && "pairs" in step.content ? (
         <PairsQuestionStep

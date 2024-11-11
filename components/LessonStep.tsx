@@ -1,5 +1,5 @@
 interface LessonStepProps {
-  nextStep: () => void;
+  nextStep: (isMistake: boolean) => void;
 }
 
 export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
@@ -82,7 +82,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
       <div className="flex justify-center">
         <button
           key="confirm-button"
-          onClick={() => nextStep()}
+          onClick={() => nextStep(false)}
           className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
         >
           Start Quiz
