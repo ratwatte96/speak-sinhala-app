@@ -51,7 +51,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
           updateLives();
           wrongGuessCount.current = 0;
         }
-        toastMessageRef.current = "Incorrect";
+        toastMessageRef.current = `Incorrect! Correct Answer: ${correctPair.sinhala} `;
         toastTypeRef.current = "Incorrect";
       }
     } else {
@@ -71,7 +71,8 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
           updateLives();
           wrongGuessCount.current = 0;
         }
-        toastMessageRef.current = "Incorrect";
+        toastMessageRef.current = `Incorrect! Correct Answer: ${correctPair.english} `;
+
         toastTypeRef.current = "Incorrect";
       }
     }

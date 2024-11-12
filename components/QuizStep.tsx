@@ -70,7 +70,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     } else {
       updateLives();
       nextStep(true);
-      toastMessageRef.current = "Incorrect";
+      toastMessageRef.current = `Incorrect! Correct Answer: ${correctAnswer} `;
       toastTypeRef.current = "Incorrect";
     }
     setToastMessage(toastMessageRef.current);
