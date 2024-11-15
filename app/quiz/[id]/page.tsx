@@ -66,13 +66,41 @@ function createSteps(order: any, pairData: any): any {
     english: pair.pair.english,
   }));
 
-  order.pairOrder.map(({ isHard, newLetter, questionType }: any) => {
+  order.pairOrder.map(({ isHard, isNew, newLetter, questionType }: any) => {
     let newQuestion: any;
     const selectedPair = mappedPairData.find(
-      (pair: any) => pair.english == pairs[newLetter - 1]
+      (pair: any) => pair.sound == pairs[newLetter - 1]
     );
 
-    if (questionType === 4) {
+    if (questionType === 5) {
+      const answers =
+        questionType === 3 || questionType === 2
+          ? getAnswers(pairData, selectedPair, true)
+          : getAnswers(pairData, selectedPair, false);
+
+      newQuestion = {
+        questionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: "question",
+        content: {
+          question_word:
+            questionType === 3 || questionType === 2
+              ? selectedPair.english
+              : selectedPair.sinhala,
+          additonal_information: selectedPair?.additonal_information,
+          correctAnswer:
+            questionType === 3 || questionType === 2
+              ? selectedPair.sinhala
+              : selectedPair.english,
+          questionType: questionType,
+          answers: answers,
+          audio: selectedPair.sound,
+          specific_note: selectedPair.specific_note,
+          isHard: isHard,
+          isNew: isNew,
+          isMistake: false,
+        },
+      };
+    } else if (questionType === 4 || questionType === 6) {
       const randomisedPairs = mappedPairData
         .sort((a: any, b: any) => 0.5 - Math.random())
         .slice(0, 4);
@@ -82,10 +110,9 @@ function createSteps(order: any, pairData: any): any {
         content: {
           questionType: questionType,
           pairs: randomisedPairs,
-          sounds: randomisedPairs
-            .map((pair: any) => pair.sound)
-            .sort((a: any, b: any) => 0.5 - Math.random()),
+          sounds: randomisedPairs.sort((a: any, b: any) => 0.5 - Math.random()),
           isHard: isHard,
+          isNew: isNew,
           isMistake: false,
         },
       };
@@ -113,6 +140,7 @@ function createSteps(order: any, pairData: any): any {
           audio: selectedPair.sound,
           specific_note: selectedPair.specific_note,
           isHard: isHard,
+          isNew: isNew,
           isMistake: false,
         },
       };

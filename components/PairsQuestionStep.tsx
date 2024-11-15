@@ -7,9 +7,10 @@ import Toast, { ToastType } from "./Toast";
 interface PairsQuestionStepProps {
   nextStep: (isMistake: boolean) => void;
   pairs: any[];
-  sounds: string[];
+  sounds: any[];
   updateLives: () => void;
   isHard?: boolean;
+  questionType: number;
 }
 
 export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
@@ -18,6 +19,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   sounds,
   updateLives,
   isHard,
+  questionType,
 }) => {
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
@@ -111,7 +113,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
             {pairs.map(({ id, sinhala, sound }) => (
               <div key={id}>
                 <AudioPlayer
-                  audioPath={`/audioClips/${sound}.mp3`}
+                  audioPath={`/audioClips/sa.mp3`}
                   // audioPath={`/audioClips/imFine.mp3`}
                   onEnd={handleAudioEnd}
                   display_text={sinhala}
@@ -128,28 +130,30 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                   }
                   disabledOveride={completePairs.current.includes(sound)}
                   isButtonNoAudio={isHard}
+                  isHard={isHard}
+                  extra_text={questionType === 6 ? sound : ""}
                 />
               </div>
             ))}
           </div>
           <div>
-            {sounds.map((sound, i) => (
+            {sounds.map((pair, i) => (
               <button
                 key={i}
                 onClick={() => {
-                  selectSound(sound);
-                  checkPair(sound, "sound");
+                  selectSound(pair.sound);
+                  checkPair(pair.sound, "sound");
                 }}
                 className={`rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28 ${
-                  completePairs.current.includes(sound)
+                  completePairs.current.includes(pair.sound)
                     ? "text-skin-muted border-skin-base border-b-4 bg-skin-disabled"
-                    : selectedSound === sound
+                    : selectedSound === pair.sound
                     ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
                     : "text-skin-muted border-skin-base border-b-4"
                 }`}
-                disabled={completePairs.current.includes(sound)}
+                disabled={completePairs.current.includes(pair.sound)}
               >
-                {sound}
+                {questionType === 6 ? pair.english : pair.sound}
               </button>
             ))}
           </div>

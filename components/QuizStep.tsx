@@ -21,7 +21,6 @@ export interface QuizData {
   questionType?: number;
   audio?: string;
   specific_note?: string;
-  isNew?: boolean;
   isHard: boolean;
   isMistake: boolean;
 }
@@ -44,7 +43,6 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   nextStep,
   questionType = 1,
   specific_note,
-  isNew = false,
   isHard,
   isMistake,
 }) => {
@@ -92,14 +90,22 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-col justify-center items-center my-4">
-        {isNew && <p>New!!!</p>}
+        {questionType == 5 && <p>New!!!</p>}
         {isMistake && <p>Previous Mistake!!!</p>}
-        {(questionType === 3 || isNew) && audio ? (
+        {(questionType === 3 || questionType == 5) && audio ? (
           <AudioPlayer
             audioPath={`/audioClips/${audio}.mp3`}
             onEnd={handleAudioEnd}
             playOnLoad={true}
-            display_text={questionType === 3 ? undefined : question_word}
+            display_text={
+              questionType === 3
+                ? undefined
+                : questionType == 5
+                ? audio
+                : question_word
+            }
+            extra_text={questionType == 5 ? question_word : undefined}
+            extraa_text={questionType == 5 ? correctAnswer : undefined}
           />
         ) : (
           <p className="text-skin-base text-5xl mb-4">{question_word}</p>
@@ -164,6 +170,8 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                         : "text-skin-muted border-skin-base border-b-4"
                     }
                     isButtonNoAudio={isHard}
+                    extra_text={answer.audio}
+                    isHard={isHard}
                   />
                 ) : (
                   <button

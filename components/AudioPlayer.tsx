@@ -8,10 +8,13 @@ interface AudioPlayerProps {
   onEnd?: () => void;
   playOnLoad?: boolean;
   display_text?: string;
+  extra_text?: string;
+  extraa_text?: string;
   onClick?: () => void;
   additionalClasses?: string;
   disabledOveride?: boolean;
   isButtonNoAudio?: boolean;
+  isHard?: boolean;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -19,10 +22,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onEnd,
   playOnLoad = false,
   display_text,
+  extra_text,
+  extraa_text,
   onClick,
   additionalClasses,
   disabledOveride = false,
   isButtonNoAudio = false,
+  isHard = false,
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
@@ -121,8 +127,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         onMouseLeave={handleMouseLeave}
         className={
           isPressed
-            ? "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28"
-            : "rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28" +
+            ? "relative rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28"
+            : "relative rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28" +
               " " +
               additionalClasses
         }
@@ -130,16 +136,44 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         disabled={!sound || disabledOveride}
       >
         {display_text ? (
-          <>
-            {display_text}
-            {!isButtonNoAudio && (
-              <div className="flex justify-end">
-                <span className="text-base ml-1 text-skin-accent">
-                  &#x1F50A;
+          extra_text ? (
+            <>
+              <span>{display_text}</span>
+              <div
+                key={display_text}
+                className={"flex flex-col items-center w-full sm:text-base"}
+              >
+                <span>
+                  {extraa_text ?? (
+                    <p className="text-skin-base ">{extraa_text}</p>
+                  )}
                 </span>
+                {extra_text ?? <p className="text-skin-base">{extra_text}</p>}
+                {!isHard && (
+                  <span
+                    className="absolute bottom-0 right-0 pr-1
+                  pb-1"
+                  >
+                    &#x1F50A;
+                  </span>
+                )}
               </div>
-            )}
-          </>
+            </>
+          ) : (
+            <>
+              <span>{display_text}</span>
+              {!isButtonNoAudio && !isHard && (
+                <div className="flex justify-end">
+                  <span
+                    className="text-base absolute bottom-0 right-0 pr-1
+                  pb-1"
+                  >
+                    &#x1F50A;
+                  </span>
+                </div>
+              )}
+            </>
+          )
         ) : (
           <span className="ml-1 text-skin-accent"> &#x1F50A;</span>
         )}
