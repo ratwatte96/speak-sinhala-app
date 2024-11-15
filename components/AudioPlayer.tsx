@@ -109,14 +109,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const togglePlay = () => {
     if (onClick) onClick();
-    if (!isButtonNoAudio) {
-      if (playing) {
-        sound?.pause();
-      } else {
-        sound?.play();
-      }
-      setPlaying(!playing);
-    }
+    // if (!isButtonNoAudio) {
+    //   if (playing) {
+    //     sound?.pause();
+    //   } else {
+    //     sound?.play();
+    //   }
+    //   setPlaying(!playing);
+    // }
   };
 
   return (
@@ -133,7 +133,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
               additionalClasses
         }
         onClick={togglePlay}
-        disabled={!sound || disabledOveride}
+        //! disabled={!sound || disabledOveride} TEMP until we get more sound recordings
+        disabled={disabledOveride}
       >
         {display_text ? (
           extra_text ? (
