@@ -57,6 +57,7 @@ export const Step: React.FC<StepProps> = ({
           isHard={step.content.isHard}
           audio={step.content.audio}
           isMistake={step.content.isMistake}
+          isLetterQuiz={step.content.isLetterQuiz}
         />
       ) : step.type === "question" && "pairs" in step.content ? (
         <PairsQuestionStep

@@ -23,6 +23,7 @@ export interface QuizData {
   specific_note?: string;
   isHard: boolean;
   isMistake: boolean;
+  isLetterQuiz: boolean;
 }
 
 export interface QuizStepProps extends QuizData {
@@ -45,6 +46,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   specific_note,
   isHard,
   isMistake,
+  isLetterQuiz,
 }) => {
   const toastMessageRef = useRef<string | null>("");
   const toastTypeRef = useRef<ToastType>("");
@@ -170,7 +172,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                         : "text-skin-muted border-skin-base border-b-4"
                     }
                     isButtonNoAudio={isHard}
-                    extra_text={answer.audio}
+                    extra_text={!isLetterQuiz ? answer.audio : undefined}
                     isHard={isHard}
                   />
                 ) : (

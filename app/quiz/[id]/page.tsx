@@ -98,6 +98,7 @@ function createSteps(order: any, pairData: any): any {
           isHard: isHard,
           isNew: isNew,
           isMistake: false,
+          isLetterQuiz: order.isLetterQuiz,
         },
       };
     } else if (questionType === 4 || questionType === 6) {
@@ -114,6 +115,7 @@ function createSteps(order: any, pairData: any): any {
           isHard: isHard,
           isNew: isNew,
           isMistake: false,
+          isLetterQuiz: order.isLetterQuiz,
         },
       };
     } else {
@@ -142,6 +144,7 @@ function createSteps(order: any, pairData: any): any {
           isHard: isHard,
           isNew: isNew,
           isMistake: false,
+          isLetterQuiz: order.isLetterQuiz,
         },
       };
     }
