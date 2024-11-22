@@ -22,7 +22,8 @@ export async function GET(req: any) {
       where: {
         id: 1,
       },
-      data: { last_active_time: new Date(), total_lives: 5 },
+      data: { last_active_time: new Date(), total_lives: 100 },
+      //! TEMP CHange data: { last_active_time: new Date(), total_lives: 5 },
     });
   }
 
