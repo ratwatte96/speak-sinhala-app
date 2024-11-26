@@ -5,18 +5,104 @@
     ["issuhraha", "ඉස්සරහ", "in front"],
     ["langa", "ළඟ", "near"],
     //Verbs
-    ["ennuh ", "එන්න​", "come (command)"],
-    ["enuhvā", "අනවා", "come"],
-    ["āvā", "ආවා", "came"],
-    ["ævillā", "ඇවිල්ලා​", "has come"],
-    ["yannuh", "යන්න", "go (command)"],
-    ["yanuhvā ", "යනවා", "go"],
-    ["giyā", "ගියා", "went"],
-    ["gihillā", "ගිහිල්ලා", "has gone"],    
-    ["kannuh", "කන්න", "eat (command)"],
-    ["kanuhvā", "කනවා", "eat"],
-    ["kævā", "කැවා", "ate"],
-    ["kālā", "කාලා", "has eaten"],
+    [
+        ["kannuh", "කන්න", "to eat"],
+        ["kanavā", "කනවා", "eating"],
+        ["kævā", "කෑවා", "ate"],
+        ["kannuhvā", "කන්නවා", "will eat"],
+        ["kæva", "කෑව", "eaten"]
+    ],
+    [
+        ["bonnuh", "බොන්න", "to drink"],
+        ["bonuhvā", "බොනවා", "drinking"],
+        ["bivvā", "බිව්වා", "drank"],
+        ["bonnuhvā", "බොන්නවා", "will drink"],
+        ["bivva", "බිව්ව", "drunk"]
+    ],
+    [
+        ["yannuh", "යන්න", "to go"],
+        ["yanuhvā", "යනවා", "going"],
+        ["giyā", "ගියා", "went"],
+        ["yannuhvā", "යන්නවා", "will go"],
+        ["giya", "ගිය", "gone"]
+    ],
+    [
+        ["ennuh", "එන්න", "to come"],
+        ["enuhvā", "එනවා", "coming"],
+        ["āvā", "ආවා", "came"],
+        ["ennuhvā", "එන්නවා", "will come"],
+        ["ā", "ආ", "come"]
+    ],
+    [
+        ["kuhrannuh", "කරන්න", "to do"],
+        ["kuhruhnuhvā", "කරනවා", "doing"],
+        ["kalā", "කළා", "did"],
+        ["kuhruhnnuhvā", "කරන්නවා", "will do"],
+        ["kaluh", "කළ", "done"]
+    ],
+    [
+        ["dakinnuh", "දකින්න", "to see"],
+        ["dakinuhvā", "දකිනවා", "seeing"],
+        ["dækkā", "දැක්කා", "saw"],
+        ["dakinnuhvā", "දකින්නවා", "will see"],
+        ["dækka", "දැක්ක", "seen"]
+    ],
+    [
+        ["kiyuhwannuh", "කියවන්න", "to read"],
+        ["kiyuhvuhnuhvā", "කියවනවා", "reading"],
+        ["kiyevūvā", "කියෙව්වා", "read (past tense)"],
+        ["kiyuhvannuhvā", "කියවන්නවා", "will read"],
+        ["kiyuhvū", "කියවූ", "read (past participle)"]
+    ],
+    [
+        ["liyannuh", "ලියන්න", "to write"],
+        ["liyuhnuhvā", "ලියනවා", "writing"],
+        ["livvā", "ලිව්වා", "wrote"],
+        ["liyannuhvā", "ලියන්නවා", "will write"],
+        ["livva", "ලිව්ව", "written"]
+    ],
+    [
+        ["nidāgannuh", "නිදාගන්න", "to sleep"],
+        ["nidāgannuhvā", "නිදාගන්නවා", "sleeping"],
+        ["nidāgathtā", "නිදාගත්තා", "slept"],
+        ["nidāgannuhvā", "නිදාගන්නවා", "will sleep"],
+        ["nidāgath", "නිදාගත්", "slept"]
+    ],
+    [
+        ["æhærennuh", "ඇහැරෙන්න", "to wake up"],
+        ["æhærenuhvā", "ඇහැරෙනවා", "waking up"],
+        ["æhærunā", "ඇහැරුණා", "woke up"],
+        ["æhærennuhvā", "ඇහැරෙන්නවා", "will wake up"],
+        ["æhærunuh", "ඇහැරුන", "woken up"]
+    ]
+    [
+        ["vahannuh", "වහන්න", "to close"],
+        ["vahanuhvā", "වහනවා", "closing"],
+        ["vahuvā", "වහුවා", "closed"],
+        ["vahannuhvā", "වහන්නවා", "will close"],
+        ["vahuva", "වහුව", "closed"]
+    ],
+    [
+        ["yavuhnnuh", "යවන්න", "to send"],
+        ["yavuhnuhvā", "යවනවා", "sending"],
+        ["yævvā", "යැව්වා", "sent"],
+        ["yavuhnnuhvā", "යවන්නවා", "will send"],
+        ["yævva", "යැව්ව", "sent"]
+    ],
+    [
+        ["katā kuhrannuh", "කතා කරන්න", "to speak"],
+        ["katā kuhruhnuhvā", "කතා කරනවා", "speaking"],
+        ["katā kalā", "කතා කළා", "spoke"],
+        ["katā kuhruhnnuhvā", "කතා කරන්නවා", "will speak"],
+        ["katā kala", "කතා කළ", "spoken"]
+    ],
+    [
+        ["hamu vennuh", "හමු වෙන්න", "to meet"],
+        ["hamu venuhvā", "හමු වෙනවා", "meeting"],
+        ["hamu vunā", "හමු වුනා", "met"],
+        ["hamu vennuhvā", "හමු වෙන්නවා", "will meet"],
+        ["hamu vū", "හමු වූ", "met"]
+    ]
     //Unit 2
     ["ta", "ත", "ta"],
     ["ṭa", "ට", "ṭa"],
