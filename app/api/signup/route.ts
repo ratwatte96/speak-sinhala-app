@@ -1,7 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
+
+export const sendEmail = async ({ to, subject, text }: any) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail", // Use your email provider
+    auth: {
+      user: process.env.EMAIL_USER, // Set this in .env
+      pass: process.env.EMAIL_PASS, // Set this in .env
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to,
+    subject,
+    text,
+  });
+};
 
 export async function POST(req: any) {
   const { email, password } = await req.json();
@@ -17,26 +36,34 @@ export async function POST(req: any) {
 
   try {
     // Check if the email already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return new Response(JSON.stringify({ error: "Email already taken" }), {
         status: 409,
       });
     }
 
-    // Hash the password with bcrypt
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    // Save the user to the database
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: { email, password: hashedPassword, verificationToken },
+    });
+
+    // Send verification email
+    const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/verify?token=${verificationToken}`;
+    await sendEmail({
+      to: email,
+      subject: "Verify Your Email",
+      text: `Click this link to verify your email: ${verificationUrl}`,
     });
 
     return new Response(
-      JSON.stringify({ message: "User created successfully", user }),
+      JSON.stringify({ message: "User created. Verification email sent." }),
       {
         status: 201,
       }
