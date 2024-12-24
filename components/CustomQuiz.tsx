@@ -33,13 +33,16 @@ export const CustomQuiz: React.FC<CustomQuizProps> = ({ dropDownLetters }) => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex justify-between w-1/4">
       {quizData.length === 0 ? (
         <>
-          <div>{...selectedItems}</div>
           <MultiSelectDropdown
             id="filters"
-            buttonLabel="Choose Letters"
+            buttonLabel={
+              selectedItems.length !== 0
+                ? selectedItems.join(", ")
+                : "Choose Letters"
+            }
             items={dropDownLetters}
             selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
@@ -58,6 +61,7 @@ export const CustomQuiz: React.FC<CustomQuizProps> = ({ dropDownLetters }) => {
           <Quiz
             steps={quizData}
             startingLives={100}
+            // TODO: startingLives={100}
             quiz_title={"Custom Quiz"}
           />
         </>
