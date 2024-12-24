@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 
 interface MultiSelectDropdownProps {
