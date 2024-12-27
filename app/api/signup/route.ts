@@ -93,17 +93,45 @@ export async function POST(req: any) {
 
     // Send verification email
     const verificationUrl = `${process.env.API_URL}/api/verify?token=${verificationToken}`;
+
     await sendEmail({
       to: email,
       subject: "Verify Your Email",
       text: `Click this link to verify your email: ${verificationUrl}`,
     });
 
+    const dailyUserCount = await prisma.user.count({
+      where: {
+        createdAt: {
+          gte: new Date(new Date().setHours(0, 0, 0, 0)), // Count emails from today
+        },
+      },
+    });
+    if (dailyUserCount === 90) {
+      await sendEmail({
+        to: process.env.EMAIL_USER,
+        subject: "Speak Sinhala: Email Limit",
+        text: ``,
+      });
+    }
+
     return new Response(
       JSON.stringify({ message: "User created. Verification email sent." }),
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
+    if (error.responseCode === 452) {
+      console.error("Daily limit reached.");
+      const autoverify = await prisma.user.updateMany({
+        where: { email },
+        data: { isVerified: true },
+      });
+      return new Response(JSON.stringify({ message: "User created." }), {
+        status: 201,
+      });
+    } else {
+      console.error("Error sending email:", error.message);
+    }
     console.error(error);
     return new Response(JSON.stringify({ error: "Something went wrong" }), {
       status: 500,
