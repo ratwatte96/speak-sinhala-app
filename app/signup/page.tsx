@@ -10,8 +10,34 @@ export default function Signup() {
   const handleSignup = async () => {
     setMessage("");
 
+    // Client-side validation
     if (!email || !password) {
       setMessage("Email and password are required");
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setMessage("Please enter a valid email address");
+      return;
+    }
+
+    // Validate password strength
+    if (password.length < 8) {
+      setMessage("Password must be at least 8 characters long");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setMessage("Password must contain at least one uppercase letter");
+      return;
+    }
+    if (!/[0-9]/.test(password)) {
+      setMessage("Password must contain at least one number");
+      return;
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      setMessage("Password must contain at least one special character");
       return;
     }
 
@@ -60,6 +86,10 @@ export default function Signup() {
           required
         />
       </div>
+      <small>
+        Password must be at least 8 characters long and include at least one
+        uppercase letter, one number, and one special character.
+      </small>
       <button onClick={handleSignup}>Sign Up</button>
       {message && <p>{message}</p>}
     </main>

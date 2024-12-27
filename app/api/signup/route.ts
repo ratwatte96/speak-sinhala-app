@@ -25,12 +25,49 @@ export const sendEmail = async ({ to, subject, text }: any) => {
 export async function POST(req: any) {
   const { email, password } = await req.json();
 
+  // Validate email and password
   if (!email || !password) {
     return new Response(
       JSON.stringify({ error: "Email and password are required" }),
-      {
-        status: 400,
-      }
+      { status: 400 }
+    );
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return new Response(JSON.stringify({ error: "Invalid email format" }), {
+      status: 400,
+    });
+  }
+
+  // Validate password strength
+  if (password.length < 8) {
+    return new Response(
+      JSON.stringify({ error: "Password must be at least 8 characters long" }),
+      { status: 400 }
+    );
+  }
+  if (!/[A-Z]/.test(password)) {
+    return new Response(
+      JSON.stringify({
+        error: "Password must contain at least one uppercase letter",
+      }),
+      { status: 400 }
+    );
+  }
+  if (!/[0-9]/.test(password)) {
+    return new Response(
+      JSON.stringify({ error: "Password must contain at least one number" }),
+      { status: 400 }
+    );
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return new Response(
+      JSON.stringify({
+        error: "Password must contain at least one special character",
+      }),
+      { status: 400 }
     );
   }
 
@@ -64,9 +101,7 @@ export async function POST(req: any) {
 
     return new Response(
       JSON.stringify({ message: "User created. Verification email sent." }),
-      {
-        status: 201,
-      }
+      { status: 201 }
     );
   } catch (error) {
     console.error(error);
