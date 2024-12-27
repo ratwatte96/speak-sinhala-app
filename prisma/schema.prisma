@@ -134,3 +134,12 @@ model PairsOnQuestions {
 
   @@id([pairId, questionId])
 }
+
+model EventLog {
+  id          Int      @id @default(autoincrement())
+  eventType   String
+  userId      Int?
+  targetEmail String?
+  message     String?
+  createdAt   DateTime @default(now())
+}
