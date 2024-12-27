@@ -17,7 +17,7 @@ export async function GET(req: any) {
 
   try {
     // Find the user with the token
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: { verificationToken: token },
     });
 
