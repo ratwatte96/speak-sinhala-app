@@ -111,7 +111,9 @@ function createSteps(order: any, pairData: any): any {
         content: {
           questionType: questionType,
           pairs: randomisedPairs,
-          sounds: randomisedPairs.sort((a: any, b: any) => 0.5 - Math.random()),
+          sounds: mappedPairData
+            .sort((a: any, b: any) => 0.5 - Math.random())
+            .slice(0, 4),
           isHard: isHard,
           isNew: isNew,
           isMistake: false,
