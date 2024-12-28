@@ -105,15 +105,14 @@ function createSteps(order: any, pairData: any): any {
       const randomisedPairs = mappedPairData
         .sort((a: any, b: any) => 0.5 - Math.random())
         .slice(0, 4);
+      let randomisedClone = structuredClone(randomisedPairs);
       newQuestion = {
         questionId: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, //Unique id
         type: "question",
         content: {
           questionType: questionType,
           pairs: randomisedPairs,
-          sounds: mappedPairData
-            .sort((a: any, b: any) => 0.5 - Math.random())
-            .slice(0, 4),
+          sounds: randomisedClone.sort((a: any, b: any) => 0.5 - Math.random()),
           isHard: isHard,
           isNew: isNew,
           isMistake: false,
