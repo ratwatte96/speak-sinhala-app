@@ -1,26 +1,9 @@
+import { sendEmail } from "@/utils/email";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
-
-export const sendEmail = async ({ to, subject, text }: any) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail", // Use your email provider
-    auth: {
-      user: process.env.EMAIL_USER, // Set this in .env
-      pass: process.env.EMAIL_PASS, // Set this in .env
-    },
-  });
-
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    text,
-  });
-};
 
 export async function POST(req: any) {
   const { email, password } = await req.json();
