@@ -25,7 +25,7 @@ function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
         .sort((a: any, b: any) => 0.5 - Math.random())
         .map((pair: any) => ({
           id: pair.pair.id,
-          buttonLabel: pair.pair.english,
+          buttonLabel: pair.pair.sound,
           value: pair.pair.english,
           audio: pair.pair.sound,
         }))
@@ -46,7 +46,7 @@ function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
           ...answers.slice(1),
           {
             id: selectedPair.id,
-            buttonLabel: selectedPair.english,
+            buttonLabel: selectedPair.sound,
             value: selectedPair.english,
             audio: selectedPair.sound,
           },
@@ -84,7 +84,7 @@ function createSteps(order: any, pairData: any): any {
         content: {
           question_word:
             questionType === 3 || questionType === 2
-              ? selectedPair.english
+              ? selectedPair.sound
               : selectedPair.sinhala,
           additonal_information: selectedPair?.additonal_information,
           correctAnswer:
@@ -131,7 +131,7 @@ function createSteps(order: any, pairData: any): any {
         content: {
           question_word:
             questionType === 3 || questionType === 2
-              ? selectedPair.english
+              ? selectedPair.sound
               : selectedPair.sinhala,
           additonal_information: selectedPair?.additonal_information,
           correctAnswer:
