@@ -194,7 +194,12 @@ export const QuizStep: React.FC<QuizStepProps> = ({
         <button
           key="confirm-button"
           onClick={() => handleAnswer()}
-          className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
+          disabled={selectedAnswer === ""}
+          className={`w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1 ${
+            selectedAnswer === ""
+              ? "text-skin-muted border-skin-base bg-skin-disabled"
+              : ""
+          }`}
         >
           Confirm
         </button>
