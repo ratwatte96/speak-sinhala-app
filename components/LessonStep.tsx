@@ -1,11 +1,75 @@
+import { AudioPlayer } from "./AudioPlayer";
+
 interface LessonStepProps {
   nextStep: (isMistake: boolean) => void;
 }
 
 export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
+  //?infoDisplay= list, image, table, sound buttons
+  const data = [
+    {
+      text: "hello",
+      infoDisplayType: "list",
+      info: { text: "hihi", data: ["ja", "ja", "ja"] },
+    },
+    {
+      text: "hi",
+      infoDisplayType: "soundButtons",
+      info: {
+        text: "hellohello",
+        data: [
+          { englishWord: "gun", sinhala: "ග​", sound: "ga" },
+          { englishWord: "gun", sinhala: "ග​", sound: "ga" },
+        ],
+      },
+    },
+  ];
   return (
     <div className="sm:w-2/3 w-full text-sm sm:text-base">
-      <p className="flex flex-col items-center text-skin-base w-full">
+      {data.map(({ text, infoDisplayType, info }, i) => (
+        <div key={i} className="flex mt-4">
+          {infoDisplayType === "list" ? (
+            <div className="flex flex-col items-center text-skin-base w-full">
+              <p>{text}</p>
+              <div className="mt-4">
+                <p>{info.text}</p>
+                <ul className="list-disc list-inside">
+                  {info.data.map((listItem: any) => (
+                    <li>{listItem}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : infoDisplayType === "soundButtons" ? (
+            <>
+              <div>
+                <p>{info.text}</p>
+                {info.data.map(({ sound, sinhala, englishWord }: any, i) => (
+                  <div key={i} className="flex mt-4">
+                    <AudioPlayer
+                      audioPath={`/audioClips/${sound}.mp3`}
+                      display_text={sinhala}
+                      onClick={() => {}}
+                      additionalClasses={
+                        "text-skin-muted border-skin-base border-b-4"
+                      }
+                    />
+                    <div className="ml-4 min-h-28 flex flex-col justify-center">
+                      <p>{sound}</p>
+                      <p>{`like in '${englishWord}'`}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : infoDisplayType === "image" ? (
+            <></>
+          ) : (
+            <></>
+          )}
+        </div>
+      ))}
+      {/* <p className="flex flex-col items-center text-skin-base w-full">
         Unfortunately using the words &apos;this&apos; and &apos;that&apos; are
         more complicated in sinhala than in english.
         <div className="mt-4">
@@ -78,7 +142,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
             </tbody>
           </table>
         </div>
-      </p>
+      </p> */}
       <div className="flex justify-center">
         <button
           key="confirm-button"
