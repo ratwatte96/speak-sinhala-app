@@ -1,6 +1,7 @@
 import Quiz from "@/components/Quiz";
 import { NewLetterData, Step } from "@/components/Step";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 function convertNewLetterData(data: any): NewLetterData[] {
   return data.map((item: any) => ({
@@ -158,6 +159,11 @@ function createSteps(order: any, pairData: any): any {
 }
 
 export default async function QuizPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+  if (id !== "28") {
+    redirect("/signup");
+  }
+
   let lives = 100;
   try {
     fetch(`${process.env.API_URL}api/lives`)
@@ -169,7 +175,6 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     console.log(error);
   }
 
-  const { id } = params;
   const quizData = await prisma.quiz.findFirst({
     where: {
       id: parseInt(id),
