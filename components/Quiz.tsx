@@ -6,6 +6,7 @@ import Link from "next/link";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { Step } from "./Step";
+import Modal from "./Modal";
 
 interface QuizProps {
   steps?: Step[];
@@ -19,15 +20,15 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
   const [quizFailed, setQuizFailed] = useState(false);
   const [lives, setLives] = useState(startingLives);
   const [mistakeCount, setMistakeCount] = useState(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (lives === 0) {
-      setQuizFailed(true);
+      setShowModal(true);
     }
   }, [lives]);
 
   const nextStep = (isMistake: boolean) => {
-    console.log("steps?.length", steps?.length);
     if (lives === 0) {
       setQuizFailed(true);
     } else if (steps !== undefined && currentStep === steps.length - 1) {
@@ -60,6 +61,23 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
         .then((res) => res.json())
         .then((streakData) => {
           console.log(streakData);
+        });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const refill = () => {
+    try {
+      fetch("/api/refill", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((streakData) => {
+          setLives(streakData.total_lives);
         });
     } catch (error: any) {
       console.log(error);
@@ -136,6 +154,26 @@ const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
         />
       ) : (
         <p>Loading...</p>
+      )}
+      {showModal && (
+        <Modal
+          show={showModal}
+          onClose={() => {
+            setShowModal(false);
+            nextStep(false);
+          }}
+          heading={"Note"}
+        >
+          <div>
+            <p>You ran out of lives</p>
+            <button
+              onClick={refill}
+              className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+            >
+              Refill
+            </button>
+          </div>
+        </Modal>
       )}
     </div>
   );

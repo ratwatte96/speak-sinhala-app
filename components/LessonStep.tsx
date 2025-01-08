@@ -6,6 +6,7 @@ interface LessonStepProps {
 
 export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
   //?infoDisplay= list, image, table, sound buttons
+  //TODO: table and image
   const data = [
     {
       text: "hello",
