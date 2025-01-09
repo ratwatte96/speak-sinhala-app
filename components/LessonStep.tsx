@@ -36,7 +36,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
                 <p>{info.text}</p>
                 <ul className="list-disc list-inside">
                   {info.data.map((listItem: any) => (
-                    <li>{listItem}</li>
+                    <li key={listItem}>{listItem}</li>
                   ))}
                 </ul>
               </div>
