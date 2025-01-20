@@ -113,8 +113,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
             {pairs.map(({ id, sinhala, sound }) => (
               <div key={id}>
                 <AudioPlayer
-                  audioPath={`/audioClips/sa.mp3`}
-                  // audioPath={`/audioClips/imFine.mp3`}
+                  audioPath={`/audioClips/${sound}.mp3`}
                   onEnd={handleAudioEnd}
                   display_text={sinhala}
                   onClick={() => {
