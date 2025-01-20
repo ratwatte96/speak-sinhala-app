@@ -11,7 +11,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
     {
       text: "hello",
       infoDisplayType: "list",
-      info: { text: "hihi", data: ["ja", "ja", "ja"] },
+      info: { text: "hihi", data: ["ja", "ga", "ma"] },
     },
     {
       text: "hi",

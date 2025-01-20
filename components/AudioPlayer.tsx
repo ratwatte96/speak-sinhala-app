@@ -90,6 +90,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     const newSound = new Howl({
       src: [src],
+      format: ["mp3"],
       html5: true, // Enable HTML5 for better mobile support
       onend: onEndCombined,
       onplay: () => setPlaying(true),
@@ -109,14 +110,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const togglePlay = () => {
     if (onClick) onClick();
-    // if (!isButtonNoAudio) {
-    //   if (playing) {
-    //     sound?.pause();
-    //   } else {
-    //     sound?.play();
-    //   }
-    //   setPlaying(!playing);
-    // }
+    if (!isButtonNoAudio) {
+      if (playing) {
+        sound?.pause();
+      } else {
+        sound?.play();
+      }
+      setPlaying(!playing);
+    }
   };
 
   return (
