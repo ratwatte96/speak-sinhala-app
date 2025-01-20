@@ -160,9 +160,10 @@ function createSteps(order: any, pairData: any): any {
 
 export default async function QuizPage({ params }: { params: { id: string } }) {
   const { id } = params;
-  if (id !== "28") {
-    redirect("/signup");
-  }
+  // !temp unbolock
+  // if (id !== "28") {
+  //   redirect("/signup");
+  // }
 
   let lives = 100;
   try {
