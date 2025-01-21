@@ -13,6 +13,7 @@
     "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",
     "howler": "^2.2.4",
+    "jsonwebtoken": "^9.0.2",
     "next": "^14.2.5",
     "nodemailer": "^6.9.16",
     "react": "^18",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/howler": "^2.2.11",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",

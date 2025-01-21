@@ -1,5 +1,7 @@
+import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { generateAccessToken, generateRefreshToken } from "@/utils/auth";
 
 const prisma = new PrismaClient();
 
@@ -8,8 +10,8 @@ export async function POST(req: any) {
 
   // Validate email and password
   if (!email || !password) {
-    return new Response(
-      JSON.stringify({ error: "Email and password are required" }),
+    return NextResponse.json(
+      { error: "Email and password are required" },
       { status: 400 }
     );
   }
@@ -17,17 +19,18 @@ export async function POST(req: any) {
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return new Response(JSON.stringify({ error: "Invalid email format" }), {
-      status: 400,
-    });
+    return NextResponse.json(
+      { error: "Invalid email format" },
+      { status: 400 }
+    );
   }
 
   try {
     // Check if the user exists
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return new Response(
-        JSON.stringify({ error: "Invalid email or password" }),
+      return NextResponse.json(
+        { error: "Invalid email or password" },
         { status: 401 }
       );
     }
@@ -35,31 +38,44 @@ export async function POST(req: any) {
     // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return new Response(
-        JSON.stringify({ error: "Invalid email or password" }),
-        { status: 401 }
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 400 }
       );
     }
 
     // Check if the user is verified
     if (!user.isVerified) {
-      return new Response(
-        JSON.stringify({ error: "Please verify your email before logging in" }),
+      return NextResponse.json(
+        { error: "Please verify your email before logging in" },
         { status: 403 }
       );
     }
 
-    // Generate a session token or JWT (for demonstration, returning a dummy token)
-    const token = "dummy-jwt-token"; // Replace with actual token generation logic
+    // Generate tokens
+    const accessToken = generateAccessToken({
+      userId: `${user.id}`,
+      email: user.email,
+      // ! isPremium: user.isPremium,
+    });
+    const refreshToken = generateRefreshToken(`${user.id}`);
 
-    return new Response(
-      JSON.stringify({ message: "Login successful", token }),
-      { status: 200 }
-    );
+    // ?(Optional) Save refresh token in the database or send it as an HTTP-only cookie
+
+    return new NextResponse("Login successful", {
+      status: 200,
+      headers: {
+        "Set-Cookie": [
+          `accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=900`, // 15 minutes
+          `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=604800`, // 7 days
+        ].join(", "), // Combine cookies into a single string
+      },
+    });
   } catch (error: any) {
     console.error("Error during login:", error.message);
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 500,
-    });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 }

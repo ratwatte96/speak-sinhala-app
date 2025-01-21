@@ -2,6 +2,8 @@ import Quiz from "@/components/Quiz";
 import { NewLetterData, Step } from "@/components/Step";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { verifyAccessToken } from "@/utils/auth";
+import { cookies } from "next/headers";
 
 function convertNewLetterData(data: any): NewLetterData[] {
   return data.map((item: any) => ({
@@ -160,10 +162,25 @@ function createSteps(order: any, pairData: any): any {
 
 export default async function QuizPage({ params }: { params: { id: string } }) {
   const { id } = params;
-  // !temp unbolock
-  // if (id !== "28") {
-  //   redirect("/signup");
-  // }
+  const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
+
+  if (id !== "28") {
+    if (!token) {
+      redirect("/login"); // Redirect to login if no token is present
+      return null;
+    }
+
+    try {
+      const decoded: any = verifyAccessToken(token.value);
+
+      // Check if the user is allowed to access the quiz
+      console.log("decoded:", decoded);
+      console.log("User ID:", decoded.userId);
+      //! console.log("Premium Status:", decoded.isPremium
+    } catch (error) {
+      redirect("/login"); // Redirect to login if token verification fails
+    }
+  }
 
   let lives = 100;
   try {
