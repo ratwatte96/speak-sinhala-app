@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchWithToken } from "@/utils/fetch";
 
 interface LivesCounterProps {
   startingLives?: number;
@@ -15,7 +16,7 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
 
   useEffect(() => {
     try {
-      fetch(`/api/lives`)
+      fetchWithToken(`/api/lives`, { method: "GET", credentials: "include" })
         .then((res) => res.json())
         .then((livesData) => {
           setLives(livesData.total_lives);
