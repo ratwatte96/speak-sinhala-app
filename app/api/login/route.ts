@@ -62,13 +62,36 @@ export async function POST(req: any) {
 
     // ?(Optional) Save refresh token in the database or send it as an HTTP-only cookie
 
+    // Determine cookie security based on environment
+    const isDev = process.env.NODE_ENV === "development";
+    const cookieOptions = {
+      accessToken: [
+        `accessToken=${accessToken}`,
+        "HttpOnly",
+        "Path=/",
+        "Max-Age=900", // 15 minutes
+        isDev ? "" : "Secure",
+      ]
+        .filter(Boolean)
+        .join("; "),
+      refreshToken: [
+        `refreshToken=${refreshToken}`,
+        "HttpOnly",
+        "Path=/",
+        "Max-Age=604800", // 7 days
+        isDev ? "" : "Secure",
+      ]
+        .filter(Boolean)
+        .join("; "),
+    };
+
     return new NextResponse("Login successful", {
       status: 200,
       headers: {
         "Set-Cookie": [
-          `accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=900`, // 15 minutes
-          `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=604800`, // 7 days
-        ].join(", "), // Combine cookies into a single string
+          cookieOptions.accessToken,
+          cookieOptions.refreshToken,
+        ].join(", "),
       },
     });
   } catch (error: any) {
