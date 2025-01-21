@@ -30,7 +30,8 @@ export function verifyAccessToken(token: string) {
 
 // Example of generating a refresh token
 export function generateRefreshToken(userId: string) {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" }); // 7 days expiration
+  const refreshTokenSecret: any = process.env.REFRESH_TOKEN_SECRET;
+  return jwt.sign({ userId }, refreshTokenSecret, { expiresIn: "7d" }); // 7 days expiration
 }
 
 export function verifyRefreshToken(token: string) {

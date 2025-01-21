@@ -1,4 +1,4 @@
-async function fetchWithToken(url: string, options = {}) {
+export async function fetchWithToken(url: string, options = {}) {
   const response = await fetch(url, options);
 
   if (response.status === 401) {
