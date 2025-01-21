@@ -13,6 +13,7 @@ model User {
   password  String
   isVerified   Boolean  @default(false)
   verificationToken String?
+  lives LivesOnUsers[]
   createdAt DateTime @default(now())
 }
 
@@ -36,6 +37,7 @@ model Streak {
 model Lives {
   id    Int    @id @default(autoincrement())
   total_lives   Int @default(5)
+  users LivesOnUsers[]
   last_active_time   DateTime
 }
 
@@ -159,4 +161,13 @@ model EventLog {
   targetEmail String?
   message     String?
   createdAt   DateTime @default(now())
+}
+
+model LivesOnUsers {
+  live     Lives     @relation(fields: [livesId], references: [id])
+  livesId   Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int 
+
+  @@id([livesId, userId])
 }

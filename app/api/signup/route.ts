@@ -74,6 +74,25 @@ export async function POST(req: any) {
       data: { email, password: hashedPassword, verificationToken },
     });
 
+    const lives = await prisma.lives.create({
+      data: { total_lives: 5, last_active_time: new Date() },
+    });
+
+    const connectLives = await prisma.lives.update({
+      where: {
+        id: lives.id,
+      },
+      data: {
+        users: {
+          create: {
+            user: {
+              connect: { id: user.id },
+            },
+          },
+        },
+      },
+    });
+
     // Send verification email
     const verificationUrl = `${process.env.API_URL}/api/verify?token=${verificationToken}`;
 
