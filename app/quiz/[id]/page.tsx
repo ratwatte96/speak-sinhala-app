@@ -172,11 +172,6 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
     try {
       const decoded: any = verifyAccessToken(token.value);
-
-      // Check if the user is allowed to access the quiz
-      console.log("decoded:", decoded);
-      console.log("User ID:", decoded.userId);
-      //! console.log("Premium Status:", decoded.isPremium
     } catch (error) {
       redirect("/login"); // Redirect to login if token verification fails
     }

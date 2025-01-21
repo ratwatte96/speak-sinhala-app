@@ -59,7 +59,6 @@ function createSteps(order: any, pairData: any): any {
   let steps: any = [];
   const pairs = order.pairs;
 
-  console.log("pairData", pairData);
   order.pairOrder.map(({ isHard, isNew, newLetter, questionType }: any) => {
     let newQuestion: any;
     const selectedPair = pairData.find((pair: any) => {
