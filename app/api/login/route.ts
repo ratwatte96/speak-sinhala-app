@@ -69,7 +69,7 @@ export async function POST(req: any) {
         `accessToken=${accessToken}`,
         "HttpOnly",
         "Path=/",
-        "Max-Age=2700", // 1 hour
+        "Max-Age=900", // 15 minutes
         isDev ? "" : "Secure",
       ]
         .filter(Boolean)

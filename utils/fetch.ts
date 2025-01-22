@@ -3,7 +3,7 @@ export async function fetchWithToken(url: string, options = {}) {
 
   if (response.status === 401) {
     // Token is expired; try refreshing it
-    const refreshResponse = await fetch("/api/refresh", {
+    const refreshResponse = await fetch("/api/refresh-token", {
       method: "POST",
       credentials: "include",
     });

@@ -1,7 +1,23 @@
 import React from "react";
 import { CustomQuiz } from "@/components/CustomQuiz";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { verifyAccessToken } from "@/utils/auth";
 
 export default function CustomQuizPage() {
+  const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
+
+  if (!token) {
+    redirect("/login"); // Redirect to login if no token is present
+    return null;
+  }
+
+  try {
+    const decoded: any = verifyAccessToken(token.value);
+  } catch (error) {
+    redirect("/login"); // Redirect to login if token verification fails
+  }
+
   const sinhalaCharacters = [
     "ක",
     "ඛ",
