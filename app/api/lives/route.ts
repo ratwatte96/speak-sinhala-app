@@ -34,7 +34,7 @@ export async function GET(req: any) {
 
   //! add try catch
   const decoded: any = verifyRefreshToken(refreshToken); // Verify refresh token
-
+  console.log("decoded", decoded);
   const user: any = await prisma.user.findUnique({
     where: {
       id: parseInt(decoded.userId),
@@ -43,21 +43,22 @@ export async function GET(req: any) {
       lives: true,
     },
   });
+  console.log("user", user);
 
   const lives = await prisma.lives.findUnique({
     where: {
       id: user.lives[0].livesId,
     },
   });
+  console.log("lives", lives);
 
   let newLives = lives;
   if (!isToday(new Date(lives!.last_active_time))) {
     newLives = await prisma.lives.update({
       where: {
-        id: 1,
+        id: user.id,
       },
-      data: { last_active_time: new Date(), total_lives: 100 },
-      //! TEMP CHange data: { last_active_time: new Date(), total_lives: 5 },
+      data: { last_active_time: new Date(), total_lives: 5 },
     });
   }
 
