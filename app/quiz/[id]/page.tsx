@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
+import LogoutButton from "@/components/LogoutButton";
 
 function convertNewLetterData(data: any): NewLetterData[] {
   return data.map((item: any) => ({
@@ -221,6 +222,9 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
+      <div>
+        <LogoutButton />
+      </div>
       <Quiz steps={quizSteps} quiz_title={quizQuestion} />
     </main>
   );
