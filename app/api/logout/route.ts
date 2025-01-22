@@ -1,6 +1,26 @@
 import { NextResponse } from "next/server";
 
-export async function POST() {
+export async function POST(req: any) {
+  const cookies = req.headers.get("cookie");
+  if (!cookies) {
+    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
+  }
+
+  // Parse cookies (basic approach)
+  const cookieArray = cookies
+    .split("; ")
+    .map((cookie: any) => cookie.split("="));
+  const cookieMap = Object.fromEntries(cookieArray);
+
+  const accessToken = cookieMap["accessToken"];
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Access token missing" },
+      { status: 401 }
+    );
+  }
+
   const isDev = process.env.NODE_ENV === "development";
 
   const cookieOptions = {

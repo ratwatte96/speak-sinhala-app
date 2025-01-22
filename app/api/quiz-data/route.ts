@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { NewLetterData } from "@/components/Step";
 
@@ -149,6 +150,26 @@ function createSteps(order: any, pairData: any): any {
 }
 
 export async function POST(req: any) {
+  const cookies = req.headers.get("cookie");
+  if (!cookies) {
+    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
+  }
+
+  // Parse cookies (basic approach)
+  const cookieArray = cookies
+    .split("; ")
+    .map((cookie: any) => cookie.split("="));
+  const cookieMap = Object.fromEntries(cookieArray);
+
+  const accessToken = cookieMap["accessToken"];
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Access token missing" },
+      { status: 401 }
+    );
+  }
+
   const { selectedItems } = await req.json();
 
   const existingPairs = await prisma.pair.findMany({

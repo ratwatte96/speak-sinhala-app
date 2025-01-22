@@ -69,7 +69,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
 
   const refill = () => {
     try {
-      fetch("/api/refill", {
+      fetchWithToken("/api/refill", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

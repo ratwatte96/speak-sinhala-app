@@ -1,6 +1,7 @@
-import { verifyRefreshToken } from "@/utils/auth";
+import { verifyAccessToken } from "@/utils/auth";
 import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
+import { access } from "fs";
 
 function isToday(date: Date) {
   const today = new Date();
@@ -23,17 +24,17 @@ export async function GET(req: any) {
     .map((cookie: any) => cookie.split("="));
   const cookieMap = Object.fromEntries(cookieArray);
 
-  const refreshToken = cookieMap["refreshToken"];
+  const accessToken = cookieMap["accessToken"];
 
-  if (!refreshToken) {
+  if (!accessToken) {
     return NextResponse.json(
-      { error: "Refresh token missing" },
+      { error: "Access token missing" },
       { status: 401 }
     );
   }
 
   //! add try catch
-  const decoded: any = verifyRefreshToken(refreshToken); // Verify refresh token
+  const decoded: any = verifyAccessToken(accessToken);
   const user: any = await prisma.user.findUnique({
     where: {
       id: parseInt(decoded.userId),
@@ -76,9 +77,9 @@ export async function POST(req: any) {
     .map((cookie: any) => cookie.split("="));
   const cookieMap = Object.fromEntries(cookieArray);
 
-  const refreshToken = cookieMap["refreshToken"];
+  const accessToken = cookieMap["accessToken"];
 
-  if (!refreshToken) {
+  if (!accessToken) {
     return NextResponse.json(
       { error: "Refresh token missing" },
       { status: 401 }
@@ -86,7 +87,7 @@ export async function POST(req: any) {
   }
 
   //! add try catch
-  const decoded: any = verifyRefreshToken(refreshToken); // Verify refresh token
+  const decoded: any = verifyAccessToken(accessToken);
   const user: any = await prisma.user.findUnique({
     where: {
       id: parseInt(decoded.userId),

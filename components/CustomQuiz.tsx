@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import Quiz from "./Quiz";
+import { fetchWithToken } from "@/utils/fetch";
 // import ChevronDownIcon from "../../public/chevron-down.svg";
 // import FilterIcon from "../../public/filter.svg";
 
@@ -15,7 +16,7 @@ export const CustomQuiz: React.FC<CustomQuizProps> = ({ dropDownLetters }) => {
 
   const getQuizData = async () => {
     try {
-      const response = await fetch("/api/quiz-data", {
+      const response = await fetchWithToken("/api/quiz-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

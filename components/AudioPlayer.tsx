@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Howl } from "howler";
+import { fetchWithToken } from "@/utils/fetch";
 
 interface AudioPlayerProps {
   audioPath: string;
@@ -54,11 +55,11 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       try {
         let response;
         if (process.env.NODE_ENV === "development") {
-          response = await fetch(
+          response = await fetchWithToken(
             `/api/audio?path=${encodeURIComponent(audioPath)}`
           );
         } else {
-          response = await fetch(
+          response = await fetchWithToken(
             `${
               process.env.NEXT_PUBLIC_API_URL
             }/api/audio?path=${encodeURIComponent(audioPath)}`
