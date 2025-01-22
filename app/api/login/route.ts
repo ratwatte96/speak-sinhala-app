@@ -85,15 +85,18 @@ export async function POST(req: any) {
         .join("; "),
     };
 
-    return new NextResponse("Login successful", {
-      status: 200,
-      headers: {
-        "Set-Cookie": [
-          cookieOptions.accessToken,
-          cookieOptions.refreshToken,
-        ].join(", "),
-      },
-    });
+    return NextResponse.json(
+      { message: "Logout successful" },
+      {
+        status: 200,
+        headers: {
+          "Set-Cookie": [
+            cookieOptions.accessToken,
+            cookieOptions.refreshToken,
+          ].join(", "),
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Error during login:", error.message);
     return NextResponse.json(
