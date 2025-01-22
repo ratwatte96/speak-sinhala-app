@@ -177,17 +177,6 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     }
   }
 
-  let lives = 100;
-  try {
-    fetch(`${process.env.API_URL}api/lives`)
-      .then((res) => res.json())
-      .then((livesData) => {
-        lives = livesData.total_lives;
-      });
-  } catch (error: any) {
-    console.log(error);
-  }
-
   const quizData = await prisma.quiz.findFirst({
     where: {
       id: parseInt(id),
@@ -232,7 +221,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <Quiz steps={quizSteps} startingLives={lives} quiz_title={quizQuestion} />
+      <Quiz steps={quizSteps} quiz_title={quizQuestion} />
     </main>
   );
 }

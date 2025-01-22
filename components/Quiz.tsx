@@ -10,15 +10,14 @@ import Modal from "./Modal";
 
 interface QuizProps {
   steps?: Step[];
-  startingLives: number;
   quiz_title?: string;
 }
 
-const Quiz: React.FC<QuizProps> = ({ steps, startingLives, quiz_title }) => {
+const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
-  const [lives, setLives] = useState(startingLives);
+  const [lives, setLives] = useState(1);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
 
