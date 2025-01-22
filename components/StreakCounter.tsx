@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchWithToken } from "@/utils/fetch";
 import { useEffect, useState } from "react";
 
 export const StreakCounter: React.FC = () => {
@@ -7,7 +8,7 @@ export const StreakCounter: React.FC = () => {
 
   useEffect(() => {
     try {
-      fetch(`/api/streak`)
+      fetchWithToken(`/api/streak`)
         .then((res) => res.json())
         .then((streaksData) => {
           setStreak(streaksData.current_streak);

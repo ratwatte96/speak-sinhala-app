@@ -93,6 +93,25 @@ export async function POST(req: any) {
       },
     });
 
+    const streak = await prisma.streak.create({
+      data: { current_streak: 0, last_active_date: new Date() },
+    });
+
+    const connectStreak = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        streaks: {
+          create: {
+            streak: {
+              connect: { id: streak.id },
+            },
+          },
+        },
+      },
+    });
+
     // Send verification email
     const verificationUrl = `${process.env.API_URL}/api/verify?token=${verificationToken}`;
 

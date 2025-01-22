@@ -7,6 +7,7 @@ import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { Step } from "./Step";
 import Modal from "./Modal";
+import { fetchWithToken } from "@/utils/fetch";
 
 interface QuizProps {
   steps?: Step[];
@@ -51,7 +52,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
 
   const updateStreak = () => {
     try {
-      fetch("/api/streak", {
+      fetchWithToken("/api/streak", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +105,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
 
   const updateLives = () => {
     try {
-      fetch(`/api/lives`, {
+      fetchWithToken(`/api/lives`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -14,6 +14,7 @@ model User {
   isVerified   Boolean  @default(false)
   verificationToken String?
   lives LivesOnUsers[]
+  streaks StreaksOnUsers[]
   createdAt DateTime @default(now())
 }
 
@@ -31,6 +32,7 @@ model Permission {
 model Streak {
   id    Int    @id @default(autoincrement())
   current_streak   Int @default(0)
+  users StreaksOnUsers[]
   last_active_date   DateTime
 }
 
@@ -170,4 +172,13 @@ model LivesOnUsers {
   userId Int 
 
   @@id([livesId, userId])
+}
+
+model StreaksOnUsers {
+  streak     Streak     @relation(fields: [streaksId], references: [id])
+  streaksId   Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int 
+
+  @@id([streaksId, userId])
 }
