@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { verifyAccessToken, generateAccessToken } from "@/utils/auth";
+import { generateAccessToken, verifyRefreshToken } from "@/utils/auth";
 
 export async function POST() {
   const cookieStore = cookies(); // Use the cookies utility
@@ -14,7 +14,7 @@ export async function POST() {
   }
 
   try {
-    const decoded: any = verifyAccessToken(refreshToken.value); // Verify refresh token
+    const decoded: any = verifyRefreshToken(refreshToken.value); // Verify refresh token
 
     const newAccessToken = generateAccessToken({
       userId: decoded.userId,
