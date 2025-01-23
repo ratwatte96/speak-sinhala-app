@@ -21,6 +21,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
   const [lives, setLives] = useState(1);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [refillMessage, setRefillMessage] = useState<string>("");
 
   useEffect(() => {
     if (lives === 0) {
@@ -67,18 +68,22 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
     }
   };
 
-  const refill = () => {
+  const refill = async () => {
     try {
-      fetchWithToken("/api/refill", {
+      const response: any = await fetchWithToken("/api/refill", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-      })
-        .then((res) => res.json())
-        .then((streakData) => {
-          setLives(streakData.total_lives);
-        });
+      });
+      const responseData = await response.json();
+      if (response.ok) {
+        setLives(responseData.total_lives);
+        setRefillMessage("Refill Successful");
+      } else {
+        console.log(responseData);
+        setRefillMessage(responseData.error);
+      }
     } catch (error: any) {
       console.log(error);
     }
@@ -172,6 +177,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
             >
               Refill
             </button>
+            {refillMessage !== "" ? <p>{refillMessage}</p> : null}
           </div>
         </Modal>
       )}

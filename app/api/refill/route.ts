@@ -23,9 +23,15 @@ export async function POST(req: any) {
       { status: 401 }
     );
   }
+  const decoded: any = verifyAccessToken(accessToken);
+  if (!decoded.isPremium) {
+    return NextResponse.json(
+      { error: "The user is not premium" },
+      { status: 401 }
+    );
+  }
 
   //! add try catch
-  const decoded: any = verifyAccessToken(accessToken);
   const user: any = await prisma.user.findUnique({
     where: {
       id: parseInt(decoded.userId),
