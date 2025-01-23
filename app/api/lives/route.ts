@@ -81,7 +81,7 @@ export async function POST(req: any) {
 
   if (!accessToken) {
     return NextResponse.json(
-      { error: "Refresh token missing" },
+      { error: "Access token missing" },
       { status: 401 }
     );
   }

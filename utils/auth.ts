@@ -7,13 +7,13 @@ const JWT_EXPIRATION = "15m"; // 15 minutes
 export function generateAccessToken(user: {
   userId: string;
   email: string;
-  //!   isPremium: boolean;
+  isPremium: boolean;
 }) {
   return jwt.sign(
     {
       userId: user.userId,
       email: user.email,
-      //!   isPremium: user.isPremium,
+      isPremium: user.isPremium,
     },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRATION }

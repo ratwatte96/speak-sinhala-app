@@ -56,7 +56,7 @@ export async function POST(req: any) {
     const accessToken = generateAccessToken({
       userId: `${user.id}`,
       email: user.email,
-      // ! isPremium: user.isPremium,
+      isPremium: user.isPremium,
     });
     const refreshToken = generateRefreshToken(`${user.id}`);
 
@@ -69,7 +69,7 @@ export async function POST(req: any) {
         `accessToken=${accessToken}`,
         "HttpOnly",
         "Path=/",
-        "Max-Age=900", // 15 minutes
+        `Max-Age=${process.env.ACCESS_TOKEN_AGE}`, // 15 minutes
         isDev ? "" : "Secure",
       ]
         .filter(Boolean)

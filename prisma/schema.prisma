@@ -12,6 +12,7 @@ model User {
   email String @unique
   password  String
   isVerified   Boolean  @default(false)
+  isPremium   Boolean  @default(false)
   verificationToken String?
   lives LivesOnUsers[]
   streaks StreaksOnUsers[]

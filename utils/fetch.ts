@@ -1,5 +1,5 @@
 export async function fetchWithToken(url: string, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(url, { ...options, credentials: "include" });
 
   if (response.status === 401) {
     // Token is expired; try refreshing it
@@ -10,7 +10,7 @@ export async function fetchWithToken(url: string, options = {}) {
 
     if (refreshResponse.ok) {
       // Retry the original request after refreshing the token
-      return await fetch(url, options);
+      return await fetch(url, { ...options, credentials: "include" });
     } else {
       throw new Error("Unable to refresh token. Please log in again.");
     }

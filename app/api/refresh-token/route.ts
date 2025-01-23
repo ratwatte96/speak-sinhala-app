@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { generateAccessToken, verifyRefreshToken } from "@/utils/auth";
+import prisma from "@/lib/prisma";
 
 export async function POST() {
   const cookieStore = cookies(); // Use the cookies utility
@@ -16,16 +17,27 @@ export async function POST() {
   try {
     const decoded: any = verifyRefreshToken(refreshToken.value); // Verify refresh token
 
+    // Check if the user exists
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(decoded.userId) },
+    });
+    if (!user) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      );
+    }
+    console.log(user);
     const newAccessToken = generateAccessToken({
-      userId: decoded.userId,
-      email: decoded.email,
-      //!   isPremium: decoded.isPremium,
+      userId: `${user.id}`,
+      email: user.email,
+      isPremium: user.isPremium,
     });
 
     return new NextResponse("Token refreshed", {
       status: 200,
       headers: {
-        "Set-Cookie": `accessToken=${newAccessToken}; HttpOnly; Secure; Path=/; Max-Age=900`, // 15 minutes
+        "Set-Cookie": `accessToken=${newAccessToken}; HttpOnly; Secure; Path=/; Max-Age=${process.env.ACCESS_TOKEN_AGE}`, // 15 minutes
       },
     });
   } catch (error) {
