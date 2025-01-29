@@ -11,6 +11,7 @@ model User {
   id    Int    @id @default(autoincrement())
   email String @unique
   password  String
+  username String @default("test")
   isVerified   Boolean  @default(false)
   isPremium   Boolean  @default(false)
   verificationToken String?

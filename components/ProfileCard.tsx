@@ -1,6 +1,10 @@
 import Image from "next/image";
 
-const ProfileCard = () => {
+interface ProfileCardProps {
+  userData: any;
+}
+
+const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
   return (
     <div className="flex flex-col items-center p-6 min-h-screen">
       <div className="p-6 rounded-lg  w-80 text-center">
@@ -11,8 +15,8 @@ const ProfileCard = () => {
           height={80}
           className="rounded-full mx-auto"
         />
-        <h2 className="text-lg font-bold mt-4">Itunuoluwa Abidoye</h2>
-        <p className="text-gray-500 text-sm">Itunuoluwa@petra.africa</p>
+        <h2 className="text-lg font-bold mt-4">{userData.username}</h2>
+        <p className="text-gray-500 text-sm">{userData.email}</p>
 
         <div className="flex justify-between mt-4">
           <div className="bg-gray-200 p-2 rounded-md w-1/2 mx-1 text-center">
