@@ -2,7 +2,7 @@ import LessonCard, { Lesson } from "@/components/LessonCard";
 import BottomNavbar from "@/components/BottomNavbar";
 import TopNavbar from "@/components/TopNavBar";
 
-export default function Read() {
+export default function Speak() {
   const lessons: Lesson[] = [
     {
       number: 1,
@@ -30,7 +30,7 @@ export default function Read() {
   return (
     <div className="flex min-h-screen flex-col mt-10 pb-24">
       <div className="mx-4">
-        <h1>Read</h1>
+        <h1>Speak</h1>
         <div
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
