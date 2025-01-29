@@ -1,5 +1,6 @@
 "use client";
 import { LivesCounter } from "@/components/LivesCounter";
+import Navbar from "@/components/BottomNavbar";
 import { StreakCounter } from "@/components/StreakCounter";
 import { useRouter } from "next/navigation";
 
@@ -42,6 +43,7 @@ export default function Home() {
           Read & Speak
         </button>
       </div>
+      <Navbar />
     </main>
   );
 }
