@@ -28,12 +28,18 @@ export default function Read() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col mt-10">
+    <div className="flex min-h-screen flex-col mt-10 pb-24">
       <div className="mx-4">
         <div
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
         ></div>
+        {lessons.map((lesson) => (
+          <LessonCard key={lesson.number} lesson={lesson} />
+        ))}
+        {lessons.map((lesson) => (
+          <LessonCard key={lesson.number} lesson={lesson} />
+        ))}
         {lessons.map((lesson) => (
           <LessonCard key={lesson.number} lesson={lesson} />
         ))}

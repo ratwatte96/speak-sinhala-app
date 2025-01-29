@@ -7,14 +7,14 @@ const BottomNavbar = () => {
   const [active, setActive] = useState("home");
 
   const navItems = [
-    { name: "home", icon: <BookOpen />, href: "/" },
+    { name: "read", icon: <BookOpen />, href: "/read" },
     { name: "messages", icon: <MessageSquare />, href: "/messages" },
     { name: "cart", icon: <ShoppingCart />, href: "/cart" },
-    { name: "settings", icon: <Settings />, href: "/settings" },
+    { name: "user", icon: <Settings />, href: "/user-profile" },
   ];
 
   return (
-    <nav className="relative bottom-0 w-screen h-[10vh] bg-white shadow-md p-4 flex justify-around border-t md:hidden">
+    <nav className="fixed bottom-0 left-0 w-full bg-white shadow-md p-4 flex justify-around border-t md:hidden">
       {navItems.map((item) => (
         <Link key={item.name} href={item.href}>
           <div
