@@ -9,7 +9,7 @@ const BottomNavbar = () => {
   const navItems = [
     { name: "read", icon: <BookOpen />, href: "/read" },
     { name: "speak", icon: <MessageSquare />, href: "/speak" },
-    { name: "cart", icon: <ShoppingCart />, href: "/cart" },
+    { name: "shop", icon: <ShoppingCart />, href: "/shop" },
     { name: "user", icon: <Settings />, href: "/user-profile" },
   ];
 
