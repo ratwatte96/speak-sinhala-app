@@ -1,31 +1,30 @@
 import LessonCard, { Lesson } from "@/components/LessonCard";
-import BottomNavbar from "@/components/BottomNavbar";
-import TopNavbar from "@/components/TopNavBar";
+import prisma from "@/lib/prisma";
 
-export default function Read() {
-  const lessons: Lesson[] = [
-    {
-      number: 1,
-      type: "New Letter",
-      content: "ka, ga, sa",
-      description: "In this lesson you will practice essential letters",
-      status: "complete",
+export default async function Read() {
+  const units: any = await prisma.unit.findMany({
+    select: {
+      quizes: {
+        include: {
+          quiz: true,
+        },
+      },
     },
-    {
-      number: 2,
-      type: "New Letter",
-      content: "ka, ga, sa",
-      description: "In this lesson you will practice essential letters",
-      status: "incomplete",
-    },
-    {
-      number: 3,
-      type: "New Letter",
-      content: "ka, ga, sa",
-      description: "In this lesson you will practice essential letters",
-      status: "locked",
-    },
-  ];
+  });
+
+  let quizData: any = [];
+
+  units.forEach((unit: any, unitIndex: number) => {
+    quizData[unitIndex] = { unitId: unitIndex + 1, quizes: [] };
+    unit.quizes.forEach((quiz: any, quizIndex: number) => {
+      quizData[unitIndex].quizes.push({
+        quizName: quiz.quiz.quiz_name,
+        content: quiz.quiz.content,
+        type: quiz.quiz.type,
+        description: quiz.quiz.description,
+      });
+    });
+  });
 
   return (
     <div className="flex min-h-screen flex-col mt-10 pb-24">
@@ -35,14 +34,15 @@ export default function Read() {
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
         ></div>
-        {lessons.map((lesson) => (
-          <LessonCard key={lesson.number} lesson={lesson} />
-        ))}
-        {lessons.map((lesson) => (
-          <LessonCard key={lesson.number} lesson={lesson} />
-        ))}
-        {lessons.map((lesson) => (
-          <LessonCard key={lesson.number} lesson={lesson} />
+        {quizData.map((unitData: any) => (
+          <div>
+            <div className="flex justify-center">
+              <h2>{`Unit: ${unitData.unitId}`}</h2>
+            </div>
+            {unitData.quizes.map((quizData: any) => (
+              <LessonCard key={quizData.quizName} lesson={quizData} />
+            ))}
+          </div>
         ))}
       </div>
     </div>

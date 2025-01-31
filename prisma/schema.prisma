@@ -48,6 +48,9 @@ model Lives {
 model Quiz {
   id    Int    @id @default(autoincrement())
   quiz_name   String
+  type String?
+  description String?
+  content String?
   questions   QuestionsOnQuizes[]
   newLetterDatas   NewLetterDatasOnQuizes[]
   pairs PairsOnQuizes[]
