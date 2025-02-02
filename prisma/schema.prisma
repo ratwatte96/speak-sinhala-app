@@ -19,6 +19,7 @@ model User {
   streaks StreaksOnUsers[]
   quizes UsersOnQuizes[]
   createdAt DateTime @default(now())
+  readStatus Int @default(1)
 }
 
 model Todo {

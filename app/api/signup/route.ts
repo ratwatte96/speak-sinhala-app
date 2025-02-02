@@ -147,7 +147,7 @@ export async function POST(req: any) {
               quiz: {
                 connect: { id: quiz.id },
               },
-              status: "incomplete",
+              status: "complete",
             },
           },
         },

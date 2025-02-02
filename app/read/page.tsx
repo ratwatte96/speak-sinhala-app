@@ -1,5 +1,7 @@
 import LessonCard, { Lesson } from "@/components/LessonCard";
 import prisma from "@/lib/prisma";
+import { verifyAccessToken } from "@/utils/auth";
+import { cookies } from "next/headers";
 
 export default async function Read() {
   const units: any = await prisma.unit.findMany({
@@ -12,8 +14,26 @@ export default async function Read() {
     },
   });
 
-  let quizData: any = [];
+  const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
+  let user: any;
+  let readStatus: any;
+  if (token) {
+    try {
+      const decoded: any = verifyAccessToken(token.value);
+      user = await prisma.user.findUnique({
+        where: {
+          id: parseInt(decoded.userId),
+        },
+      });
+      readStatus = user.readStatus;
+    } catch (error) {
+      //! add
+    }
+  } else {
+    readStatus = 1;
+  }
 
+  let quizData: any = [];
   units.forEach((unit: any, unitIndex: number) => {
     quizData[unitIndex] = { unitId: unitIndex + 1, quizes: [] };
     unit.quizes.forEach((quiz: any, quizIndex: number) => {
@@ -22,6 +42,8 @@ export default async function Read() {
         content: quiz.quiz.content,
         type: quiz.quiz.type,
         description: quiz.quiz.description,
+        status: unitIndex + 1 <= readStatus ? "incomplete" : "locked",
+        //! need to add info from pivot table:  status: readStatus <= unitIndex + 1 ? quiz.quiz.status : "locked",
       });
     });
   });
