@@ -112,6 +112,48 @@ export async function POST(req: any) {
       },
     });
 
+    const unitOneQuizes = await prisma.unit.findFirst({
+      where: {
+        id: 2, // Fetching Unit with ID 1
+      },
+      include: {
+        quizes: {
+          select: {
+            quizId: true, // Only select quiz IDs
+          },
+        },
+      },
+    });
+
+    const unitOneQuizIds = unitOneQuizes?.quizes.map((q) => q.quizId) || [];
+
+    const quizes = await prisma.quiz.findMany({
+      where: {
+        id: {
+          in: unitOneQuizIds,
+        },
+      },
+    });
+
+    //! maybe do promise.All
+    quizes.forEach(async (quiz) => {
+      const connectQuizes = await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          quizes: {
+            create: {
+              quiz: {
+                connect: { id: quiz.id },
+              },
+              status: "incomplete",
+            },
+          },
+        },
+      });
+    });
+
     // Send verification email
     const verificationUrl = `${process.env.API_URL}/api/verify?token=${verificationToken}`;
 
