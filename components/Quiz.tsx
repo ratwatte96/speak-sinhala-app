@@ -12,9 +12,10 @@ import { fetchWithToken } from "@/utils/fetch";
 interface QuizProps {
   steps?: Step[];
   quiz_title?: string;
+  quiz_id: number;
 }
 
-const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
+const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
@@ -38,7 +39,6 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
       if (isMistake) {
         setMistakeCount(mistakeCount + 1);
         if (mistakeCount !== 3) {
-          console.log("mistakeCount", mistakeCount);
           const mistakeStep =
             steps !== undefined ? steps[currentStep] : ({} as Step);
           let clone: Step = structuredClone(mistakeStep);
@@ -58,6 +58,26 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
         headers: {
           "Content-Type": "application/json",
         },
+      })
+        .then((res) => res.json())
+        .then((streakData) => {
+          console.log(streakData);
+        });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  //! maybe combine updateStatus and updateStreak
+  const updateStatus = () => {
+    //! need to make sure nobody can just hit this endpoint
+    try {
+      fetchWithToken("/api/updateQuizStatus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ quiz_id }),
       })
         .then((res) => res.json())
         .then((streakData) => {
@@ -95,6 +115,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title }) => {
 
   if (quizCompleted) {
     updateStreak();
+    updateStatus();
     return (
       <div className="text-center">
         <LivesCounter startingLives={lives} />

@@ -225,7 +225,11 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
       <div>
         <LogoutButton />
       </div>
-      <Quiz steps={quizSteps} quiz_title={quizQuestion} />
+      <Quiz
+        steps={quizSteps}
+        quiz_title={quizQuestion}
+        quiz_id={parseInt(id)}
+      />
     </main>
   );
 }
