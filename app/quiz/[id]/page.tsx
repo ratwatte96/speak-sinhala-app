@@ -165,7 +165,9 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
-  if (id !== "28") {
+  let user: any;
+  let readStatus: any;
+  if (!["28", "29", "30", "31", "32", "33"].includes(id)) {
     if (!token) {
       redirect("/login"); // Redirect to login if no token is present
       return null;
@@ -173,9 +175,30 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
     try {
       const decoded: any = verifyAccessToken(token.value);
+      user = await prisma.user.findUnique({
+        where: {
+          id: parseInt(decoded.userId),
+        },
+      });
+      readStatus = user.readStatus;
     } catch (error) {
       redirect("/login"); // Redirect to login if token verification fails
     }
+  }
+
+  const unit: any = await prisma.quizesOnUnits.findFirst({
+    where: {
+      quizId: parseInt(id), // Find the row where the given quiz exists
+    },
+    include: {
+      unit: true, // Include the unit details
+    },
+  });
+
+  if (readStatus < unit?.unit.id) {
+    //! add a custom don't have access to this quiz page
+    redirect("/login");
+    return null;
   }
 
   const quizData = await prisma.quiz.findFirst({
