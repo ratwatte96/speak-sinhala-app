@@ -29,12 +29,13 @@ export async function POST(req: any) {
 
   const unit = await prisma.quizesOnUnits.findFirst({
     where: {
-      quizId: 28, // Find the row where the given quiz exists
+      quizId: quiz_id, // Find the row where the given quiz exists
     },
     include: {
       unit: true, // Include the unit details
     },
   });
+  const unitId: any = unit?.unit.id;
 
   const user: any = await prisma.user.findUnique({
     where: {
@@ -55,7 +56,7 @@ export async function POST(req: any) {
   });
 
   //! update this when we add the speak quizes
-  if ((unit?.unit.id ?? 0 > 1) && record === null) {
+  if ((unitId ?? 0 > 1) && record === null) {
     const updatedPivot = await prisma.usersOnQuizes.updateMany({
       where: {
         userId: parseInt(decoded.userId),
@@ -67,9 +68,9 @@ export async function POST(req: any) {
     });
 
     //! be vary of the hundred once adding other units
-    if (unit?.unit.id ?? 100 <= user.readStatus) {
+    if (unitId ?? 100 <= user.readStatus) {
       const quizes = await prisma.quizesOnUnits.findMany({
-        where: { unitId: unit?.unit.id },
+        where: { unitId: unitId },
         select: { quizId: true },
       });
 
@@ -103,6 +104,50 @@ export async function POST(req: any) {
             },
           },
         });
+
+        if (unitId < 13) {
+          const newQuizes = await prisma.unit.findFirst({
+            where: {
+              id: unitId + 1,
+            },
+            include: {
+              quizes: {
+                select: {
+                  quizId: true, // Only select quiz IDs
+                },
+              },
+            },
+          });
+
+          const newQuizIds = newQuizes?.quizes.map((q) => q.quizId) || [];
+
+          const quizes = await prisma.quiz.findMany({
+            where: {
+              id: {
+                in: newQuizIds,
+              },
+            },
+          });
+
+          //! maybe do promise.All
+          quizes.forEach(async (quiz) => {
+            const connectQuizes = await prisma.user.update({
+              where: {
+                id: user.id,
+              },
+              data: {
+                quizes: {
+                  create: {
+                    quiz: {
+                      connect: { id: quiz.id },
+                    },
+                    status: "incomplete",
+                  },
+                },
+              },
+            });
+          });
+        }
       }
     }
   }
