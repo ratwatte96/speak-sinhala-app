@@ -4,7 +4,7 @@ import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
 
 export default async function Read() {
-  const units: any = await prisma.unit.findMany({
+  let units: any = await prisma.unit.findMany({
     select: {
       quizes: {
         include: {
@@ -17,15 +17,47 @@ export default async function Read() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
   let user: any;
   let readStatus: any;
+  let decoded: any;
   if (token) {
     try {
-      const decoded: any = verifyAccessToken(token.value);
+      decoded = verifyAccessToken(token.value);
       user = await prisma.user.findUnique({
         where: {
           id: parseInt(decoded.userId),
         },
       });
       readStatus = user.readStatus;
+
+      units = await prisma.unit.findMany({
+        include: {
+          quizes: {
+            include: {
+              quiz: true, // Include basic quiz info
+            },
+          },
+        },
+      });
+
+      const quizIds = units.flatMap((unit: any) =>
+        unit.quizes.map((q: any) => q.quizId)
+      );
+
+      const userQuizRecords = await prisma.usersOnQuizes.findMany({
+        where: {
+          userId: parseInt(decoded.userId),
+          quizId: { in: quizIds },
+        },
+      });
+
+      units = units.map((unit: any) => ({
+        ...unit,
+        quizes: unit.quizes.map((quiz: any) => ({
+          ...quiz,
+          userQuizRecord:
+            userQuizRecords.find((record) => record.quizId === quiz.quizId) ||
+            null,
+        })),
+      }));
     } catch (error) {
       //! add
     }
@@ -42,8 +74,10 @@ export default async function Read() {
         content: quiz.quiz.content,
         type: quiz.quiz.type,
         description: quiz.quiz.description,
-        status: unitIndex + 1 <= readStatus ? "incomplete" : "locked",
-        //! need to add info from pivot table:  status: readStatus <= unitIndex + 1 ? quiz.quiz.status : "locked",
+        status:
+          unitIndex + 1 <= readStatus
+            ? quiz.userQuizRecord?.status ?? "incomplete"
+            : "locked",
       });
     });
   });
