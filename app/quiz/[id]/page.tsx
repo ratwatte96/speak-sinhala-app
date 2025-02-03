@@ -162,6 +162,7 @@ function createSteps(order: any, pairData: any): any {
 }
 
 export default async function QuizPage({ params }: { params: { id: string } }) {
+  const callbackUrl = "/read";
   const { id } = params;
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
@@ -169,8 +170,8 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   let readStatus: any;
   if (!["28", "29", "30", "31", "32", "33"].includes(id)) {
     if (!token) {
-      redirect("/login"); // Redirect to login if no token is present
-      return null;
+      //! add a custom don't have access to this quiz page
+      redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
 
     try {
@@ -182,7 +183,8 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
       });
       readStatus = user.readStatus;
     } catch (error) {
-      redirect("/login"); // Redirect to login if token verification fails
+      //! add a custom don't have access to this quiz page
+      redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
   }
 
@@ -197,8 +199,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
   if (readStatus < unit?.unit.id) {
     //! add a custom don't have access to this quiz page
-    redirect("/login");
-    return null;
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
   const quizData = await prisma.quiz.findFirst({

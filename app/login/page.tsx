@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
-export default function Login() {
+function LoginComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const callbackUrl = searchParams.get("callbackUrl") || "/home";
 
   const handleLogin = async () => {
     setMessage("");
@@ -37,6 +42,9 @@ export default function Login() {
         setMessage("Login successful!");
         setEmail("");
         setPassword("");
+        if (res.ok) {
+          router.push(callbackUrl); // Redirect back after login
+        }
       } else {
         setMessage(data.error);
       }
@@ -71,5 +79,13 @@ export default function Login() {
       <button onClick={handleLogin}>Login</button>
       {message && <p>{message}</p>}
     </main>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <LoginComponent />
+    </Suspense>
   );
 }

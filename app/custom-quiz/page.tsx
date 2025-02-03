@@ -5,17 +5,17 @@ import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 
 export default function CustomQuizPage() {
+  const callbackUrl = "custom-quiz";
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
   if (!token) {
-    redirect("/login"); // Redirect to login if no token is present
-    return null;
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
   try {
     const decoded: any = verifyAccessToken(token.value);
   } catch (error) {
-    redirect("/login"); // Redirect to login if token verification fails
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
   const sinhalaCharacters = [

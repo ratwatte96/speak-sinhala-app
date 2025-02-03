@@ -5,18 +5,18 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function UserProfile() {
+  const callbackUrl = "/user-profile";
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
   if (!token) {
-    redirect("/login"); // Redirect to login if no token is present
-    return null;
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
   let decoded: any;
   try {
     decoded = verifyAccessToken(token.value);
   } catch (error) {
-    redirect("/login"); // Redirect to login if token verification fails
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
   const user: any = await prisma.user.findUnique({
