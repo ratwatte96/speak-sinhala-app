@@ -20,6 +20,8 @@ model User {
   quizes UsersOnQuizes[]
   createdAt DateTime @default(now())
   readStatus Int @default(1)
+  resetToken   String?  @unique
+  resetExpires DateTime?
 }
 
 model Todo {

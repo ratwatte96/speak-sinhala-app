@@ -1,5 +1,6 @@
 // utils/auth.ts
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 const JWT_EXPIRATION = "15m"; // 15 minutes
@@ -41,4 +42,8 @@ export function verifyRefreshToken(token: string) {
   } catch (error) {
     throw new Error("Invalid or expired refresh token");
   }
+}
+
+export function generateResetToken(): string {
+  return crypto.randomBytes(32).toString("hex");
 }

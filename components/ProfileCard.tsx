@@ -13,6 +13,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("");
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -67,6 +69,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    try {
+      const response = await fetchWithToken("/api/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setForgotMessage("Password reset email sent!");
+      } else {
+        setForgotMessage(data.error || "Something went wrong.");
+      }
+    } catch (error) {
+      setForgotMessage("Error sending reset email.");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center p-6 min-h-screen">
       <div className="p-6 rounded-lg w-80 text-center">
@@ -90,41 +109,65 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
           </div>
         </div>
         {/* Change Password Form */}
-        <div className="mt-4">
-          <input
-            type="password"
-            placeholder="Current Password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            className="w-full p-2 border rounded-md text-center"
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full p-2 border rounded-md text-center mt-2"
-          />
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-2 border rounded-md text-center mt-2"
-          />
-        </div>
-        {message && <p className="text-sm text-red-500 mt-2">{message}</p>}
-        <div className="mt-4 flex space-x-2">
-          <button
-            onClick={handleChangePassword}
-            className="bg-green-500 text-white w-1/2 p-2 rounded-md"
-          >
-            Update Password
-          </button>
-          <button className="bg-yellow-400 text-black w-1/2 p-2 rounded-md">
-            Forgot Password
-          </button>
-        </div>
+        {isForgotPassword ? (
+          <div className="mt-4">
+            {forgotMessage && (
+              <p className="text-sm text-red-500 mt-2">{forgotMessage}</p>
+            )}
+            <div className="mt-4 flex space-x-2">
+              <button
+                onClick={handleForgotPassword}
+                className="bg-yellow-400 text-black w-full p-2 rounded-md"
+              >
+                Send Reset Email
+              </button>
+              <button
+                onClick={() => setIsForgotPassword(false)}
+                className="bg-gray-400 text-white w-full p-2 rounded-md"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mt-4">
+              <input
+                type="password"
+                placeholder="Current Password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full p-2 border rounded-md text-center"
+              />
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full p-2 border rounded-md text-center mt-2"
+              />
+              <input
+                type="password"
+                placeholder="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 border rounded-md text-center mt-2"
+              />
+            </div>
+            {message && <p className="text-sm text-red-500 mt-2">{message}</p>}
+            <div className="mt-4 flex space-x-2">
+              <button className="bg-green-500 text-white w-1/2 p-2 rounded-md">
+                Update Password
+              </button>
+              <button
+                onClick={() => setIsForgotPassword(true)}
+                className="bg-yellow-400 text-black w-1/2 p-2 rounded-md"
+              >
+                Forgot Password
+              </button>
+            </div>
+          </>
+        )}
 
         <div className="relative inline-block w-full mt-2">
           <button
