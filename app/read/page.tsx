@@ -1,4 +1,4 @@
-import LessonCard, { Lesson } from "@/components/LessonCard";
+import Lessons from "@/components/Lessons";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
@@ -65,23 +65,6 @@ export default async function Read() {
     readStatus = 1;
   }
 
-  let quizData: any = [];
-  units.forEach((unit: any, unitIndex: number) => {
-    quizData[unitIndex] = { unitId: unitIndex + 1, quizes: [] };
-    unit.quizes.forEach((quiz: any, quizIndex: number) => {
-      quizData[unitIndex].quizes.push({
-        quizName: quiz.quiz.quiz_name,
-        content: quiz.quiz.content,
-        type: quiz.quiz.type,
-        description: quiz.quiz.description,
-        status:
-          unitIndex + 1 <= readStatus
-            ? quiz.userQuizRecord?.status ?? "incomplete"
-            : "locked",
-      });
-    });
-  });
-
   return (
     <div className="flex min-h-screen flex-col mt-10 pb-24">
       <div className="mx-4">
@@ -90,16 +73,7 @@ export default async function Read() {
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
         ></div>
-        {quizData.map((unitData: any) => (
-          <div>
-            <div className="flex justify-center">
-              <h2>{`Unit: ${unitData.unitId}`}</h2>
-            </div>
-            {unitData.quizes.map((quizData: any) => (
-              <LessonCard key={quizData.quizName} lesson={quizData} />
-            ))}
-          </div>
-        ))}
+        <Lessons unitData={units} readStatus={readStatus} />
       </div>
     </div>
   );

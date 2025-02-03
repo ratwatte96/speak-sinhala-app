@@ -116,6 +116,45 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
   if (quizCompleted) {
     updateStreak();
     updateStatus();
+
+    if ([28, 29, 30, 31, 32, 33].includes(quiz_id)) {
+      const storedData = localStorage.getItem("quizProgress");
+      if (!storedData) {
+        const expiry = Date.now() + 7 * 24 * 60 * 60 * 1000; // Expiry in 1 week
+        const dataToStore = {
+          quizes: [{ quizId: quiz_id, status: "complete" }],
+          expiry,
+        };
+        localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
+      } else {
+        const { quizes, expiry } = JSON.parse(storedData);
+        console.log("quizes", quizes);
+        if (Date.now() > expiry) {
+          localStorage.removeItem("quizProgress"); // Remove expired data
+          return [];
+        }
+
+        // Prevent duplicate quizId entries
+        const newQuiz = { quizId: quiz_id, status: "complete" };
+        const existingIndex = quizes.findIndex(
+          (q: any) => q.quizId === newQuiz.quizId
+        );
+        if (existingIndex !== -1) {
+          quizes[existingIndex] = newQuiz; // Update existing entry
+        } else {
+          quizes.push(newQuiz); // Add new entry
+        }
+        console.log("quizes", quizes);
+
+        // Store new data
+        const dataToStore = {
+          quizes: quizes,
+          expiry: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        };
+        localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
+      }
+    }
+
     return (
       <div className="text-center">
         <LivesCounter startingLives={lives} />

@@ -6,7 +6,7 @@ import crypto from "crypto";
 const prisma = new PrismaClient();
 
 export async function POST(req: any) {
-  const { email, password } = await req.json();
+  const { email, password, quizProgress } = await req.json();
 
   // Validate email and password
   if (!email || !password) {
@@ -114,7 +114,7 @@ export async function POST(req: any) {
 
     const unitOneQuizes = await prisma.unit.findFirst({
       where: {
-        id: 2, // Fetching Unit with ID 1
+        id: 1, // Fetching Unit with ID 1
       },
       include: {
         quizes: {
@@ -127,7 +127,7 @@ export async function POST(req: any) {
 
     const unitOneQuizIds = unitOneQuizes?.quizes.map((q) => q.quizId) || [];
 
-    const quizes = await prisma.quiz.findMany({
+    const unitOneQuizData = await prisma.quiz.findMany({
       where: {
         id: {
           in: unitOneQuizIds,
@@ -136,7 +136,7 @@ export async function POST(req: any) {
     });
 
     //! maybe do promise.All
-    quizes.forEach(async (quiz) => {
+    unitOneQuizData.forEach(async (quiz) => {
       const connectQuizes = await prisma.user.update({
         where: {
           id: user.id,
@@ -147,7 +147,56 @@ export async function POST(req: any) {
               quiz: {
                 connect: { id: quiz.id },
               },
-              status: "complete",
+              status: JSON.parse(quizProgress)?.quizes?.find(
+                (localStorageQuiz: any) => localStorageQuiz.quizId === quiz.id
+              )?.status
+                ? JSON.parse(quizProgress)?.quizes?.find(
+                    (localStorageQuiz: any) =>
+                      localStorageQuiz.quizId === quiz.id
+                  )?.status
+                : "incomplete",
+            },
+          },
+        },
+      });
+    });
+
+    const unitTwoQuizes = await prisma.unit.findFirst({
+      where: {
+        id: 2, // Fetching Unit with ID 1
+      },
+      include: {
+        quizes: {
+          select: {
+            quizId: true, // Only select quiz IDs
+          },
+        },
+      },
+    });
+
+    const unitTwoQuizIds = unitTwoQuizes?.quizes.map((q) => q.quizId) || [];
+
+    const unitTwoQuizData = await prisma.quiz.findMany({
+      where: {
+        id: {
+          in: unitTwoQuizIds,
+        },
+      },
+    });
+
+    //! maybe do promise.All
+    unitTwoQuizData.forEach(async (quiz) => {
+      const connectQuizes = await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          quizes: {
+            create: {
+              quiz: {
+                connect: { id: quiz.id },
+              },
+              status: "incomplete",
             },
           },
         },

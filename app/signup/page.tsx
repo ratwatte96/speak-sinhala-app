@@ -47,7 +47,11 @@ export default function Signup() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          quizProgress: localStorage.getItem("quizProgress"),
+        }),
       });
 
       const data = await res.json();
