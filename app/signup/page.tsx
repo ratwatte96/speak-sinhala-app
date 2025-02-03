@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 export default function Signup() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -11,8 +12,17 @@ export default function Signup() {
     setMessage("");
 
     // Client-side validation
-    if (!email || !password) {
-      setMessage("Email and password are required");
+    if (!username || !email || !password) {
+      setMessage("All fields are required");
+      return;
+    }
+
+    // Validate username (at least 3 characters, no special characters)
+    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+    if (!usernameRegex.test(username)) {
+      setMessage(
+        "Username must be at least 3 characters and contain only letters, numbers, or underscores."
+      );
       return;
     }
 
@@ -48,6 +58,7 @@ export default function Signup() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          username,
           email,
           password,
           quizProgress: localStorage.getItem("quizProgress"),
@@ -57,6 +68,7 @@ export default function Signup() {
       const data = await res.json();
       if (res.ok) {
         setMessage("User created successfully!");
+        setUsername("");
         setEmail("");
         setPassword("");
       } else {
@@ -68,34 +80,58 @@ export default function Signup() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <h1>Sign Up</h1>
-      <div>
-        <label>Email</label>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-skin-base text-skin-base">
+      <h1 className="text-2xl font-bold">Sign Up</h1>
+
+      <div className="mt-4">
+        <label className="block">Username</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Choose a username"
+          required
+          className="border rounded-md p-2 w-80"
+        />
+      </div>
+
+      <div className="mt-4">
+        <label className="block">Email</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
           required
+          className="border rounded-md p-2 w-80"
         />
       </div>
-      <div>
-        <label>Password</label>
+
+      <div className="mt-4">
+        <label className="block">Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
           required
+          className="border rounded-md p-2 w-80"
         />
       </div>
-      <small>
+
+      <small className="text-gray-500 mt-2">
         Password must be at least 8 characters long and include at least one
         uppercase letter, one number, and one special character.
       </small>
-      <button onClick={handleSignup}>Sign Up</button>
-      {message && <p>{message}</p>}
+
+      <button
+        onClick={handleSignup}
+        className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-md"
+      >
+        Sign Up
+      </button>
+
+      {message && <p className="mt-4 text-red-500">{message}</p>}
     </main>
   );
 }

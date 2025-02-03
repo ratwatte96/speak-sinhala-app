@@ -6,12 +6,24 @@ import crypto from "crypto";
 const prisma = new PrismaClient();
 
 export async function POST(req: any) {
-  const { email, password, quizProgress } = await req.json();
+  const { username, email, password, quizProgress } = await req.json();
 
-  // Validate email and password
-  if (!email || !password) {
+  // Validate input fields
+  if (!username || !email || !password) {
     return new Response(
-      JSON.stringify({ error: "Email and password are required" }),
+      JSON.stringify({ error: "Username, email, and password are required" }),
+      { status: 400 }
+    );
+  }
+
+  // Validate username (at least 3 characters, only letters, numbers, underscores)
+  const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+  if (!usernameRegex.test(username)) {
+    return new Response(
+      JSON.stringify({
+        error:
+          "Invalid username. Use at least 3 characters with only letters, numbers, or underscores.",
+      }),
       { status: 400 }
     );
   }
@@ -55,7 +67,7 @@ export async function POST(req: any) {
   }
 
   try {
-    // Check if the email already exists
+    // Check if email already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return new Response(JSON.stringify({ error: "Email already taken" }), {
@@ -63,7 +75,17 @@ export async function POST(req: any) {
       });
     }
 
-    // Hash the password
+    // Check if username already exists
+    const existingUsername = await prisma.user.findFirst({
+      where: { username },
+    });
+    if (existingUsername) {
+      return new Response(JSON.stringify({ error: "Username already taken" }), {
+        status: 409,
+      });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate verification token
@@ -71,159 +93,83 @@ export async function POST(req: any) {
 
     // Save the user to the database
     const user = await prisma.user.create({
-      data: { email, password: hashedPassword, verificationToken },
+      data: { username, email, password: hashedPassword, verificationToken },
     });
 
+    // Create initial lives
     const lives = await prisma.lives.create({
       data: { total_lives: 5, last_active_time: new Date() },
     });
 
-    const connectLives = await prisma.lives.update({
-      where: {
-        id: lives.id,
-      },
+    await prisma.lives.update({
+      where: { id: lives.id },
       data: {
         users: {
-          create: {
-            user: {
-              connect: { id: user.id },
-            },
-          },
+          create: { user: { connect: { id: user.id } } },
         },
       },
     });
 
+    // Create initial streak
     const streak = await prisma.streak.create({
       data: { current_streak: 0, last_active_date: new Date() },
     });
 
-    const connectStreak = await prisma.user.update({
-      where: {
-        id: user.id,
-      },
+    await prisma.user.update({
+      where: { id: user.id },
       data: {
         streaks: {
-          create: {
-            streak: {
-              connect: { id: streak.id },
-            },
-          },
+          create: { streak: { connect: { id: streak.id } } },
         },
       },
     });
 
-    const unitOneQuizes = await prisma.unit.findFirst({
-      where: {
-        id: 1, // Fetching Unit with ID 1
-      },
-      include: {
-        quizes: {
-          select: {
-            quizId: true, // Only select quiz IDs
-          },
-        },
-      },
+    // Fetch unit quizzes and associate them with the user
+    const units = await prisma.unit.findMany({
+      where: { id: { in: [1, 2] } }, // Fetch Unit 1 & 2
+      include: { quizes: { select: { quizId: true } } },
     });
 
-    const unitOneQuizIds = unitOneQuizes?.quizes.map((q) => q.quizId) || [];
-
-    const unitOneQuizData = await prisma.quiz.findMany({
-      where: {
-        id: {
-          in: unitOneQuizIds,
-        },
-      },
-    });
-
-    //! maybe do promise.All
-    unitOneQuizData.forEach(async (quiz) => {
-      const connectQuizes = await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          quizes: {
-            create: {
-              quiz: {
-                connect: { id: quiz.id },
-              },
-              status: JSON.parse(quizProgress)?.quizes?.find(
-                (localStorageQuiz: any) => localStorageQuiz.quizId === quiz.id
-              )?.status
-                ? JSON.parse(quizProgress)?.quizes?.find(
+    for (const unit of units) {
+      for (const quiz of unit.quizes) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            quizes: {
+              create: {
+                quiz: { connect: { id: quiz.quizId } },
+                status:
+                  JSON.parse(quizProgress)?.quizes?.find(
                     (localStorageQuiz: any) =>
-                      localStorageQuiz.quizId === quiz.id
-                  )?.status
-                : "incomplete",
-            },
-          },
-        },
-      });
-    });
-
-    const unitTwoQuizes = await prisma.unit.findFirst({
-      where: {
-        id: 2, // Fetching Unit with ID 1
-      },
-      include: {
-        quizes: {
-          select: {
-            quizId: true, // Only select quiz IDs
-          },
-        },
-      },
-    });
-
-    const unitTwoQuizIds = unitTwoQuizes?.quizes.map((q) => q.quizId) || [];
-
-    const unitTwoQuizData = await prisma.quiz.findMany({
-      where: {
-        id: {
-          in: unitTwoQuizIds,
-        },
-      },
-    });
-
-    //! maybe do promise.All
-    unitTwoQuizData.forEach(async (quiz) => {
-      const connectQuizes = await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          quizes: {
-            create: {
-              quiz: {
-                connect: { id: quiz.id },
+                      localStorageQuiz.quizId === quiz.quizId
+                  )?.status || "incomplete",
               },
-              status: "incomplete",
             },
           },
-        },
-      });
-    });
+        });
+      }
+    }
 
     // Send verification email
     const verificationUrl = `${process.env.API_URL}/api/verify?token=${verificationToken}`;
-
     await sendEmail({
       to: email,
       subject: "Verify Your Email",
       text: `Click this link to verify your email: ${verificationUrl}`,
     });
 
+    // Daily signup count to enforce limits
     const dailyUserCount = await prisma.user.count({
       where: {
-        createdAt: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)), // Count emails from today
-        },
+        createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
       },
     });
+
     if (dailyUserCount === 90) {
       await sendEmail({
         to: process.env.EMAIL_USER,
         subject: "Speak Sinhala: Email Limit",
-        text: ``,
+        text: "",
       });
     }
 
@@ -234,7 +180,7 @@ export async function POST(req: any) {
   } catch (error: any) {
     if (error.responseCode === 452) {
       console.error("Daily limit reached.");
-      const autoverify = await prisma.user.updateMany({
+      await prisma.user.updateMany({
         where: { email },
         data: { isVerified: true },
       });
@@ -244,7 +190,6 @@ export async function POST(req: any) {
     } else {
       console.error("Error sending email:", error.message);
     }
-    console.error(error);
     return new Response(JSON.stringify({ error: "Something went wrong" }), {
       status: 500,
     });
