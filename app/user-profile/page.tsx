@@ -4,6 +4,48 @@ import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+async function getQuizCompletionPercentage(userId: number): Promise<number> {
+  // const totalQuizzes = await prisma.quiz.count({
+  //   where: {
+  //     units: {
+  //       some: {
+  //         unit: {
+  //           id: {
+  //             gte: 1,
+  //             lte: 13,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
+  // console.log("totalQuizzes", totalQuizzes);
+
+  // if (totalQuizzes === 0) return 0; // Avoid division by zero
+  const totalQuizzes = 74;
+  const completedQuizzes = await prisma.usersOnQuizes.count({
+    where: {
+      userId: userId,
+      status: "complete",
+      quiz: {
+        units: {
+          some: {
+            unit: {
+              id: {
+                gte: 1,
+                lte: 13,
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  console.log(completedQuizzes);
+
+  return (completedQuizzes / totalQuizzes) * 100;
+}
+
 export default async function UserProfile() {
   const callbackUrl = "/user-profile";
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -29,7 +71,14 @@ export default async function UserProfile() {
   });
 
   const { username, email } = user;
-  const userData = { username, email };
+  const readPercentage = await getQuizCompletionPercentage(
+    parseInt(decoded.userId)
+  );
+  const userData = {
+    username,
+    email,
+    readPercentage: Math.floor(readPercentage),
+  };
 
   return (
     <div className="flex min-h-screen flex-col mt-10">

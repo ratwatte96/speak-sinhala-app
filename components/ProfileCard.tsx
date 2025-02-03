@@ -101,7 +101,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
         <div className="flex justify-between mt-4">
           <div className="bg-gray-300 p-2 rounded-md w-1/2 mx-1 text-center">
             <p className="text-sm">Reading Completion</p>
-            <p className="text-lg font-bold">100%</p>
+            <p className="text-lg font-bold">{`${userData.readPercentage}%`}</p>
           </div>
           <div className="relative bg-gray-200 p-2 rounded-md w-1/2 mx-1 text-center">
             <p className="text-sm">Speaking Completion</p>
