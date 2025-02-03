@@ -92,9 +92,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
         </div>
 
         <div className="mt-4 flex space-x-2">
-          <button className="bg-blue-500 text-white w-1/2 py-2 rounded-md">
+          {/* <button className="bg-blue-500 text-white w-1/2 py-2 rounded-md">
             Invite Friends
-          </button>
+          </button> */}
+          <div className="relative inline-block w-1/2">
+            <button
+              className="bg-gray-400 text-white w-full py-2 rounded-md opacity-50 cursor-not-allowed"
+              disabled
+            >
+              Invite Friends
+            </button>
+            <div className="absolute bottom-0 right-0 bg-yellow-500 text-[6px] text-black px-0.5 py-0.5 rounded-br-md shadow-md">
+              Coming Soon
+            </div>
+          </div>
+
           <button className="bg-yellow-400 text-black w-1/2 py-2 rounded-md">
             Get Premium
           </button>
