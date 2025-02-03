@@ -79,7 +79,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
         />
         <h2 className="text-lg font-bold mt-4">{userData.username}</h2>
         <p className="text-gray-500 text-sm">{userData.email}</p>
-
         <div className="flex justify-between mt-4">
           <div className="bg-gray-200 p-2 rounded-md w-1/2 mx-1 text-center">
             <p className="text-sm">Reading Completion</p>
@@ -90,28 +89,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
             <p className="text-lg font-bold">5%</p>
           </div>
         </div>
-
-        <div className="mt-4 flex space-x-2">
-          {/* <button className="bg-blue-500 text-white w-1/2 py-2 rounded-md">
-            Invite Friends
-          </button> */}
-          <div className="relative inline-block w-1/2">
-            <button
-              className="bg-gray-400 text-white w-full py-2 rounded-md opacity-50 cursor-not-allowed"
-              disabled
-            >
-              Invite Friends
-            </button>
-            <div className="absolute bottom-0 right-0 bg-yellow-500 text-[6px] text-black px-0.5 py-0.5 rounded-br-md shadow-md">
-              Coming Soon
-            </div>
-          </div>
-
-          <button className="bg-yellow-400 text-black w-1/2 py-2 rounded-md">
-            Get Premium
-          </button>
-        </div>
-
         {/* Change Password Form */}
         <div className="mt-4">
           <input
@@ -136,15 +113,30 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
             className="w-full p-2 border rounded-md text-center mt-2"
           />
         </div>
-
         {message && <p className="text-sm text-red-500 mt-2">{message}</p>}
+        <div className="mt-4 flex space-x-2">
+          <button
+            onClick={handleChangePassword}
+            className="bg-green-500 text-white w-1/2 p-2 rounded-md"
+          >
+            Update Password
+          </button>
+          <button className="bg-yellow-400 text-black w-1/2 p-2 rounded-md">
+            Forgot Password
+          </button>
+        </div>
 
-        <button
-          onClick={handleChangePassword}
-          className="bg-green-500 text-white w-full py-2 mt-4 rounded-md"
-        >
-          Update Password
-        </button>
+        <div className="relative inline-block w-full mt-2">
+          <button
+            className="bg-gray-400 text-white w-full py-2 rounded-md opacity-50 cursor-not-allowed"
+            disabled
+          >
+            Invite Friends
+          </button>
+          <div className="absolute bottom-0 right-0 bg-yellow-500 text-[8px] text-black px-1.5 py-0.5 rounded-bl-sm shadow-md">
+            Coming Soon
+          </div>
+        </div>
       </div>
     </div>
   );
