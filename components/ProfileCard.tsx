@@ -99,13 +99,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
         <h2 className="text-lg font-bold mt-4">{userData.username}</h2>
         <p className="text-gray-500 text-sm">{userData.email}</p>
         <div className="flex justify-between mt-4">
-          <div className="bg-gray-200 p-2 rounded-md w-1/2 mx-1 text-center">
+          <div className="bg-gray-300 p-2 rounded-md w-1/2 mx-1 text-center">
             <p className="text-sm">Reading Completion</p>
             <p className="text-lg font-bold">100%</p>
           </div>
-          <div className="bg-gray-200 p-2 rounded-md w-1/2 mx-1 text-center">
+          <div className="relative bg-gray-200 p-2 rounded-md w-1/2 mx-1 text-center">
             <p className="text-sm">Speaking Completion</p>
-            <p className="text-lg font-bold">5%</p>
+            <p className="text-lg font-bold">0%</p>
+            <div className="absolute bottom-0 right-0 bg-yellow-500 text-[7px] text-black px-1.5 py-0.5 rounded-bl-sm shadow-md">
+              Coming Soon
+            </div>
           </div>
         </div>
         {/* Change Password Form */}
