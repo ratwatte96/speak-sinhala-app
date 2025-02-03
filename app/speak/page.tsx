@@ -5,25 +5,28 @@ import TopNavbar from "@/components/TopNavBar";
 export default function Speak() {
   const lessons: Lesson[] = [
     {
-      number: 1,
       type: "New Letter",
       content: "ka, ga, sa",
       description: "In this lesson you will practice essential letters",
       status: "complete",
+      quizName: "",
+      number: undefined,
     },
     {
-      number: 2,
       type: "New Letter",
       content: "ka, ga, sa",
       description: "In this lesson you will practice essential letters",
       status: "incomplete",
+      quizName: "",
+      number: undefined,
     },
     {
-      number: 3,
       type: "New Letter",
       content: "ka, ga, sa",
       description: "In this lesson you will practice essential letters",
       status: "locked",
+      quizName: "",
+      number: undefined,
     },
   ];
 

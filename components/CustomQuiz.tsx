@@ -59,7 +59,7 @@ export const CustomQuiz: React.FC<CustomQuizProps> = ({ dropDownLetters }) => {
         </>
       ) : (
         <>
-          <Quiz steps={quizData} quiz_title={"Custom Quiz"} />
+          <Quiz steps={quizData} quiz_title={"Custom Quiz"} quiz_id={0} />
         </>
       )}
     </div>

@@ -37,8 +37,8 @@ const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
 
   return (
     <>
-      {processedUnitData.map((unitData: any) => (
-        <div>
+      {processedUnitData.map((unitData: any, unitIndex: number) => (
+        <div key={unitIndex}>
           <div className="flex justify-center">
             <h2>{`Unit: ${unitData.unitId}`}</h2>
           </div>

@@ -1,6 +1,7 @@
 import { CheckCircle, XCircle, Lock } from "lucide-react";
 
 export interface Lesson {
+  number: null | undefined;
   quizName: string;
   type: string;
   content: string;

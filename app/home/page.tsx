@@ -2,28 +2,31 @@ import LessonCard, { Lesson } from "@/components/LessonCard";
 import ProfileCard from "@/components/ProfileCard";
 import Shop from "@/components/ShopComponent";
 
-export default function UserProfile() {
+export default function Home() {
   const lessons: Lesson[] = [
     {
-      number: 1,
       type: "New Letter",
       content: "ka, ga, sa",
       description: "In this lesson you will practice essential letters",
       status: "complete",
+      quizName: "",
+      number: undefined,
     },
     {
-      number: 2,
       type: "New Letter",
       content: "ka, ga, sa",
       description: "In this lesson you will practice essential letters",
       status: "incomplete",
+      quizName: "",
+      number: undefined,
     },
     {
-      number: 3,
       type: "New Letter",
       content: "ka, ga, sa",
       description: "In this lesson you will practice essential letters",
       status: "locked",
+      quizName: "",
+      number: undefined,
     },
   ];
 
@@ -44,7 +47,9 @@ export default function UserProfile() {
             <LessonCard key={lesson.number} lesson={lesson} />
           ))}
         </div>
-        <ProfileCard />
+        <ProfileCard
+          userData={{ username: "testtest", email: "testtest@testtest.com" }}
+        />
       </div>
     </div>
   );
