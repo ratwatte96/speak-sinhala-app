@@ -4,7 +4,11 @@ import { useState } from "react";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 
-const Navbar = ({ loggedOut }: { loggedOut: boolean }) => {
+interface TopNavBarProps {
+  loggedOut?: boolean;
+}
+
+const Navbar: React.FC<TopNavBarProps> = ({ loggedOut }) => {
   const [isToggled, setIsToggled] = useState(false);
 
   return (
