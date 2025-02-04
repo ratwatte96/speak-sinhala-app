@@ -1,9 +1,10 @@
 "use client";
 
-import { Heart, Crown } from "lucide-react";
 import { useState } from "react";
+import { LivesCounter } from "./LivesCounter";
+import { StreakCounter } from "./StreakCounter";
 
-const Navbar = () => {
+const Navbar = ({ loggedOut }: { loggedOut: boolean }) => {
   const [isToggled, setIsToggled] = useState(false);
 
   return (
@@ -11,12 +12,10 @@ const Navbar = () => {
       <div className="w-screen h-full relative flex justify-between items-center p-4 bg-white shadow-md">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
-            <Heart className="text-red-500" size={24} />
-            <span className="ml-1 font-bold text-lg">5</span>
+            <LivesCounter loggedOut={loggedOut} />
           </div>
           <div className="flex items-center">
-            <Crown className="text-yellow-500" size={24} />
-            <span className="ml-1 font-bold text-lg">5</span>
+            <StreakCounter loggedOut={loggedOut} />
           </div>
         </div>
         <button

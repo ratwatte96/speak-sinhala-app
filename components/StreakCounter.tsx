@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchWithToken } from "@/utils/fetch";
+import { Crown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -61,9 +62,9 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({ loggedOut }) => {
     }
   }, []);
   return (
-    <p className="flex items-center text-skin-base">
-      {streak}
-      <span className="text-xl">&#128293;</span>
+    <p className="flex items-center">
+      <Crown className="text-yellow-500" size={24} />
+      <span className="ml-1 font-bold text-lg">{streak}</span>
     </p>
   );
 };

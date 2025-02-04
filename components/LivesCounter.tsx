@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
+import { Heart } from "lucide-react";
 
 interface LivesCounterProps {
   startingLives?: number;
@@ -52,9 +53,11 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
   }, [startingLives]);
 
   return (
-    <p className="flex items-center text-skin-base">
-      {loadingLives ? "loading" : lives}
-      <span className="text-xl ml-1 text-skin-accent">&#x2764;</span>
+    <p className="flex items-center">
+      <Heart className="text-red-500" size={24} />
+      <span className="ml-1 font-bold text-lg">
+        {loadingLives ? "loading" : lives}
+      </span>
     </p>
   );
 };
