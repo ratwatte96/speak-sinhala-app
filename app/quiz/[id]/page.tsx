@@ -168,6 +168,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
   let user: any;
   let readStatus: any;
+
   if (!["28", "29", "30", "31", "32", "33"].includes(id)) {
     if (!token) {
       //! add a custom don't have access to this quiz page
@@ -253,6 +254,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
         steps={quizSteps}
         quiz_title={quizQuestion}
         quiz_id={parseInt(id)}
+        loggedOut={!token}
       />
     </main>
   );

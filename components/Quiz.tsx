@@ -8,14 +8,21 @@ import { StreakCounter } from "./StreakCounter";
 import { Step } from "./Step";
 import Modal from "./Modal";
 import { fetchWithToken } from "@/utils/fetch";
+import { usePathname } from "next/navigation";
 
 interface QuizProps {
   steps?: Step[];
   quiz_title?: string;
   quiz_id: number;
+  loggedOut: boolean;
 }
 
-const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
+const Quiz: React.FC<QuizProps> = ({
+  steps,
+  quiz_title,
+  quiz_id,
+  loggedOut,
+}) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
@@ -23,6 +30,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
   const [mistakeCount, setMistakeCount] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [refillMessage, setRefillMessage] = useState<string>("");
+  const pathname = usePathname();
 
   useEffect(() => {
     if (lives === 0) {
@@ -52,19 +60,46 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
   };
 
   const updateStreak = () => {
-    try {
-      fetchWithToken("/api/streak", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((streakData) => {
-          console.log(streakData);
-        });
-    } catch (error: any) {
-      console.log(error);
+    if (
+      loggedOut &&
+      pathname.includes("quiz") &&
+      ["28", "29", "30", "31", "32", "33"].includes(
+        pathname.split("/").pop() || "0"
+      )
+    ) {
+      let storedStreakDate: any = localStorage.getItem("streakDate");
+      if (!storedStreakDate) {
+        const today = new Date().toISOString().split("T")[0]; // Format as YYYY-MM-DD
+        storedStreakDate = localStorage.setItem("streakDate", today);
+      }
+
+      const stored = new Date(storedStreakDate);
+      const today = new Date();
+
+      // Get difference in days
+      const diffInTime = today.getTime() - stored.getTime();
+      const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+
+      if (diffInDays === 1) {
+        let storedStreak: any = localStorage.getItem("streak");
+        let newStreak: any = parseInt(storedStreak) + 1;
+        localStorage.setItem("streak", `${newStreak}`);
+        localStorage.setItem("streakDate", today.toISOString().split("T")[0]);
+        return;
+      }
+    } else {
+      try {
+        fetchWithToken("/api/streak", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((streakData) => {});
+      } catch (error: any) {
+        console.log(error);
+      }
     }
   };
 
@@ -80,32 +115,50 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
         body: JSON.stringify({ quiz_id }),
       })
         .then((res) => res.json())
-        .then((streakData) => {
-          console.log(streakData);
-        });
+        .then((streakData) => {});
     } catch (error: any) {
       console.log(error);
     }
   };
 
   const refill = async () => {
-    try {
-      const response: any = await fetchWithToken("/api/refill", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const responseData = await response.json();
-      if (response.ok) {
-        setLives(responseData.total_lives);
-        setRefillMessage("Refill Successful");
-      } else {
-        console.log(responseData);
-        setRefillMessage(responseData.error);
+    if (
+      loggedOut &&
+      pathname.includes("quiz") &&
+      ["28", "29", "30", "31", "32", "33"].includes(
+        pathname.split("/").pop() || "0"
+      )
+    ) {
+      let storedLives: any = localStorage.getItem("lives");
+      if (!storedLives) {
+        storedLives = localStorage.setItem("lives", "5");
       }
-    } catch (error: any) {
-      console.log(error);
+      const newLives = parseInt(storedLives) + 5;
+      storedLives = localStorage.setItem("lives", `${newLives}`);
+      setLives(newLives);
+      setShowModal(false);
+    } else {
+      try {
+        const response: any = await fetchWithToken(
+          `/api/refill?quizId=${pathname.split("/").pop()}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const responseData = await response.json();
+        if (response.ok) {
+          setLives(responseData.total_lives);
+          setRefillMessage("Refill Successful");
+          setShowModal(false);
+        } else {
+          setRefillMessage(responseData.error);
+        }
+      } catch (error: any) {
+        console.log(error);
+      }
     }
   };
 
@@ -128,7 +181,6 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       } else {
         const { quizes, expiry } = JSON.parse(storedData);
-        console.log("quizes", quizes);
         if (Date.now() > expiry) {
           localStorage.removeItem("quizProgress"); // Remove expired data
           return [];
@@ -144,7 +196,6 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
         } else {
           quizes.push(newQuiz); // Add new entry
         }
-        console.log("quizes", quizes);
 
         // Store new data
         const dataToStore = {
@@ -157,7 +208,7 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
 
     return (
       <div className="text-center">
-        <LivesCounter startingLives={lives} />
+        <LivesCounter startingLives={lives} loggedOut={loggedOut} />
         <h2 className="text-2xl font-bold mb-4">
           Congratulations! You&apos;ve completed the quiz.
         </h2>
@@ -169,19 +220,35 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
   }
 
   const updateLives = () => {
-    try {
-      fetchWithToken(`/api/lives`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((livesData) => {
-          setLives(livesData.total_lives);
-        });
-    } catch (error: any) {
-      console.log(error);
+    if (
+      loggedOut &&
+      pathname.includes("quiz") &&
+      ["28", "29", "30", "31", "32", "33"].includes(
+        pathname.split("/").pop() || "0"
+      )
+    ) {
+      let storedLives: any = localStorage.getItem("lives");
+      if (!storedLives) {
+        storedLives = localStorage.setItem("lives", "5");
+      }
+      const newLives = parseInt(storedLives) - 1;
+      storedLives = localStorage.setItem("lives", `${newLives}`);
+      setLives(newLives);
+    } else {
+      try {
+        fetchWithToken(`/api/lives`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((livesData) => {
+            setLives(livesData.total_lives);
+          });
+      } catch (error: any) {
+        console.log(error);
+      }
     }
   };
 
@@ -189,7 +256,11 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
 
   return quizFailed ? (
     <div className="text-center">
-      <LivesCounter startingLives={lives} setMainLives={setLives} />
+      <LivesCounter
+        startingLives={lives}
+        setMainLives={setLives}
+        loggedOut={loggedOut}
+      />
       <h2 className="text-2xl font-bold mb-4">
         Sorry! You&apos;ve run out of lives.
       </h2>
@@ -200,8 +271,12 @@ const Quiz: React.FC<QuizProps> = ({ steps, quiz_title, quiz_id }) => {
   ) : (
     <div className="flex flex-col items-center">
       <div className="flex justify-start w-56 sm:w-40">
-        <StreakCounter />
-        <LivesCounter startingLives={lives} setMainLives={setLives} />
+        <StreakCounter loggedOut={loggedOut} />
+        <LivesCounter
+          startingLives={lives}
+          setMainLives={setLives}
+          loggedOut={loggedOut}
+        />
       </div>
       <div className="w-80 bg-gray-200 rounded-full h-2.5 mb-4">
         <div

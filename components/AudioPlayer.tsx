@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Howl } from "howler";
 import { fetchWithToken } from "@/utils/fetch";
+import { usePathname } from "next/navigation";
 
 interface AudioPlayerProps {
   audioPath: string;
@@ -35,6 +36,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [sound, setSound] = useState<Howl | null>(null);
   const [src, setSrc] = useState<string | null>(null); // Hold the fetched audio src URL
   const [isPressed, setIsPressed] = useState(false);
+  const pathname = usePathname();
 
   // Event handler for when the mouse button is pressed down
   const handleMouseDown = () => {
@@ -56,13 +58,17 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         let response;
         if (process.env.NODE_ENV === "development") {
           response = await fetchWithToken(
-            `/api/audio?path=${encodeURIComponent(audioPath)}`
+            `/api/audio?path=${encodeURIComponent(audioPath)}&quizId=${pathname
+              .split("/")
+              .pop()}`
           );
         } else {
           response = await fetchWithToken(
             `${
               process.env.NEXT_PUBLIC_API_URL
-            }/api/audio?path=${encodeURIComponent(audioPath)}`
+            }/api/audio?path=${encodeURIComponent(audioPath)}&quizId=${pathname
+              .split("/")
+              .pop()}`
           );
         }
 
