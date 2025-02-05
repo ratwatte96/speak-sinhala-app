@@ -34,7 +34,7 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
       if (!storedLives) {
         storedLives = localStorage.setItem("lives", "5");
       }
-      setSharedState(parseInt(storedLives));
+      setSharedState("lives", parseInt(storedLives));
       setLoadingLives(false);
       if (setMainLives) setMainLives(parseInt(storedLives));
       return;
@@ -43,9 +43,7 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
         fetchWithToken(`/api/lives`, { method: "GET", credentials: "include" })
           .then((res) => res.json())
           .then((livesData) => {
-            setSharedState(livesData.total_lives);
-            // console.log(livesData.total_lives);
-            // console.log(sharedState);
+            setSharedState("lives", livesData.total_lives);
             setLoadingLives(false);
             if (setMainLives) setMainLives(livesData.total_lives);
           });
@@ -53,13 +51,13 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
         console.log(error);
       }
     }
-  }, [startingLives, sharedState]);
+  }, [startingLives, sharedState.lives]);
 
   return (
     <p className="flex items-center">
       <Heart className="text-red-500" size={24} />
       <span className="ml-1 font-bold text-lg">
-        {loadingLives ? "loading" : sharedState}
+        {loadingLives ? "loading" : sharedState.lives}
       </span>
     </p>
   );

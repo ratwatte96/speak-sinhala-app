@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { SharedStateProvider } from "./StateProvider";
+import { RefillCounter } from "./RefillCounter";
 
 interface TopNavBarProps {
   loggedOut?: boolean;
@@ -21,6 +22,9 @@ const Navbar: React.FC<TopNavBarProps> = ({ loggedOut }) => {
           </div>
           <div className="flex items-center">
             <StreakCounter loggedOut={loggedOut} />
+          </div>
+          <div className="flex items-center">
+            <RefillCounter loggedOut={loggedOut} />
           </div>
         </div>
         <button

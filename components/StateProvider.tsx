@@ -1,23 +1,34 @@
 "use client";
+import { createContext, useState, useContext, ReactNode } from "react";
 
-import { createContext, useState, useContext } from "react";
+// Define the shape of the shared state
+type SharedStateType = {
+  lives: number;
+  refills: number;
+};
 
-// Define the context type
 type SharedStateContextType = {
-  sharedState: any;
-  setSharedState: (value: any) => void;
+  sharedState: SharedStateType;
+  setSharedState: (key: keyof SharedStateType, value: number) => void;
 };
 
 const SharedStateContext = createContext<SharedStateContextType | undefined>(
   undefined
 );
 
-export const SharedStateProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const [sharedState, setSharedState] = useState("default value");
+export const SharedStateProvider = ({ children }: { children: ReactNode }) => {
+  const [sharedState, setSharedStateInternal] = useState<SharedStateType>({
+    lives: 0,
+    refills: 0,
+  });
+
+  // Function to update only one property of the state
+  const setSharedState = (key: keyof SharedStateType, value: number) => {
+    setSharedStateInternal((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
 
   return (
     <SharedStateContext.Provider value={{ sharedState, setSharedState }}>

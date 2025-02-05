@@ -52,7 +52,7 @@ const Quiz: React.FC<QuizProps> = ({
           });
           const responseData = await response.json();
           if (response.ok) {
-            setSharedState(responseData.total_lives);
+            setSharedState("lives", responseData.total_lives);
             setRefillMessage("Refill Successful");
           } else {
             setRefillMessage(responseData.error);
@@ -77,7 +77,7 @@ const Quiz: React.FC<QuizProps> = ({
         const data = await res.json();
 
         if (data.ok) {
-          setSharedState(data.total_lives);
+          setSharedState("lives", data.total_lives);
           setRefillMessage("Refill Purchased");
         } else {
           setRefillMessage(data.error);

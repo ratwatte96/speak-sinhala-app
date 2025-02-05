@@ -2,6 +2,49 @@ import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 
+export async function GET(req: any) {
+  const cookies = req.headers.get("cookie");
+  if (!cookies) {
+    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
+  }
+
+  // Parse cookies (basic approach)
+  const cookieArray = cookies
+    .split("; ")
+    .map((cookie: any) => cookie.split("="));
+  const cookieMap = Object.fromEntries(cookieArray);
+
+  const accessToken = cookieMap["accessToken"];
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Access token missing" },
+      { status: 401 }
+    );
+  }
+
+  //! add try catch
+  const decoded: any = verifyAccessToken(accessToken);
+  const user: any = await prisma.user.findUnique({
+    where: {
+      id: parseInt(decoded.userId),
+    },
+    include: {
+      refills: true,
+    },
+  });
+  const refill = await prisma.refill.findUnique({
+    where: {
+      id: user.refills[0].refillId,
+    },
+  });
+
+  return new Response(JSON.stringify(refill), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
 // TODO: Secure this endpoint properly
 export async function POST(req: Request) {
   try {

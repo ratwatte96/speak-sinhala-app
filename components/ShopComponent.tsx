@@ -34,7 +34,7 @@ const Shop = () => {
           });
           const responseData = await response.json();
           if (response.ok) {
-            setSharedState(responseData.total_lives);
+            setSharedState("lives", responseData.total_lives);
             setRefillMessage("Refill Successful");
           } else {
             setRefillMessage(responseData.error);
@@ -58,8 +58,9 @@ const Shop = () => {
 
         const data = await res.json();
 
-        if (data.ok) {
-          setSharedState(data.total_lives);
+        if (res.ok) {
+          console.log(data.total_refill);
+          setSharedState("refills", data.total_refill);
           setRefillMessage("Refill Purchased");
         } else {
           setRefillMessage(data.error);
