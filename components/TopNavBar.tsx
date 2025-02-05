@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
+import { SharedStateProvider } from "./StateProvider";
 
 interface TopNavBarProps {
   loggedOut?: boolean;

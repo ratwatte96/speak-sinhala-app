@@ -57,7 +57,7 @@ export async function POST(req: any) {
   });
 
   let newLives: any = lives;
-  if (lives?.total_lives === 0) {
+  if (lives?.total_lives !== 5) {
     newLives = await prisma.lives.update({
       where: {
         id: newLives.id,

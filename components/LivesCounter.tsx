@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
 import { Heart } from "lucide-react";
+import { useSharedState } from "@/components/StateProvider";
 
 interface LivesCounterProps {
   startingLives?: number;
@@ -16,9 +17,9 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
   setMainLives,
   loggedOut,
 }) => {
-  const [lives, setLives] = useState(startingLives);
   const [loadingLives, setLoadingLives] = useState(true);
   const pathname = usePathname();
+  const { sharedState, setSharedState } = useSharedState();
 
   // if this a quiz page and if this is a quiz number in unit 1 and if there is no token
   useEffect(() => {
@@ -33,7 +34,7 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
       if (!storedLives) {
         storedLives = localStorage.setItem("lives", "5");
       }
-      setLives(parseInt(storedLives));
+      setSharedState(parseInt(storedLives));
       setLoadingLives(false);
       if (setMainLives) setMainLives(parseInt(storedLives));
       return;
@@ -42,7 +43,9 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
         fetchWithToken(`/api/lives`, { method: "GET", credentials: "include" })
           .then((res) => res.json())
           .then((livesData) => {
-            setLives(livesData.total_lives);
+            setSharedState(livesData.total_lives);
+            // console.log(livesData.total_lives);
+            // console.log(sharedState);
             setLoadingLives(false);
             if (setMainLives) setMainLives(livesData.total_lives);
           });
@@ -50,13 +53,13 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
         console.log(error);
       }
     }
-  }, [startingLives]);
+  }, [startingLives, sharedState]);
 
   return (
     <p className="flex items-center">
       <Heart className="text-red-500" size={24} />
       <span className="ml-1 font-bold text-lg">
-        {loadingLives ? "loading" : lives}
+        {loadingLives ? "loading" : sharedState}
       </span>
     </p>
   );
