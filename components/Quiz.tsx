@@ -6,9 +6,10 @@ import Link from "next/link";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { Step } from "./Step";
-import Modal from "./Modal";
 import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
+import RefillModal from "./RefillModal";
+import { useSharedState } from "./StateProvider";
 
 interface QuizProps {
   steps?: Step[];
@@ -29,14 +30,63 @@ const Quiz: React.FC<QuizProps> = ({
   const [lives, setLives] = useState(1);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [useRefill, setUseRefill] = useState<boolean>(false);
+  const [buyRefill, setBuyRefill] = useState<boolean>(false);
   const [refillMessage, setRefillMessage] = useState<string>("");
+  const { setSharedState } = useSharedState();
   const pathname = usePathname();
 
   useEffect(() => {
     if (lives === 0) {
       setShowModal(true);
     }
-  }, [lives]);
+
+    if (useRefill) {
+      const refill = async () => {
+        try {
+          const response: any = await fetchWithToken(`/api/refill?quizId=0`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const responseData = await response.json();
+          if (response.ok) {
+            setSharedState(responseData.total_lives);
+            setRefillMessage("Refill Successful");
+          } else {
+            setRefillMessage(responseData.error);
+          }
+        } catch (error: any) {
+          console.log(error);
+        }
+      };
+      refill();
+    }
+
+    if (buyRefill) {
+      const updateRefill = async (newTotal: number) => {
+        const res = await fetchWithToken("/api/buy-refill", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ newTotal }),
+        });
+
+        const data = await res.json();
+
+        if (data.ok) {
+          setSharedState(data.total_lives);
+          setRefillMessage("Refill Purchased");
+        } else {
+          setRefillMessage(data.error);
+        }
+        return data;
+      };
+      updateRefill(1);
+    }
+  }, [lives, useRefill, buyRefill]);
 
   const nextStep = (isMistake: boolean) => {
     if (lives === 0) {
@@ -295,27 +345,20 @@ const Quiz: React.FC<QuizProps> = ({
       ) : (
         <p>Loading...</p>
       )}
-      {showModal && (
-        <Modal
-          show={showModal}
-          onClose={() => {
-            setShowModal(false);
-            nextStep(false);
-          }}
-          heading={"Note"}
-        >
-          <div>
-            <p>You ran out of lives</p>
-            <button
-              onClick={refill}
-              className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
-            >
-              Refill
-            </button>
-            {refillMessage !== "" ? <p>{refillMessage}</p> : null}
-          </div>
-        </Modal>
-      )}
+      <RefillModal
+        show={showModal}
+        onClose={() => {
+          setUseRefill(false);
+          setBuyRefill(false);
+          setRefillMessage("");
+          setShowModal(false);
+        }}
+        onBuyRefill={() => setBuyRefill(true)}
+        onUseRefill={() => setUseRefill(true)}
+        refillMessage={refillMessage}
+        disableBuy={buyRefill}
+        disableUse={useRefill}
+      />
     </div>
   );
 };

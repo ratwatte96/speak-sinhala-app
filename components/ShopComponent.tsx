@@ -1,9 +1,9 @@
 "use client";
 import { Heart, Crown } from "lucide-react";
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
 import { fetchWithToken } from "@/utils/fetch";
 import { useSharedState } from "@/components/StateProvider";
+import RefillModal from "./RefillModal";
 
 const Shop = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -37,7 +37,7 @@ const Shop = () => {
             setSharedState(responseData.total_lives);
             setRefillMessage("Refill Successful");
           } else {
-            setRefillMessage("Refill Failed");
+            setRefillMessage(responseData.error);
           }
         } catch (error: any) {
           console.log(error);
@@ -109,39 +109,21 @@ const Shop = () => {
           ))}
       </div>
 
-      {showModal && (
-        <Modal
-          show={showModal}
-          onClose={() => {
-            setUseRefill(false);
-            setBuyRefill(false);
-            setRefillTotal(0);
-            setRefillMessage("");
-            setShowModal(false);
-          }}
-          heading={"Note"}
-        >
-          <div>
-            <button
-              onClick={() => setBuyRefill(true)}
-              className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
-              disabled={buyRefill}
-            >
-              Add Refill Rs.0
-            </button>
-            <button
-              onClick={() => {
-                setUseRefill(true);
-              }}
-              className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
-              disabled={useRefill}
-            >
-              Use Refill
-            </button>
-          </div>
-          <p>{refillMessage}</p>
-        </Modal>
-      )}
+      <RefillModal
+        show={showModal}
+        onClose={() => {
+          setUseRefill(false);
+          setBuyRefill(false);
+          setRefillTotal(0);
+          setRefillMessage("");
+          setShowModal(false);
+        }}
+        onBuyRefill={() => setBuyRefill(true)}
+        onUseRefill={() => setUseRefill(true)}
+        refillMessage={refillMessage}
+        disableBuy={buyRefill}
+        disableUse={useRefill}
+      />
     </div>
   );
 };
