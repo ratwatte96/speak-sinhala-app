@@ -9,8 +9,10 @@ const Shop = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [useRefill, setUseRefill] = useState<boolean>(false);
   const [buyRefill, setBuyRefill] = useState<boolean>(false);
+  const [refillTotal, setRefillTotal] = useState<number>(0);
   const [refillMessage, setRefillMessage] = useState<string>("");
-  const { sharedState, setSharedState } = useSharedState();
+
+  const { setSharedState } = useSharedState();
 
   const items = [
     { type: "Refill", amount: 1 },
@@ -33,9 +35,7 @@ const Shop = () => {
           const responseData = await response.json();
           if (response.ok) {
             setSharedState(responseData.total_lives);
-            console.log(setSharedState);
             setRefillMessage("Refill Successful");
-            setShowModal(false);
           } else {
             setRefillMessage("Refill Failed");
           }
@@ -45,7 +45,30 @@ const Shop = () => {
       };
       refill();
     }
-  }, [useRefill]);
+
+    if (buyRefill) {
+      const updateRefill = async (newTotal: number) => {
+        const res = await fetchWithToken("/api/buy-refill", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ newTotal }),
+        });
+
+        const data = await res.json();
+
+        if (data.ok) {
+          setSharedState(data.total_lives);
+          setRefillMessage("Refill Purchased");
+        } else {
+          setRefillMessage(data.error);
+        }
+        return data;
+      };
+      updateRefill(refillTotal);
+    }
+  }, [useRefill, buyRefill]);
 
   return (
     <div className="p-6 min-h-screen">
@@ -58,7 +81,10 @@ const Shop = () => {
             <div
               key={index}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                setShowModal(true);
+                setRefillTotal(item.amount);
+              }}
             >
               <Heart className="text-red-500" size={40} />
               <p className="mt-2 font-semibold">Refill x {item.amount}</p>
@@ -88,21 +114,27 @@ const Shop = () => {
           show={showModal}
           onClose={() => {
             setUseRefill(false);
+            setBuyRefill(false);
+            setRefillTotal(0);
             setRefillMessage("");
             setShowModal(false);
           }}
           heading={"Note"}
         >
           <div>
-            {/* <button
-              onClick={refill}
-              className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
-            >
-              Add Refill
-            </button> */}
             <button
-              onClick={() => setUseRefill(true)}
+              onClick={() => setBuyRefill(true)}
               className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+              disabled={buyRefill}
+            >
+              Add Refill Rs.0
+            </button>
+            <button
+              onClick={() => {
+                setUseRefill(true);
+              }}
+              className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+              disabled={useRefill}
             >
               Use Refill
             </button>

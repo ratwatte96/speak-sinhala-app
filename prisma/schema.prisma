@@ -18,10 +18,26 @@ model User {
   lives LivesOnUsers[]
   streaks StreaksOnUsers[]
   quizes UsersOnQuizes[]
+  refills RefillsOnUsers[]
   createdAt DateTime @default(now())
   readStatus Int @default(1)
   resetToken   String?  @unique
   resetExpires DateTime?
+}
+
+model Refill {
+  id    Int    @id @default(autoincrement())
+  total_refill   Int @default(5)
+  users RefillsOnUsers[]
+}
+
+model RefillsOnUsers {
+  refill     Refill  @relation(fields: [refillId], references: [id])
+  refillId   Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int 
+
+  @@id([refillId, userId])
 }
 
 model Todo {
