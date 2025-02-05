@@ -111,6 +111,7 @@ export async function POST(req: Request) {
 
     // Update lives if needed
     let updatedLives = lives;
+    let updatedRefill: any;
     if (lives.total_lives !== 5) {
       updatedLives = await prisma.lives.update({
         where: { id: lives.id },
@@ -121,7 +122,7 @@ export async function POST(req: Request) {
       });
 
       // Decrease total_refill by 1
-      await prisma.refill.update({
+      updatedRefill = await prisma.refill.update({
         where: { id: userRefill.refillId },
         data: {
           total_refill: { decrement: 1 },
@@ -134,10 +135,16 @@ export async function POST(req: Request) {
       );
     }
 
-    return new Response(JSON.stringify(updatedLives), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        total_lives: updatedLives.total_lives,
+        total_refills: updatedRefill.total_refill,
+      }),
+      {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Error updating lives/refill:", error);
     return NextResponse.json(

@@ -10,6 +10,7 @@ import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
 import RefillModal from "./RefillModal";
 import { useSharedState } from "./StateProvider";
+import { RefillCounter } from "./RefillCounter";
 
 interface QuizProps {
   steps?: Step[];
@@ -43,22 +44,49 @@ const Quiz: React.FC<QuizProps> = ({
 
     if (useRefill) {
       const refill = async () => {
-        try {
-          const response: any = await fetchWithToken(`/api/refill?quizId=0`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const responseData = await response.json();
-          if (response.ok) {
-            setSharedState("lives", responseData.total_lives);
-            setRefillMessage("Refill Successful");
-          } else {
-            setRefillMessage(responseData.error);
+        if (
+          loggedOut &&
+          pathname.includes("quiz") &&
+          ["28", "29", "30", "31", "32", "33"].includes(
+            pathname.split("/").pop() || "0"
+          )
+        ) {
+          //lives
+          let storedLives: any = localStorage.getItem("lives");
+          if (storedLives === "5") {
+            setUseRefill(false);
+            setRefillMessage("Lives are already full");
+            return;
           }
-        } catch (error: any) {
-          console.log(error);
+          const newLives = parseInt(storedLives) + 5;
+          storedLives = localStorage.setItem("lives", `${newLives}`);
+          setSharedState("lives", parseInt(storedLives));
+          setUseRefill(false);
+          setRefillMessage("Refill Successful");
+        } else {
+          try {
+            const response: any = await fetchWithToken(
+              `/api/refill?quizId=${pathname.split("/").pop()}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const responseData = await response.json();
+            if (response.ok) {
+              setSharedState("refills", responseData.total_refill);
+              setSharedState("lives", responseData.total_lives);
+
+              setRefillMessage("Refill Successful");
+            } else {
+              setRefillMessage(responseData.error);
+            }
+          } catch (error: any) {
+            console.log(error);
+          }
+          setUseRefill(false);
         }
       };
       refill();
@@ -66,23 +94,37 @@ const Quiz: React.FC<QuizProps> = ({
 
     if (buyRefill) {
       const updateRefill = async (newTotal: number) => {
-        const res = await fetchWithToken("/api/buy-refill", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ newTotal }),
-        });
-
-        const data = await res.json();
-
-        if (data.ok) {
-          setSharedState("lives", data.total_lives);
-          setRefillMessage("Refill Purchased");
+        if (
+          loggedOut &&
+          pathname.includes("quiz") &&
+          ["28", "29", "30", "31", "32", "33"].includes(
+            pathname.split("/").pop() || "0"
+          )
+        ) {
+          setRefillMessage("You have unlimited refills while in free mode");
         } else {
-          setRefillMessage(data.error);
+          const res = await fetchWithToken(
+            `/api/buy-refill?quizId=${pathname.split("/").pop()}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ newTotal }),
+            }
+          );
+
+          const data = await res.json();
+
+          if (res.ok) {
+            setSharedState("refills", data.total_refill);
+            setRefillMessage("Refill Purchased");
+          } else {
+            setRefillMessage(data.error);
+          }
+          return data;
         }
-        return data;
+        setBuyRefill(false);
       };
       updateRefill(1);
     }
@@ -258,7 +300,15 @@ const Quiz: React.FC<QuizProps> = ({
 
     return (
       <div className="text-center">
-        <LivesCounter startingLives={lives} loggedOut={loggedOut} />
+        <div className="flex justify-start w-56 sm:w-40">
+          <StreakCounter loggedOut={loggedOut} />
+          <LivesCounter
+            startingLives={lives}
+            setMainLives={setLives}
+            loggedOut={loggedOut}
+          />
+          <RefillCounter loggedOut={loggedOut} />
+        </div>
         <h2 className="text-2xl font-bold mb-4">
           Congratulations! You&apos;ve completed the quiz.
         </h2>
@@ -306,11 +356,15 @@ const Quiz: React.FC<QuizProps> = ({
 
   return quizFailed ? (
     <div className="text-center">
-      <LivesCounter
-        startingLives={lives}
-        setMainLives={setLives}
-        loggedOut={loggedOut}
-      />
+      <div className="flex justify-start w-56 sm:w-40">
+        <StreakCounter loggedOut={loggedOut} />
+        <LivesCounter
+          startingLives={lives}
+          setMainLives={setLives}
+          loggedOut={loggedOut}
+        />
+        <RefillCounter loggedOut={loggedOut} />
+      </div>
       <h2 className="text-2xl font-bold mb-4">
         Sorry! You&apos;ve run out of lives.
       </h2>
@@ -327,6 +381,7 @@ const Quiz: React.FC<QuizProps> = ({
           setMainLives={setLives}
           loggedOut={loggedOut}
         />
+        <RefillCounter loggedOut={loggedOut} />
       </div>
       <div className="w-80 bg-gray-200 rounded-full h-2.5 mb-4">
         <div
