@@ -1,3 +1,4 @@
+"use client";
 import { CheckCircle, XCircle, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 

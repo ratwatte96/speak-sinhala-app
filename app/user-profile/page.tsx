@@ -30,6 +30,22 @@ async function getQuizCompletionPercentage(userId: number): Promise<number> {
   return (completedQuizzes / totalQuizzes) * 100;
 }
 
+export async function getUserData(user: any) {
+  try {
+    const readPercentage = await getQuizCompletionPercentage(user.id);
+
+    return {
+      username: user.username,
+      email: user.email,
+      readPercentage: Math.floor(readPercentage),
+      premiumEndDate: user.premiumEndDate,
+    };
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+}
+
 export default async function UserProfile() {
   const callbackUrl = "/user-profile";
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -45,25 +61,8 @@ export default async function UserProfile() {
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
-  const user: any = await prisma.user.findUnique({
-    where: {
-      id: parseInt(decoded.userId),
-    },
-    include: {
-      lives: true,
-    },
-  });
-
-  const { username, email } = user;
-  const readPercentage = await getQuizCompletionPercentage(
-    parseInt(decoded.userId)
-  );
-  const userData = {
-    username,
-    email,
-    readPercentage: Math.floor(readPercentage),
-    premiumEndDate: user.premiumEndDate,
-  };
+  const userData = await getUserData(decoded.userId);
+  console.log(userData);
   const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
   return (
     <div className="flex min-h-screen flex-col mt-10">
