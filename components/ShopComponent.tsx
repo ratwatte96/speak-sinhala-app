@@ -4,13 +4,18 @@ import { useEffect, useState } from "react";
 import { fetchWithToken } from "@/utils/fetch";
 import { useSharedState } from "@/components/StateProvider";
 import RefillModal from "./RefillModal";
+import Modal from "./Modal";
 
 const Shop = () => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showRefillModal, setShowRefillModal] = useState<boolean>(false);
+  const [showPremiumModal, setShowPremiumModal] = useState<boolean>(false);
   const [useRefill, setUseRefill] = useState<boolean>(false);
   const [buyRefill, setBuyRefill] = useState<boolean>(false);
-  const [refillTotal, setRefillTotal] = useState<number>(0);
+  const [buyPremium, setBuyPremium] = useState<boolean>(false);
+  const [refillTotal, setRefillTotal] = useState<any>(0);
   const [refillMessage, setRefillMessage] = useState<string>("");
+  const [premiumType, setPremiumType] = useState<any>("");
+  const [premiumMessage, setPremiumMessage] = useState<string>("");
 
   const { setSharedState } = useSharedState();
 
@@ -20,6 +25,7 @@ const Shop = () => {
     { type: "Refill", amount: 10 },
     { type: "Premium", amount: 1 },
     { type: "Premium", amount: 12 },
+    { type: "Premium", amount: "lifetime" },
   ];
 
   useEffect(() => {
@@ -69,7 +75,31 @@ const Shop = () => {
       };
       updateRefill(refillTotal);
     }
-  }, [useRefill, buyRefill]);
+
+    if (buyPremium) {
+      const updatePremium = async (type: any) => {
+        const res = await fetchWithToken("/api/premium", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ type }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          console.log(data.total_refill);
+          setPremiumMessage("Premium Activated");
+        } else {
+          setPremiumMessage(data.error);
+        }
+        setBuyPremium(false);
+        return data;
+      };
+      updatePremium(premiumType);
+    }
+  }, [useRefill, buyRefill, buyPremium]);
 
   return (
     <div className="p-6 min-h-screen">
@@ -83,7 +113,7 @@ const Shop = () => {
               key={index}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
               onClick={() => {
-                setShowModal(true);
+                setShowRefillModal(true);
                 setRefillTotal(item.amount);
               }}
             >
@@ -101,23 +131,39 @@ const Shop = () => {
             <div
               key={index}
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
+              onClick={() => {
+                setPremiumType(
+                  item.amount === 1
+                    ? "1_month"
+                    : item.amount === 12
+                    ? "12_months"
+                    : null
+                );
+                setShowPremiumModal(true);
+              }}
             >
               <Crown className="text-yellow-500" size={40} />
               <p className="mt-2 font-semibold">
-                Month{item.amount > 1 ? "s" : ""} x {item.amount}
+                Month
+                {typeof item.amount != "number"
+                  ? item.amount
+                  : item.amount > 1
+                  ? "s"
+                  : ""}
+                x {item.amount}
               </p>
             </div>
           ))}
       </div>
 
       <RefillModal
-        show={showModal}
+        show={showRefillModal}
         onClose={() => {
           setUseRefill(false);
           setBuyRefill(false);
           setRefillTotal(0);
           setRefillMessage("");
-          setShowModal(false);
+          setShowRefillModal(false);
         }}
         onBuyRefill={() => setBuyRefill(true)}
         onUseRefill={() => setUseRefill(true)}
@@ -125,6 +171,27 @@ const Shop = () => {
         disableBuy={buyRefill}
         disableUse={useRefill}
       />
+      <Modal
+        show={showPremiumModal}
+        onClose={() => {
+          setBuyPremium(false);
+          setPremiumType("");
+          setPremiumMessage("");
+          setShowPremiumModal(false);
+        }}
+        heading={"Note"}
+      >
+        <div>
+          <button
+            onClick={() => setBuyPremium(true)}
+            className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+            disabled={buyPremium}
+          >
+            Buy Premium: {premiumType}
+          </button>
+        </div>
+        <p>{premiumMessage}</p>
+      </Modal>
     </div>
   );
 };

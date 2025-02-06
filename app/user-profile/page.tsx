@@ -62,8 +62,8 @@ export default async function UserProfile() {
     username,
     email,
     readPercentage: Math.floor(readPercentage),
+    premiumEndDate: user.premiumEndDate,
   };
-
   const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
   return (
     <div className="flex min-h-screen flex-col mt-10">

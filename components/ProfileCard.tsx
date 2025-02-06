@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { fetchWithToken } from "@/utils/fetch";
+import { Star } from "lucide-react";
 
 interface ProfileCardProps {
   userData: any;
+  isPremium: boolean;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -86,18 +88,42 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData }) => {
     }
   };
 
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <div className="flex flex-col items-center p-6 min-h-screen">
       <div className="p-6 rounded-lg w-80 text-center">
-        <Image
-          src="/avatar.webp"
-          alt="User Avatar"
-          width={80}
-          height={80}
-          className="rounded-full mx-auto"
-        />
+        <div className="relative w-[80px] h-[80px] mx-auto">
+          <Image
+            src="/avatar.webp"
+            alt="User Avatar"
+            width={80}
+            height={80}
+            className="rounded-full"
+          />
+          {isPremium && (
+            <Star
+              className="absolute top-0 right-0 text-yellow-500"
+              size={24}
+              fill="currentColor"
+            />
+          )}
+        </div>
         <h2 className="text-lg font-bold mt-4">{userData.username}</h2>
         <p className="text-gray-500 text-sm">{userData.email}</p>
+        {isPremium && (
+          <p className="text-sm text-gray-500">
+            {userData.premiumEndDate
+              ? `Premium Until: ${formatDate(userData.premiumEndDate)}`
+              : "Lifetime Premium"}
+          </p>
+        )}
         <div className="flex justify-between mt-4">
           <div className="bg-gray-300 p-2 rounded-md w-1/2 mx-1 text-center">
             <p className="text-sm">Reading Completion</p>

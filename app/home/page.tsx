@@ -66,6 +66,7 @@ export default function Home() {
         </div>
         <ProfileCard
           userData={{ username: "testtest", email: "testtest@testtest.com" }}
+          isPremium={false}
         />
       </div>
     </div>

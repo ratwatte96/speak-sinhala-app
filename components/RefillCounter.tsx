@@ -34,7 +34,6 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
     if (infinityRefills) {
       setLoadingRefills(false);
     } else {
-      console.log("RefillCOunter", infinityRefills);
       try {
         fetchWithToken(`/api/refill`, { method: "GET", credentials: "include" })
           .then((res) => res.json())
