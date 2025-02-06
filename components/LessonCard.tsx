@@ -1,4 +1,5 @@
 import { CheckCircle, XCircle, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export interface Lesson {
   number: null | undefined;
@@ -7,6 +8,7 @@ export interface Lesson {
   content: string;
   description: string;
   status: "complete" | "incomplete" | "locked";
+  quizId: string;
 }
 
 interface LessonCardProps {
@@ -14,6 +16,11 @@ interface LessonCardProps {
 }
 
 const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
+  const router = useRouter();
+  const handleRouting = (value: string) => {
+    router.push(`/quiz/${lesson.quizId}`);
+  };
+
   const statusIcons = {
     complete: <CheckCircle className="text-green-500" size={24} />, // Reduced size
     incomplete: <XCircle className="text-red-500" size={24} />, // Reduced size
@@ -37,6 +44,14 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
         <span className="text-gray-700 text-xs sm:text-sm capitalize">
           {lesson.status}
         </span>
+        {lesson.status !== "locked" && (
+          <button
+            onClick={() => handleRouting(lesson.quizId)}
+            className="bg-green-500 text-black p-1 rounded-md w-28"
+          >
+            Start
+          </button>
+        )}
       </div>
     </div>
   );

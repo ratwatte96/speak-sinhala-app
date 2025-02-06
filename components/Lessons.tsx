@@ -20,6 +20,7 @@ const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
         content: quiz.quiz.content,
         type: quiz.quiz.type,
         description: quiz.quiz.description,
+        quizId: quiz.quizId,
         status:
           unitIndex + 1 <= readStatus
             ? quiz.userQuizRecord?.status ??
