@@ -27,55 +27,34 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   extra_text,
   extraa_text,
   onClick,
-  additionalClasses,
+  additionalClasses = "",
   disabledOveride = false,
   isButtonNoAudio = false,
   isHard = false,
 }) => {
   const [playing, setPlaying] = useState(false);
   const [sound, setSound] = useState<Howl | null>(null);
-  const [src, setSrc] = useState<string | null>(null); // Hold the fetched audio src URL
+  const [src, setSrc] = useState<string | null>(null);
   const [isPressed, setIsPressed] = useState(false);
   const pathname = usePathname();
+  const quizId = pathname.split("/").pop();
 
-  // Event handler for when the mouse button is pressed down
-  const handleMouseDown = () => {
-    setIsPressed(true);
-  };
-
-  // Event handler for when the mouse button is released
-  const handleMouseUp = () => {
-    setIsPressed(false);
-  };
-
-  // Event handler for when the mouse leaves the button (in case the user moves the cursor away while clicking)
-  const handleMouseLeave = () => {
-    setIsPressed(false);
-  };
   useEffect(() => {
     const fetchAudioUrl = async () => {
       try {
-        let response;
-        if (process.env.NODE_ENV === "development") {
-          response = await fetchWithToken(
-            `/api/audio?path=${encodeURIComponent(audioPath)}&quizId=${pathname
-              .split("/")
-              .pop()}`
-          );
-        } else {
-          response = await fetchWithToken(
-            `${
-              process.env.NEXT_PUBLIC_API_URL
-            }/api/audio?path=${encodeURIComponent(audioPath)}&quizId=${pathname
-              .split("/")
-              .pop()}`
-          );
-        }
+        const baseUrl =
+          process.env.NODE_ENV === "development"
+            ? ""
+            : process.env.NEXT_PUBLIC_API_URL;
+        const response = await fetchWithToken(
+          `${baseUrl}/api/audio?path=${encodeURIComponent(
+            audioPath
+          )}&quizId=${quizId}`
+        );
 
         if (response.ok) {
           const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          setSrc(url); // Set the fetched URL
+          setSrc(URL.createObjectURL(blob));
         } else {
           console.error("Failed to fetch audio file.");
         }
@@ -85,12 +64,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
 
     fetchAudioUrl();
-  }, [audioPath]);
-
-  const onEndCombined = () => {
-    if (onEnd) onEnd();
-    setPlaying(false);
-  };
+  }, [audioPath, quizId]);
 
   useEffect(() => {
     if (!src) return;
@@ -98,95 +72,58 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const newSound = new Howl({
       src: [src],
       format: ["mp3"],
-      html5: true, // Enable HTML5 for better mobile support
-      onend: onEndCombined,
+      html5: true,
+      onend: () => {
+        setPlaying(false);
+        onEnd?.();
+      },
       onplay: () => setPlaying(true),
       onpause: () => setPlaying(false),
       onstop: () => setPlaying(false),
     });
 
     setSound(newSound);
-    if (playOnLoad) {
-      newSound.play();
-    }
+    if (playOnLoad) newSound.play();
+
     return () => {
       newSound.unload();
-      URL.revokeObjectURL(src); // Clean up the object URL after it's used
+      URL.revokeObjectURL(src);
     };
-  }, [src, onEnd]);
+  }, [src, onEnd, playOnLoad]);
 
   const togglePlay = () => {
-    if (onClick) onClick();
+    onClick?.();
     if (!isButtonNoAudio) {
-      if (playing) {
-        sound?.pause();
-      } else {
-        sound?.play();
-      }
+      playing ? sound?.pause() : sound?.play();
       setPlaying(!playing);
     }
   };
 
   return (
-    <>
-      <button
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        className={
-          isPressed
-            ? "relative rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28"
-            : "relative rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28" +
-              " " +
-              additionalClasses
-        }
-        onClick={togglePlay}
-        //! disabled={!sound || disabledOveride} TEMP until we get more sound recordings
-        disabled={disabledOveride}
-      >
-        {display_text ? (
-          extra_text ? (
-            <>
-              <span>{display_text}</span>
-              <div
-                key={display_text}
-                className={"flex flex-col items-center w-full sm:text-base"}
-              >
-                <span>
-                  {extraa_text ?? (
-                    <p className="text-skin-base ">{extraa_text}</p>
-                  )}
-                </span>
-                {extra_text ?? <p className="text-skin-base">{extra_text}</p>}
-                {!isHard && (
-                  <span
-                    className="absolute bottom-0 right-0 pr-1
-                  pb-1"
-                  >
-                    &#x1F50A;
-                  </span>
-                )}
-              </div>
-            </>
-          ) : (
-            <>
-              <span>{display_text}</span>
-              {!isButtonNoAudio && !isHard && (
-                <div className="flex justify-end">
-                  <span
-                    className="text-base absolute bottom-0 right-0 pr-1
-                  pb-1"
-                  >
-                    &#x1F50A;
-                  </span>
-                </div>
-              )}
-            </>
-          )
-        ) : (
-          <span className="ml-1 text-skin-accent"> &#x1F50A;</span>
-        )}
-      </button>
-    </>
+    <button
+      onMouseDown={() => setIsPressed(true)}
+      onMouseUp={() => setIsPressed(false)}
+      onMouseLeave={() => setIsPressed(false)}
+      className={`relative rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28 ${
+        isPressed ? "" : additionalClasses
+      }`}
+      onClick={togglePlay}
+      disabled={disabledOveride || playing}
+    >
+      {display_text ? (
+        <div className="flex flex-col items-center w-full sm:text-base">
+          <span>{display_text}</span>
+          {extraa_text && <p className="text-skin-base">{extraa_text}</p>}
+          {extra_text && <p className="text-skin-base">{extra_text}</p>}
+          {!isHard && !isButtonNoAudio && (
+            <span className="absolute bottom-0 right-0 pr-1 pb-1">
+              &#x1F50A;
+            </span>
+          )}
+        </div>
+      ) : (
+        <span className="ml-1 text-skin-accent">&#x1F50A;</span>
+      )}
+    </button>
   );
 };
