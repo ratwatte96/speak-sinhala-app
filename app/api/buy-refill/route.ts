@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { updatePremiumStatus } from "@/utils/checkPremium";
 
 export async function POST(req: Request) {
   const cookies = req.headers.get("cookie");
@@ -25,7 +26,8 @@ export async function POST(req: Request) {
   }
 
   const decoded: any = verifyAccessToken(accessToken);
-  if (decoded.isPremium) {
+  const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+  if (isPremium) {
     return NextResponse.json({ error: "The user is premium" }, { status: 401 });
   }
 

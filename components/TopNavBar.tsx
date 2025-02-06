@@ -8,9 +8,10 @@ import { RefillCounter } from "./RefillCounter";
 
 interface TopNavBarProps {
   loggedOut?: boolean;
+  isPremium?: boolean;
 }
 
-const Navbar: React.FC<TopNavBarProps> = ({ loggedOut }) => {
+const Navbar: React.FC<TopNavBarProps> = ({ loggedOut, isPremium }) => {
   const [isToggled, setIsToggled] = useState(false);
 
   return (
@@ -24,7 +25,7 @@ const Navbar: React.FC<TopNavBarProps> = ({ loggedOut }) => {
             <StreakCounter loggedOut={loggedOut} />
           </div>
           <div className="flex items-center">
-            <RefillCounter loggedOut={loggedOut} />
+            <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
           </div>
         </div>
         <button

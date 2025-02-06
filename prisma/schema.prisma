@@ -13,16 +13,21 @@ model User {
   password  String
   username String @default("test")
   isVerified   Boolean  @default(false)
+
   isPremium   Boolean  @default(false)
+  premiumEndDate DateTime?
+
   verificationToken String?
+  resetToken   String?  @unique
+  resetExpires DateTime?
+
   lives LivesOnUsers[]
   streaks StreaksOnUsers[]
   quizes UsersOnQuizes[]
   refills RefillsOnUsers[]
+
   createdAt DateTime @default(now())
   readStatus Int @default(1)
-  resetToken   String?  @unique
-  resetExpires DateTime?
 }
 
 model Refill {

@@ -7,25 +7,28 @@ import { RefreshCcw, Infinity } from "lucide-react";
 import { useSharedState } from "@/components/StateProvider";
 
 interface RefillCounterProps {
-  startingLives?: number;
-  setMainLives?: (lives: number) => void;
   loggedOut?: boolean;
+  isPremium?: boolean;
 }
 
-export const RefillCounter: React.FC<RefillCounterProps> = ({ loggedOut }) => {
+export const RefillCounter: React.FC<RefillCounterProps> = ({
+  loggedOut,
+  isPremium,
+}) => {
   const [loadingRefills, setLoadingRefills] = useState(true);
   const pathname = usePathname();
   const { sharedState, setSharedState } = useSharedState();
 
   const infinityRefills =
-    loggedOut &&
-    ((pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )) ||
-      pathname.includes("read") ||
-      pathname.includes("speak") ||
-      pathname.includes("home"));
+    isPremium ||
+    (loggedOut &&
+      ((pathname.includes("quiz") &&
+        ["28", "29", "30", "31", "32", "33"].includes(
+          pathname.split("/").pop() || "0"
+        )) ||
+        pathname.includes("read") ||
+        pathname.includes("speak") ||
+        pathname.includes("home")));
 
   useEffect(() => {
     if (infinityRefills) {

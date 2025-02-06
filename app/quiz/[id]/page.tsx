@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
 import LogoutButton from "@/components/LogoutButton";
+import { updatePremiumStatus } from "@/utils/checkPremium";
 
 function convertNewLetterData(data: any): NewLetterData[] {
   return data.map((item: any) => ({
@@ -168,8 +169,12 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
   let user: any;
   let readStatus: any;
+  let isPremium: any;
 
-  if (!["28", "29", "30", "31", "32", "33"].includes(id)) {
+  if (
+    (token && ["28", "29", "30", "31", "32", "33"].includes(id)) ||
+    !["28", "29", "30", "31", "32", "33"].includes(id)
+  ) {
     if (!token) {
       //! add a custom don't have access to this quiz page
       redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
@@ -182,8 +187,10 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
           id: parseInt(decoded.userId),
         },
       });
+      isPremium = await updatePremiumStatus(parseInt(decoded.userId));
       readStatus = user.readStatus;
     } catch (error) {
+      console.log(error);
       //! add a custom don't have access to this quiz page
       redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
@@ -255,6 +262,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
         quiz_title={quizQuestion}
         quiz_id={parseInt(id)}
         loggedOut={!token}
+        isPremium={isPremium}
       />
     </main>
   );

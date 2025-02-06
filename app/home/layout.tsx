@@ -1,4 +1,6 @@
 import TopNavbar from "@/components/TopNavBar";
+import { verifyAccessToken } from "@/utils/auth";
+import { updatePremiumStatus } from "@/utils/checkPremium";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
@@ -10,17 +12,24 @@ export const metadata: Metadata = {
   description: "Website to make learning how to speak sinhala fun",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
+  let isPremium;
+  if (token) {
+    const decoded: any = verifyAccessToken(token.value);
+    isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+  } else {
+    isPremium = false;
+  }
 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col bg-[#EAEAEA]">
-        <TopNavbar loggedOut={!token} />
+        <TopNavbar loggedOut={!token} isPremium={isPremium} />
         <main className="min-h-[80vh]">{children}</main>
       </body>
     </html>

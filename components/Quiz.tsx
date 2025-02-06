@@ -17,6 +17,7 @@ interface QuizProps {
   quiz_title?: string;
   quiz_id: number;
   loggedOut: boolean;
+  isPremium?: boolean;
 }
 
 const Quiz: React.FC<QuizProps> = ({
@@ -24,6 +25,7 @@ const Quiz: React.FC<QuizProps> = ({
   quiz_title,
   quiz_id,
   loggedOut,
+  isPremium,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
@@ -102,6 +104,7 @@ const Quiz: React.FC<QuizProps> = ({
           )
         ) {
           setRefillMessage("You have unlimited refills while in free mode");
+          setBuyRefill(false);
         } else {
           const res = await fetchWithToken(
             `/api/buy-refill?quizId=${pathname.split("/").pop()}`,
@@ -122,9 +125,9 @@ const Quiz: React.FC<QuizProps> = ({
           } else {
             setRefillMessage(data.error);
           }
+          setBuyRefill(false);
           return data;
         }
-        setBuyRefill(false);
       };
       updateRefill(1);
     }
@@ -307,7 +310,7 @@ const Quiz: React.FC<QuizProps> = ({
             setMainLives={setLives}
             loggedOut={loggedOut}
           />
-          <RefillCounter loggedOut={loggedOut} />
+          <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
         </div>
         <h2 className="text-2xl font-bold mb-4">
           Congratulations! You&apos;ve completed the quiz.
@@ -363,7 +366,7 @@ const Quiz: React.FC<QuizProps> = ({
           setMainLives={setLives}
           loggedOut={loggedOut}
         />
-        <RefillCounter loggedOut={loggedOut} />
+        <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
       </div>
       <h2 className="text-2xl font-bold mb-4">
         Sorry! You&apos;ve run out of lives.
@@ -381,7 +384,7 @@ const Quiz: React.FC<QuizProps> = ({
           setMainLives={setLives}
           loggedOut={loggedOut}
         />
-        <RefillCounter loggedOut={loggedOut} />
+        <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
       </div>
       <div className="w-80 bg-gray-200 rounded-full h-2.5 mb-4">
         <div

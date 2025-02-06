@@ -1,27 +1,11 @@
 import ProfileCard from "@/components/ProfileCard";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { updatePremiumStatus } from "@/utils/checkPremium";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 async function getQuizCompletionPercentage(userId: number): Promise<number> {
-  // const totalQuizzes = await prisma.quiz.count({
-  //   where: {
-  //     units: {
-  //       some: {
-  //         unit: {
-  //           id: {
-  //             gte: 1,
-  //             lte: 13,
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // });
-  // console.log("totalQuizzes", totalQuizzes);
-
-  // if (totalQuizzes === 0) return 0; // Avoid division by zero
   const totalQuizzes = 74;
   const completedQuizzes = await prisma.usersOnQuizes.count({
     where: {
@@ -80,10 +64,11 @@ export default async function UserProfile() {
     readPercentage: Math.floor(readPercentage),
   };
 
+  const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
   return (
     <div className="flex min-h-screen flex-col mt-10">
       <div className="mx-4">
-        <ProfileCard userData={userData} />
+        <ProfileCard userData={userData} isPremium={isPremium} />
       </div>
     </div>
   );

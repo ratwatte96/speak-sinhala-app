@@ -56,7 +56,6 @@ export async function POST(req: any) {
     const accessToken = generateAccessToken({
       userId: `${user.id}`,
       email: user.email,
-      isPremium: user.isPremium,
     });
     const refreshToken = generateRefreshToken(`${user.id}`);
 

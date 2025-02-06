@@ -27,11 +27,10 @@ export async function POST() {
         { status: 401 }
       );
     }
-    console.log(user);
+
     const newAccessToken = generateAccessToken({
       userId: `${user.id}`,
       email: user.email,
-      isPremium: user.isPremium,
     });
 
     return new NextResponse("Token refreshed", {

@@ -5,16 +5,11 @@ import crypto from "crypto";
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 const JWT_EXPIRATION = "15m"; // 15 minutes
 
-export function generateAccessToken(user: {
-  userId: string;
-  email: string;
-  isPremium: boolean;
-}) {
+export function generateAccessToken(user: { userId: string; email: string }) {
   return jwt.sign(
     {
       userId: user.userId,
       email: user.email,
-      isPremium: user.isPremium,
     },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRATION }

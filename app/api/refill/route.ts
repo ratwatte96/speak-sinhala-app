@@ -70,12 +70,6 @@ export async function POST(req: Request) {
     }
 
     const decoded: any = verifyAccessToken(accessToken);
-    if (decoded.isPremium) {
-      return NextResponse.json(
-        { error: "The user is premium" },
-        { status: 401 }
-      );
-    }
 
     // Fetch user with lives and refills
     const user = await prisma.user.findUnique({
