@@ -2,12 +2,11 @@ import ProfileCard from "@/components/ProfileCard";
 import Shop from "@/components/ShopComponent";
 import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
-import { getUserData } from "../user-profile/page";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import prisma from "@/lib/prisma";
-import { getUserWithQuizRecords } from "../read/page";
 import Lessons from "@/components/Lessons";
 import Tabs from "@/components/Tabs";
+import { getUserData, getUserWithQuizRecords } from "@/utils/random";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies

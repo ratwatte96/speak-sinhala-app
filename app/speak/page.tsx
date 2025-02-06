@@ -1,35 +1,4 @@
-import LessonCard, { Lesson } from "@/components/LessonCard";
-import BottomNavbar from "@/components/BottomNavbar";
-import TopNavbar from "@/components/TopNavBar";
-
 export default function Speak() {
-  const lessons: Lesson[] = [
-    {
-      type: "New Letter",
-      content: "ka, ga, sa",
-      description: "In this lesson you will practice essential letters",
-      status: "complete",
-      quizName: "",
-      number: undefined,
-    },
-    {
-      type: "New Letter",
-      content: "ka, ga, sa",
-      description: "In this lesson you will practice essential letters",
-      status: "incomplete",
-      quizName: "",
-      number: undefined,
-    },
-    {
-      type: "New Letter",
-      content: "ka, ga, sa",
-      description: "In this lesson you will practice essential letters",
-      status: "locked",
-      quizName: "",
-      number: undefined,
-    },
-  ];
-
   return (
     <div className="flex min-h-screen flex-col mt-10 pb-24">
       <div className="mx-4">
@@ -38,15 +7,7 @@ export default function Speak() {
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
         ></div>
-        {lessons.map((lesson) => (
-          <LessonCard key={lesson.number} lesson={lesson} />
-        ))}
-        {lessons.map((lesson) => (
-          <LessonCard key={lesson.number} lesson={lesson} />
-        ))}
-        {lessons.map((lesson) => (
-          <LessonCard key={lesson.number} lesson={lesson} />
-        ))}
+        COMING SOON
       </div>
     </div>
   );

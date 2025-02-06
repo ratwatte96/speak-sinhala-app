@@ -1,51 +1,8 @@
 import Lessons from "@/components/Lessons";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { getUserWithQuizRecords } from "@/utils/random";
 import { cookies } from "next/headers";
-
-export async function getUserWithQuizRecords(user: any) {
-  try {
-    // Fetch all units with quizzes
-    let units = await prisma.unit.findMany({
-      include: {
-        quizes: {
-          include: {
-            quiz: true, // Include quiz details
-          },
-        },
-      },
-    });
-
-    // Extract quiz IDs from units
-    const quizIds = units.flatMap((unit: any) =>
-      unit.quizes.map((q: any) => q.quizId)
-    );
-
-    // Fetch user's quiz records
-    const userQuizRecords = await prisma.usersOnQuizes.findMany({
-      where: {
-        userId: parseInt(user.id),
-        quizId: { in: quizIds },
-      },
-    });
-
-    // Attach user quiz records to quizzes in units
-    units = units.map((unit: any) => ({
-      ...unit,
-      quizes: unit.quizes.map((quiz: any) => ({
-        ...quiz,
-        userQuizRecord:
-          userQuizRecords.find((record) => record.quizId === quiz.quizId) ||
-          null,
-      })),
-    }));
-
-    return units;
-  } catch (error) {
-    console.error("Error fetching user quiz data:", error);
-    throw error;
-  }
-}
 
 export default async function Read() {
   let units: any = await prisma.unit.findMany({
