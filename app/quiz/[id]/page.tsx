@@ -176,7 +176,6 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     !["28", "29", "30", "31", "32", "33"].includes(id)
   ) {
     if (!token) {
-      //! add a custom don't have access to this quiz page
       redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
 
@@ -191,7 +190,6 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
       readStatus = user.readStatus;
     } catch (error) {
       console.log(error);
-      //! add a custom don't have access to this quiz page
       redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
   }
@@ -206,8 +204,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   });
 
   if (readStatus < unit?.unit.id) {
-    //! add a custom don't have access to this quiz page
-    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    redirect(`/no-access`);
   }
 
   const quizData = await prisma.quiz.findFirst({
