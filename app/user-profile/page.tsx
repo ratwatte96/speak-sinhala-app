@@ -20,10 +20,12 @@ export default async function UserProfile() {
   } catch (error) {
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
-
-  const userData = await getUserData(decoded.userId);
-  console.log(userData);
-  const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+  const user: any = await prisma.user.findUnique({
+    where: { id: parseInt(decoded.userId) },
+    include: { lives: true },
+  });
+  const userData = await getUserData(user);
+  const isPremium = await updatePremiumStatus(user.id);
   return (
     <div className="flex min-h-screen flex-col mt-10">
       <div className="mx-4">
