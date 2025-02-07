@@ -50,32 +50,18 @@ export async function POST(req: Request) {
 
     let refill;
 
-    // If the user doesn't have a refill record, create one
-    if (user.refills.length === 0) {
-      refill = await prisma.refill.create({
-        data: {
-          total_refill: newTotal, // Start with the provided amount
-          users: {
-            create: {
-              userId: user.id, // Associate the user with the refill
-            },
-          },
-        },
-      });
-    } else {
-      // Get the user's first refill
-      const existingRefillId = user.refills[0].refillId;
+    // Get the user's first refill
+    const existingRefillId = user.refills[0].refillId;
 
-      // Update the existing refill
-      refill = await prisma.refill.update({
-        where: { id: existingRefillId },
-        data: {
-          total_refill: {
-            increment: newTotal, // Add to the existing count
-          },
+    // Update the existing refill
+    refill = await prisma.refill.update({
+      where: { id: existingRefillId },
+      data: {
+        total_refill: {
+          increment: newTotal, // Add to the existing count
         },
-      });
-    }
+      },
+    });
 
     return NextResponse.json(refill, { status: 200 });
   } catch (error) {

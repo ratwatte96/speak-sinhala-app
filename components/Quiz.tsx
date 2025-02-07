@@ -38,6 +38,15 @@ const Quiz: React.FC<QuizProps> = ({
   const [refillMessage, setRefillMessage] = useState<string>("");
   const { setSharedState } = useSharedState();
   const pathname = usePathname();
+  const notSignedUp =
+    loggedOut &&
+    ((pathname.includes("quiz") &&
+      ["28", "29", "30", "31", "32", "33"].includes(
+        pathname.split("/").pop() || "0"
+      )) ||
+      pathname.includes("read") ||
+      pathname.includes("speak") ||
+      pathname.includes("home"));
 
   useEffect(() => {
     if (lives === 0) {
@@ -46,13 +55,7 @@ const Quiz: React.FC<QuizProps> = ({
 
     if (useRefill) {
       const refill = async () => {
-        if (
-          loggedOut &&
-          pathname.includes("quiz") &&
-          ["28", "29", "30", "31", "32", "33"].includes(
-            pathname.split("/").pop() || "0"
-          )
-        ) {
+        if (notSignedUp) {
           //lives
           let storedLives: any = localStorage.getItem("lives");
           if (storedLives === "5") {
@@ -96,13 +99,7 @@ const Quiz: React.FC<QuizProps> = ({
 
     if (buyRefill) {
       const updateRefill = async (newTotal: number) => {
-        if (
-          loggedOut &&
-          pathname.includes("quiz") &&
-          ["28", "29", "30", "31", "32", "33"].includes(
-            pathname.split("/").pop() || "0"
-          )
-        ) {
+        if (notSignedUp) {
           setRefillMessage("You have unlimited refills while in free mode");
           setBuyRefill(false);
         } else {
@@ -155,13 +152,7 @@ const Quiz: React.FC<QuizProps> = ({
   };
 
   const updateStreak = () => {
-    if (
-      loggedOut &&
-      pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )
-    ) {
+    if (notSignedUp) {
       let storedStreakDate: any = localStorage.getItem("streakDate");
       if (!storedStreakDate) {
         const today = new Date().toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -216,47 +207,6 @@ const Quiz: React.FC<QuizProps> = ({
     }
   };
 
-  const refill = async () => {
-    if (
-      loggedOut &&
-      pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )
-    ) {
-      let storedLives: any = localStorage.getItem("lives");
-      if (!storedLives) {
-        storedLives = localStorage.setItem("lives", "5");
-      }
-      const newLives = parseInt(storedLives) + 5;
-      storedLives = localStorage.setItem("lives", `${newLives}`);
-      setLives(newLives);
-      setShowModal(false);
-    } else {
-      try {
-        const response: any = await fetchWithToken(
-          `/api/refill?quizId=${pathname.split("/").pop()}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const responseData = await response.json();
-        if (response.ok) {
-          setLives(responseData.total_lives);
-          setRefillMessage("Refill Successful");
-          setShowModal(false);
-        } else {
-          setRefillMessage(responseData.error);
-        }
-      } catch (error: any) {
-        console.log(error);
-      }
-    }
-  };
-
   if (quizFailed) {
     updateStreak();
   }
@@ -265,7 +215,7 @@ const Quiz: React.FC<QuizProps> = ({
     updateStreak();
     updateStatus();
 
-    if ([28, 29, 30, 31, 32, 33].includes(quiz_id)) {
+    if (notSignedUp) {
       const storedData = localStorage.getItem("quizProgress");
       if (!storedData) {
         const expiry = Date.now() + 7 * 24 * 60 * 60 * 1000; // Expiry in 1 week
@@ -323,13 +273,7 @@ const Quiz: React.FC<QuizProps> = ({
   }
 
   const updateLives = () => {
-    if (
-      loggedOut &&
-      pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )
-    ) {
+    if (notSignedUp) {
       let storedLives: any = localStorage.getItem("lives");
       if (!storedLives) {
         storedLives = localStorage.setItem("lives", "5");

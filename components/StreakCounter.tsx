@@ -12,15 +12,18 @@ interface StreakCounterProps {
 export const StreakCounter: React.FC<StreakCounterProps> = ({ loggedOut }) => {
   const [streak, setStreak] = useState("loading");
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (
-      loggedOut &&
-      pathname.includes("quiz") &&
+  const notSignedUp =
+    loggedOut &&
+    ((pathname.includes("quiz") &&
       ["28", "29", "30", "31", "32", "33"].includes(
         pathname.split("/").pop() || "0"
-      )
-    ) {
+      )) ||
+      pathname.includes("read") ||
+      pathname.includes("speak") ||
+      pathname.includes("home"));
+
+  useEffect(() => {
+    if (notSignedUp) {
       let storedStreak: any = localStorage.getItem("streak");
       if (!storedStreak) {
         // First creation of local streak data

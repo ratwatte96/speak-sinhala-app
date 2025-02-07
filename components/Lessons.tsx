@@ -11,7 +11,7 @@ interface LessonsProps {
 const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
   let processedUnitData: any = [];
   const localStorageJson: any = localStorage.getItem("quizProgress");
-
+  console.log(unitData[0].quizes);
   unitData.forEach((unit: any, unitIndex: number) => {
     processedUnitData[unitIndex] = { unitId: unitIndex + 1, quizes: [] };
     unit.quizes.forEach((quiz: any, quizIndex: number) => {

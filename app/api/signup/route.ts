@@ -124,6 +124,21 @@ export async function POST(req: any) {
       },
     });
 
+    // Create initial refill
+
+    const refill = await prisma.refill.create({
+      data: { total_refill: 0 },
+    });
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        refills: {
+          create: { refill: { connect: { id: refill.id } } },
+        },
+      },
+    });
+
     // Fetch unit quizzes and associate them with the user
     const units = await prisma.unit.findMany({
       where: { id: { in: [1, 2] } }, // Fetch Unit 1 & 2
