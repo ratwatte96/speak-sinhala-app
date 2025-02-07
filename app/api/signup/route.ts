@@ -1,9 +1,7 @@
 import { sendEmail } from "@/utils/email";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-
-const prisma = new PrismaClient();
 
 export async function POST(req: any) {
   const { username, email, password, quizProgress } = await req.json();
