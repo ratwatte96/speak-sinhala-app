@@ -40,13 +40,10 @@ const Quiz: React.FC<QuizProps> = ({
   const pathname = usePathname();
   const notSignedUp =
     loggedOut &&
-    ((pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )) ||
-      pathname.includes("read") ||
-      pathname.includes("speak") ||
-      pathname.includes("home"));
+    (pathname.includes("quiz") || pathname.includes("custom-quiz")) &&
+    ["28", "29", "30", "31", "32", "33"].includes(
+      pathname.split("/").pop() || "0"
+    );
 
   useEffect(() => {
     if (lives === 0) {
@@ -192,29 +189,6 @@ const Quiz: React.FC<QuizProps> = ({
   //! maybe combine updateStatus and updateStreak
   const updateStatus = () => {
     //! need to make sure nobody can just hit this endpoint
-    try {
-      fetchWithToken("/api/updateQuizStatus", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ quiz_id }),
-      })
-        .then((res) => res.json())
-        .then((streakData) => {});
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-
-  if (quizFailed) {
-    updateStreak();
-  }
-
-  if (quizCompleted) {
-    updateStreak();
-    updateStatus();
-
     if (notSignedUp) {
       const storedData = localStorage.getItem("quizProgress");
       if (!storedData) {
@@ -222,6 +196,7 @@ const Quiz: React.FC<QuizProps> = ({
         const dataToStore = {
           quizes: [{ quizId: quiz_id, status: "complete" }],
           expiry,
+          isPerfect: mistakeCount === 0,
         };
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       } else {
@@ -246,10 +221,34 @@ const Quiz: React.FC<QuizProps> = ({
         const dataToStore = {
           quizes: quizes,
           expiry: Date.now() + 7 * 24 * 60 * 60 * 1000,
+          isPerfect: mistakeCount === 0,
         };
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       }
+    } else {
+      try {
+        fetchWithToken("/api/updateQuizStatus", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quiz_id, perfect_score: mistakeCount === 0 }),
+        })
+          .then((res) => res.json())
+          .then((streakData) => {});
+      } catch (error: any) {
+        console.log(error);
+      }
     }
+  };
+
+  if (quizFailed) {
+    updateStreak();
+  }
+
+  if (quizCompleted) {
+    updateStreak();
+    updateStatus();
 
     return (
       <div className="text-center">

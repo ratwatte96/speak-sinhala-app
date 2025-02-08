@@ -221,6 +221,7 @@ model UsersOnQuizes {
   quizId   Int
   status String @default("locked")
   completionCount Int @default(0)
+  perfect_score Boolean @default(false)
 
   @@id([userId, quizId])
 }

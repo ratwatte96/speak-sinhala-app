@@ -15,6 +15,7 @@ const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
   unitData.forEach((unit: any, unitIndex: number) => {
     processedUnitData[unitIndex] = { unitId: unitIndex + 1, quizes: [] };
     unit.quizes.forEach((quiz: any, quizIndex: number) => {
+      console.log(quiz.userQuizRecord);
       processedUnitData[unitIndex].quizes.push({
         quizName: quiz.quiz.quiz_name,
         content: quiz.quiz.content,
@@ -32,6 +33,17 @@ const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
                 : "incomplete") ??
               "incomplete"
             : "locked",
+        isPerfect:
+          unitIndex + 1 <= readStatus
+            ? quiz.userQuizRecord?.perfect_score ??
+              (unitIndex + 1 === 1
+                ? JSON.parse(localStorageJson)?.quizes?.find(
+                    (localStorageQuiz: any) =>
+                      localStorageQuiz.quizId === quiz.quizId
+                  )?.isPerfect
+                : false) ??
+              false
+            : false,
       });
     });
   });

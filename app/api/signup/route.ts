@@ -156,6 +156,11 @@ export async function POST(req: any) {
                     (localStorageQuiz: any) =>
                       localStorageQuiz.quizId === quiz.quizId
                   )?.status || "incomplete",
+                perfect_score:
+                  JSON.parse(quizProgress)?.quizes?.find(
+                    (localStorageQuiz: any) =>
+                      localStorageQuiz.quizId === quiz.quizId
+                  )?.isPerfect || false,
               },
             },
           },

@@ -10,6 +10,7 @@ export interface Lesson {
   description: string;
   status: "complete" | "incomplete" | "locked";
   quizId: string;
+  isPerfect: boolean;
 }
 
 interface LessonCardProps {
@@ -41,6 +42,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
         </p>
       </div>
       <div className="flex flex-col items-center">
+        {lesson.isPerfect ? "Perfect Score" : "No perfect score"}
         {statusIcons[lesson.status]}
         <span className="text-gray-700 text-xs sm:text-sm capitalize">
           {lesson.status}
