@@ -165,28 +165,28 @@ function createSteps(order: any, pairData: any): any {
 export default async function QuizPage({ params }: { params: { id: string } }) {
   const callbackUrl = "/read";
   const { id } = params;
-  const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
-
+  const token: any = cookies().get("accessToken");
+  let validToken: any;
+  try {
+    validToken = verifyAccessToken(token.value);
+  } catch (error) {
+    console.log(error);
+  }
   let user: any;
   let readStatus: any;
   let isPremium: any;
 
   if (
-    (token && ["28", "29", "30", "31", "32", "33"].includes(id)) ||
+    (validToken && ["28", "29", "30", "31", "32", "33"].includes(id)) ||
     !["28", "29", "30", "31", "32", "33"].includes(id)
   ) {
-    if (!token) {
-      redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-    }
-
     try {
-      const decoded: any = verifyAccessToken(token.value);
       user = await prisma.user.findUnique({
         where: {
-          id: parseInt(decoded.userId),
+          id: parseInt(validToken.userId),
         },
       });
-      isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+      isPremium = await updatePremiumStatus(parseInt(validToken.userId));
       readStatus = user.readStatus;
     } catch (error) {
       console.log(error);
@@ -258,7 +258,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
         steps={quizSteps}
         quiz_title={quizQuestion}
         quiz_id={parseInt(id)}
-        loggedOut={!token}
+        loggedOut={!validToken}
         isPremium={isPremium}
       />
     </main>

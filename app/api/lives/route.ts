@@ -33,36 +33,40 @@ export async function GET(req: any) {
     );
   }
 
-  //! add try catch
-  const decoded: any = verifyAccessToken(accessToken);
-  const user: any = await prisma.user.findUnique({
-    where: {
-      id: parseInt(decoded.userId),
-    },
-    include: {
-      lives: true,
-    },
-  });
-  const lives = await prisma.lives.findUnique({
-    where: {
-      id: user.lives[0].livesId,
-    },
-  });
-
-  let newLives: any = lives;
-  if (!isToday(new Date(lives!.last_active_time))) {
-    newLives = await prisma.lives.update({
+  try {
+    const decoded: any = verifyAccessToken(accessToken);
+    const user: any = await prisma.user.findUnique({
       where: {
-        id: newLives.id,
+        id: parseInt(decoded.userId),
       },
-      data: { last_active_time: new Date(), total_lives: 5 },
+      include: {
+        lives: true,
+      },
     });
-  }
+    const lives = await prisma.lives.findUnique({
+      where: {
+        id: user.lives[0].livesId,
+      },
+    });
 
-  return new Response(JSON.stringify(newLives), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+    let newLives: any = lives;
+    if (!isToday(new Date(lives!.last_active_time))) {
+      newLives = await prisma.lives.update({
+        where: {
+          id: newLives.id,
+        },
+        data: { last_active_time: new Date(), total_lives: 5 },
+      });
+    }
+
+    return new Response(JSON.stringify(newLives), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ error: "Failed to get lives" }, { status: 500 });
+  }
 }
 
 export async function POST(req: any) {
@@ -86,37 +90,44 @@ export async function POST(req: any) {
     );
   }
 
-  //! add try catch
-  const decoded: any = verifyAccessToken(accessToken);
-  const user: any = await prisma.user.findUnique({
-    where: {
-      id: parseInt(decoded.userId),
-    },
-    include: {
-      lives: true,
-    },
-  });
-
-  const lives = await prisma.lives.findUnique({
-    where: {
-      id: user.lives[0].livesId,
-    },
-  });
-
-  let newLives: any = lives;
-  if (lives?.total_lives !== 0) {
-    newLives = await prisma.lives.update({
+  try {
+    const decoded: any = verifyAccessToken(accessToken);
+    const user: any = await prisma.user.findUnique({
       where: {
-        id: newLives.id,
+        id: parseInt(decoded.userId),
       },
-      data: {
-        last_active_time: new Date(),
-        total_lives: lives!.total_lives - 1,
+      include: {
+        lives: true,
       },
     });
+
+    const lives = await prisma.lives.findUnique({
+      where: {
+        id: user.lives[0].livesId,
+      },
+    });
+
+    let newLives: any = lives;
+    if (lives?.total_lives !== 0) {
+      newLives = await prisma.lives.update({
+        where: {
+          id: newLives.id,
+        },
+        data: {
+          last_active_time: new Date(),
+          total_lives: lives!.total_lives - 1,
+        },
+      });
+    }
+    return new Response(JSON.stringify(newLives), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Failed to update lives" },
+      { status: 500 }
+    );
   }
-  return new Response(JSON.stringify(newLives), {
-    status: 201,
-    headers: { "Content-Type": "application/json" },
-  });
 }

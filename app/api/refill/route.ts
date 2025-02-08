@@ -23,26 +23,33 @@ export async function GET(req: any) {
     );
   }
 
-  //! add try catch
-  const decoded: any = verifyAccessToken(accessToken);
-  const user: any = await prisma.user.findUnique({
-    where: {
-      id: parseInt(decoded.userId),
-    },
-    include: {
-      refills: true,
-    },
-  });
-  const refill = await prisma.refill.findUnique({
-    where: {
-      id: user.refills[0].refillId,
-    },
-  });
+  try {
+    const decoded: any = verifyAccessToken(accessToken);
+    const user: any = await prisma.user.findUnique({
+      where: {
+        id: parseInt(decoded.userId),
+      },
+      include: {
+        refills: true,
+      },
+    });
+    const refill = await prisma.refill.findUnique({
+      where: {
+        id: user.refills[0].refillId,
+      },
+    });
 
-  return new Response(JSON.stringify(refill), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+    return new Response(JSON.stringify(refill), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Failed to get refills" },
+      { status: 500 }
+    );
+  }
 }
 
 // TODO: Secure this endpoint properly

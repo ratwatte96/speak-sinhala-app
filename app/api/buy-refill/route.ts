@@ -25,13 +25,16 @@ export async function POST(req: Request) {
     );
   }
 
-  const decoded: any = verifyAccessToken(accessToken);
-  const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
-  if (isPremium) {
-    return NextResponse.json({ error: "The user is premium" }, { status: 401 });
-  }
-
   try {
+    const decoded: any = verifyAccessToken(accessToken);
+    const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+    if (isPremium) {
+      return NextResponse.json(
+        { error: "The user is premium" },
+        { status: 401 }
+      );
+    }
+
     const { newTotal } = await req.json();
 
     if (typeof newTotal !== "number") {

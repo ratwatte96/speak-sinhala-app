@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import Lessons from "@/components/Lessons";
 import Tabs from "@/components/Tabs";
 import { getUserData, getUserWithQuizRecords } from "@/utils/random";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -25,7 +26,11 @@ export default async function Home() {
   });
 
   if (token) {
-    decoded = verifyAccessToken(token.value);
+    try {
+      decoded = verifyAccessToken(token.value);
+    } catch (error) {
+      redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
+    }
     const user: any = await prisma.user.findUnique({
       where: { id: parseInt(decoded.userId) },
       include: { lives: true },

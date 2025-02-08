@@ -15,6 +15,7 @@ export default function CustomQuizPage() {
   try {
     const decoded: any = verifyAccessToken(token.value);
   } catch (error) {
+    console.log(error);
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 

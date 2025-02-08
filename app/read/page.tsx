@@ -30,7 +30,7 @@ export default async function Read() {
       readStatus = user.readStatus;
       units = await getUserWithQuizRecords(user);
     } catch (error) {
-      //! add
+      console.log(error);
     }
   } else {
     readStatus = 1;

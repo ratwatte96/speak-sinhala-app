@@ -5,6 +5,7 @@ import { updatePremiumStatus } from "@/utils/checkPremium";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,18 +21,21 @@ export default async function RootLayout({
 }>) {
   //!GET ACCESS TOKEN TO CHECK IF LOGGED OUT
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
-  let isPremium;
-  if (token) {
-    const decoded: any = verifyAccessToken(token.value);
-    isPremium = await updatePremiumStatus(parseInt(decoded.userId));
-  } else {
-    isPremium = false;
+  let isPremium = false;
+  let decoded: any;
+  try {
+    if (token) {
+      decoded = verifyAccessToken(token.value);
+      isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+    }
+  } catch (error) {
+    console.log(error);
   }
 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col bg-[#EAEAEA]">
-        <TopNavbar loggedOut={!token} isPremium={isPremium} />
+        <TopNavbar loggedOut={!decoded} isPremium={isPremium} />
         <main className="min-h-[80vh]">{children}</main>
         <BottomNavbar />
       </body>
