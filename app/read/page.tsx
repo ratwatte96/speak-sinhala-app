@@ -1,7 +1,9 @@
+import { CustomQuizForm } from "@/components/CustomQuizForm";
 import Lessons from "@/components/Lessons";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
-import { getUserWithQuizRecords } from "@/utils/random";
+import { updatePremiumStatus } from "@/utils/checkPremium";
+import { getUserWithQuizRecords, sinhalaCharacters } from "@/utils/random";
 import { cookies } from "next/headers";
 
 export default async function Read() {
@@ -19,6 +21,8 @@ export default async function Read() {
   let user: any;
   let readStatus: any;
   let decoded: any;
+  let isPremium = false;
+
   if (token) {
     try {
       decoded = verifyAccessToken(token.value);
@@ -29,6 +33,7 @@ export default async function Read() {
       });
       readStatus = user.readStatus;
       units = await getUserWithQuizRecords(user);
+      isPremium = await updatePremiumStatus(parseInt(decoded.userId));
     } catch (error) {
       console.log(error);
     }
@@ -36,14 +41,25 @@ export default async function Read() {
     readStatus = 1;
   }
 
+  const sinhalaObjects = sinhalaCharacters.map((char) => ({
+    value: char,
+    name: char,
+  }));
+
   return (
-    <div className="flex min-h-screen flex-col mt-10 pb-24">
+    <div className="flex min-h-screen flex-col items-center mt-10 pb-24">
       <div className="mx-4">
         <h1>READ</h1>
         <div
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
         ></div>
+        {decoded && (
+          <CustomQuizForm
+            dropDownLetters={sinhalaObjects}
+            isPremium={isPremium}
+          />
+        )}
         <Lessons unitData={units} readStatus={readStatus} />
       </div>
     </div>

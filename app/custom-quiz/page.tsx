@@ -3,92 +3,42 @@ import { CustomQuiz } from "@/components/CustomQuiz";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
+import { updatePremiumStatus } from "@/utils/checkPremium";
 
-export default function CustomQuizPage() {
-  const callbackUrl = "custom-quiz";
-  const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
+export default async function CustomQuizPage({
+  searchParams,
+}: {
+  searchParams: { letters?: string };
+}) {
+  const callbackUrl = "read";
+  const token: any = cookies().get("accessToken");
 
   if (!token) {
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
+  let isPremium: any;
   try {
     const decoded: any = verifyAccessToken(token.value);
+    isPremium = await updatePremiumStatus(parseInt(decoded.userId));
   } catch (error) {
     console.log(error);
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
-  const sinhalaCharacters = [
-    "ක",
-    "ඛ",
-    "ග",
-    "ඝ",
-    "ඞ",
-    "ඟ",
-    "ච",
-    "ඡ",
-    "ජ",
-    "ඣ",
-    "ඤ",
-    "ඥ",
-    "ඦ",
-    "ට",
-    "ඨ",
-    "ඩ",
-    "ඪ",
-    "ණ",
-    "ඬ",
-    "ත",
-    "ථ",
-    "ද",
-    "ධ",
-    "න",
-    "ඳ",
-    "ප",
-    "ඵ",
-    "බ",
-    "භ",
-    "ම",
-    "ඹ",
-    "ය",
-    "ර",
-    "ල",
-    "ළ",
-    "ව",
-    "හ",
-    "ශ",
-    "ෂ",
-    "ස",
-    "ෆ",
-    "අ",
-    "ආ",
-    "ඇ",
-    "ඈ",
-    "ඉ",
-    "ඊ",
-    "උ",
-    "ඌ",
-    "එ",
-    "ඒ",
-    "ඓ",
-    "ඔ",
-    "ඕ",
-    "ඖ",
-    "ඍ",
-    "ඎ",
-    "ඏ",
-    "ඐ",
-  ];
+  if (!isPremium) {
+    //! do basic need premium page
+    redirect(`/read`);
+  }
 
-  const sinhalaObjects = sinhalaCharacters.map((char) => ({
-    value: char,
-    name: char,
-  }));
+  const encodedLetters = searchParams.letters;
+  const letters = encodedLetters
+    ? JSON.parse(decodeURIComponent(encodedLetters))
+    : [];
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <CustomQuiz dropDownLetters={sinhalaObjects} />
+      <CustomQuiz letters={letters} />
     </main>
   );
 }

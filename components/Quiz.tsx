@@ -40,7 +40,7 @@ const Quiz: React.FC<QuizProps> = ({
   const pathname = usePathname();
   const notSignedUp =
     loggedOut &&
-    (pathname.includes("quiz") || pathname.includes("custom-quiz")) &&
+    pathname.includes("quiz") &&
     ["28", "29", "30", "31", "32", "33"].includes(
       pathname.split("/").pop() || "0"
     );
@@ -226,18 +226,23 @@ const Quiz: React.FC<QuizProps> = ({
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       }
     } else {
-      try {
-        fetchWithToken("/api/updateQuizStatus", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ quiz_id, perfect_score: mistakeCount === 0 }),
-        })
-          .then((res) => res.json())
-          .then((streakData) => {});
-      } catch (error: any) {
-        console.log(error);
+      if (!pathname.includes("custom-quiz")) {
+        try {
+          fetchWithToken("/api/updateQuizStatus", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              quiz_id,
+              perfect_score: mistakeCount === 0,
+            }),
+          })
+            .then((res) => res.json())
+            .then((statusData) => {});
+        } catch (error: any) {
+          console.log(error);
+        }
       }
     }
   };

@@ -6,15 +6,19 @@ import { updatePremiumStatus } from "@/utils/checkPremium";
 import prisma from "@/lib/prisma";
 import Lessons from "@/components/Lessons";
 import Tabs from "@/components/Tabs";
-import { getUserData, getUserWithQuizRecords } from "@/utils/random";
-import { redirect } from "next/navigation";
+import {
+  getUserData,
+  getUserWithQuizRecords,
+  sinhalaCharacters,
+} from "@/utils/random";
+import { CustomQuizForm } from "@/components/CustomQuizForm";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
   let readStatus: any;
   let decoded: any;
   let userData: any;
-  let isPremium: any;
+  let isPremium = false;
   let units: any = await prisma.unit.findMany({
     select: {
       quizes: {
@@ -28,34 +32,50 @@ export default async function Home() {
   if (token) {
     try {
       decoded = verifyAccessToken(token.value);
+      const user: any = await prisma.user.findUnique({
+        where: { id: parseInt(decoded.userId) },
+        include: { lives: true },
+      });
+      userData = await getUserData(user);
+      isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+      readStatus = user.readStatus;
+      units = await getUserWithQuizRecords(user);
     } catch (error) {
-      redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
+      console.log(error);
+      // redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
     }
-    const user: any = await prisma.user.findUnique({
-      where: { id: parseInt(decoded.userId) },
-      include: { lives: true },
-    });
-    userData = await getUserData(user);
-    isPremium = await updatePremiumStatus(parseInt(decoded.userId));
-    readStatus = user.readStatus;
-    units = await getUserWithQuizRecords(user);
   } else {
     readStatus = 1;
   }
 
+  const sinhalaObjects = sinhalaCharacters.map((char) => ({
+    value: char,
+    name: char,
+  }));
+
   return (
     <div className="flex min-h-screen flex-col mt-10">
       <div className="mx-4 flex flex-col md:flex-row justify-around">
-        {token && <Shop />}
+        {decoded && <Shop />}
         <div className="mx-4 w-full">
           <Tabs
-            readComponent={<Lessons unitData={units} readStatus={readStatus} />}
+            readComponent={
+              <>
+                {decoded && (
+                  <CustomQuizForm
+                    dropDownLetters={sinhalaObjects}
+                    isPremium={isPremium}
+                  />
+                )}
+                <Lessons unitData={units} readStatus={readStatus} />
+              </>
+            }
             speakComponent={
               <div className="text-center">🎤 Speak section coming soon!</div>
             }
           />
         </div>
-        {token && <ProfileCard userData={userData} isPremium={isPremium} />}
+        {decoded && <ProfileCard userData={userData} isPremium={isPremium} />}
       </div>
     </div>
   );
