@@ -42,20 +42,37 @@ export async function POST(req: any) {
       );
     }
 
-    // Check if the user is verified
-    if (!user.isVerified) {
-      return NextResponse.json(
-        { error: "Please verify your email before logging in" },
-        { status: 403 }
-      );
-    }
+    // Check if user is within the 24-hour temp access period
+    const timeSinceSignup = Date.now() - new Date(user.createdAt).getTime();
+    const oneDayInMs = 24 * 60 * 60 * 1000;
 
-    // Generate tokens
-    const accessToken = generateAccessToken({
-      userId: `${user.id}`,
-      email: user.email,
-    });
-    const refreshToken = generateRefreshToken(`${user.id}`);
+    let accessToken;
+    let refreshToken = null;
+    let accessTokenExpiry;
+
+    if (!user.isVerified) {
+      if (timeSinceSignup > oneDayInMs) {
+        return NextResponse.json(
+          {
+            error:
+              "Your 24-hour access has expired. Please verify your email to continue.",
+          },
+          { status: 403 }
+        );
+      }
+      // Temporary unverified user: 24-hour access token
+      accessTokenExpiry = 24 * 60 * 60; // 24 hours
+      accessToken = generateAccessToken(
+        { userId: `${user.id}`, email: user.email },
+        "24h"
+      );
+    } else {
+      accessToken = generateAccessToken({
+        userId: `${user.id}`,
+        email: user.email,
+      });
+      refreshToken = generateRefreshToken(`${user.id}`);
+    }
 
     // ?(Optional) Save refresh token in the database or send it as an HTTP-only cookie
 
@@ -66,24 +83,26 @@ export async function POST(req: any) {
         `accessToken=${accessToken}`,
         "HttpOnly",
         "Path=/",
-        `Max-Age=${process.env.ACCESS_TOKEN_AGE}`, // 15 minutes
+        `Max-Age=${accessTokenExpiry}`,
         isDev ? "" : "Secure",
       ]
         .filter(Boolean)
         .join("; "),
-      refreshToken: [
-        `refreshToken=${refreshToken}`,
-        "HttpOnly",
-        "Path=/",
-        "Max-Age=604800", // 7 days
-        isDev ? "" : "Secure",
-      ]
-        .filter(Boolean)
-        .join("; "),
+      refreshToken: refreshToken
+        ? [
+            `refreshToken=${refreshToken}`,
+            "HttpOnly",
+            "Path=/",
+            "Max-Age=604800", // 7 days
+            isDev ? "" : "Secure",
+          ]
+            .filter(Boolean)
+            .join("; ")
+        : null,
     };
 
     return NextResponse.json(
-      { message: "Logout successful" },
+      { message: "Login successful" },
       {
         status: 200,
         headers: {

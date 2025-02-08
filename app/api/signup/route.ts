@@ -187,7 +187,10 @@ export async function POST(req: any) {
     }
 
     return new Response(
-      JSON.stringify({ message: "User created. Verification email sent." }),
+      JSON.stringify({
+        message:
+          "User created. Verification email sent. You have 24 hours temp access until email is verified.",
+      }),
       { status: 201 }
     );
   } catch (error: any) {

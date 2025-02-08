@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Signup() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +54,7 @@ export default function Signup() {
     }
 
     try {
+      setMessage("Signing up, please wait a few moments");
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: {
@@ -67,10 +70,16 @@ export default function Signup() {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage("User created successfully!");
+        data.message
+          ? setMessage(data.message)
+          : setMessage("User created successfully!");
         setUsername("");
         setEmail("");
         setPassword("");
+        setTimeout(() => {
+          setMessage("Redirecting...");
+          router.push(`/login`);
+        }, 2000);
       } else {
         setMessage(data.error);
       }
