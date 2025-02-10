@@ -2,32 +2,15 @@ import { AudioPlayer } from "./AudioPlayer";
 
 interface LessonStepProps {
   nextStep: (isMistake: boolean) => void;
+  data: any;
 }
 
-export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
+export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
   //?infoDisplay= list, image, table, sound buttons
   //TODO: table and image
-  const data = [
-    {
-      text: "hello",
-      infoDisplayType: "list",
-      info: { text: "hihi", data: ["ja", "ga", "ma"] },
-    },
-    {
-      text: "hi",
-      infoDisplayType: "soundButtons",
-      info: {
-        text: "hellohello",
-        data: [
-          { englishWord: "gun", sinhala: "ග​", sound: "ga" },
-          { englishWord: "gun", sinhala: "ග​", sound: "ga" },
-        ],
-      },
-    },
-  ];
   return (
     <div className="sm:w-2/3 w-full text-sm sm:text-base">
-      {data.map(({ text, infoDisplayType, info }, i) => (
+      {data.map(({ text, infoDisplayType, info }: any, i: number) => (
         <div key={i} className="flex mt-4">
           {infoDisplayType === "list" ? (
             <div className="flex flex-col items-center text-skin-base w-full">
@@ -44,23 +27,26 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep }) => {
           ) : infoDisplayType === "soundButtons" ? (
             <>
               <div>
+                <p className="mb-2">{text}</p>
                 <p>{info.text}</p>
-                {info.data.map(({ sound, sinhala, englishWord }: any, i) => (
-                  <div key={i} className="flex mt-4">
-                    <AudioPlayer
-                      audioPath={`/audioClips/${sound}.mp3`}
-                      display_text={sinhala}
-                      onClick={() => {}}
-                      additionalClasses={
-                        "text-skin-muted border-skin-base border-b-4"
-                      }
-                    />
-                    <div className="ml-4 min-h-28 flex flex-col justify-center">
-                      <p>{sound}</p>
-                      <p>{`like in '${englishWord}'`}</p>
+                {info.data.map(
+                  ({ sound, sinhala, englishWord }: any, i: number) => (
+                    <div key={i} className="flex mt-4">
+                      <AudioPlayer
+                        audioPath={`/audioClips/${sound}.mp3`}
+                        display_text={sinhala}
+                        onClick={() => {}}
+                        additionalClasses={
+                          "text-skin-muted border-skin-base border-b-4"
+                        }
+                      />
+                      <div className="ml-4 min-h-28 flex flex-col justify-center">
+                        <p>{sound}</p>
+                        <p>{`like in '${englishWord}'`}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </>
           ) : infoDisplayType === "image" ? (

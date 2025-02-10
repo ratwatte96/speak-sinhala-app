@@ -223,28 +223,17 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
           pair: true,
         },
       },
-      newLetterDatas: {
-        include: {
-          newLetterData: true,
-        },
-      },
     },
   });
 
   const quizSteps = createSteps(quizData?.order, quizItemsData[0]);
 
-  if (quizItemsData[0].newLetterDatas) {
-    const newLetterStepData = convertNewLetterData(
-      quizItemsData[0].newLetterDatas
-    );
-    quizSteps.unshift({
-      type: "newLetterData",
-      content: newLetterStepData,
-    });
-  }
-
   if (quizData?.lessonContent) {
-    quizSteps.unshift({ type: "lesson", content: { stepType: "lesson" } });
+    //!add data from lesson content column
+    quizSteps.unshift({
+      type: "lesson",
+      content: { stepType: "lesson", data: quizData.lessonContent },
+    });
   }
 
   const quizQuestion = quizData!.quiz_name ?? "";

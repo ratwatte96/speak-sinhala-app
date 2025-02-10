@@ -11,6 +11,7 @@ export interface Step {
 
 interface LessonStep {
   stepType: string;
+  data: any;
 }
 
 interface PairsData {
@@ -68,8 +69,10 @@ export const Step: React.FC<StepProps> = ({
           isHard={step.content.isHard}
           questionType={step.content.questionType}
         />
+      ) : step.type === "lesson" && "data" in step.content ? (
+        <LessonStep nextStep={nextStep} data={step.content.data} />
       ) : (
-        <LessonStep nextStep={nextStep} />
+        <></>
       )}
     </>
   );
