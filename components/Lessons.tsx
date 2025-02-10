@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import LessonCard from "./LessonCard";
 
 interface LessonsProps {
@@ -11,11 +10,10 @@ interface LessonsProps {
 const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
   let processedUnitData: any = [];
   const localStorageJson: any = localStorage.getItem("quizProgress");
-  console.log(unitData[0].quizes);
+  console.log(readStatus);
   unitData.forEach((unit: any, unitIndex: number) => {
     processedUnitData[unitIndex] = { unitId: unitIndex + 1, quizes: [] };
     unit.quizes.forEach((quiz: any, quizIndex: number) => {
-      console.log(quiz.userQuizRecord);
       processedUnitData[unitIndex].quizes.push({
         quizName: quiz.quiz.quiz_name,
         content: quiz.quiz.content,
@@ -46,6 +44,7 @@ const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
             : false,
       });
     });
+    console.log("processedUnitData", processedUnitData);
   });
 
   return (

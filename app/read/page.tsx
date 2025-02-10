@@ -23,8 +23,8 @@ export default async function Read() {
   let decoded: any;
   let isPremium = false;
 
-  if (token) {
-    try {
+  try {
+    if (token && verifyAccessToken(token.value)) {
       decoded = verifyAccessToken(token.value);
       user = await prisma.user.findUnique({
         where: {
@@ -32,15 +32,18 @@ export default async function Read() {
         },
       });
       readStatus = user.readStatus;
+      console.log("readStatus", readStatus);
+
       units = await getUserWithQuizRecords(user);
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
-    } catch (error) {
-      console.log(error);
+    } else {
+      readStatus = 1;
     }
-  } else {
+  } catch (error) {
+    console.log(error);
     readStatus = 1;
   }
-
+  console.log("readStatus", readStatus);
   const sinhalaObjects = sinhalaCharacters.map((char) => ({
     value: char,
     name: char,
