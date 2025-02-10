@@ -32,7 +32,6 @@ export default async function Read() {
         },
       });
       readStatus = user.readStatus;
-      console.log("readStatus", readStatus);
 
       units = await getUserWithQuizRecords(user);
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
@@ -43,7 +42,7 @@ export default async function Read() {
     console.log(error);
     readStatus = 1;
   }
-  console.log("readStatus", readStatus);
+
   const sinhalaObjects = sinhalaCharacters.map((char) => ({
     value: char,
     name: char,

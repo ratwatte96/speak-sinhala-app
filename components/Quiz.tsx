@@ -194,9 +194,14 @@ const Quiz: React.FC<QuizProps> = ({
       if (!storedData) {
         const expiry = Date.now() + 7 * 24 * 60 * 60 * 1000; // Expiry in 1 week
         const dataToStore = {
-          quizes: [{ quizId: quiz_id, status: "complete" }],
+          quizes: [
+            {
+              quizId: quiz_id,
+              status: "complete",
+              isPerfect: mistakeCount === 0,
+            },
+          ],
           expiry,
-          isPerfect: mistakeCount === 0,
         };
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       } else {
@@ -207,7 +212,11 @@ const Quiz: React.FC<QuizProps> = ({
         }
 
         // Prevent duplicate quizId entries
-        const newQuiz = { quizId: quiz_id, status: "complete" };
+        const newQuiz = {
+          quizId: quiz_id,
+          status: "complete",
+          isPerfect: mistakeCount === 0,
+        };
         const existingIndex = quizes.findIndex(
           (q: any) => q.quizId === newQuiz.quizId
         );
@@ -221,7 +230,6 @@ const Quiz: React.FC<QuizProps> = ({
         const dataToStore = {
           quizes: quizes,
           expiry: Date.now() + 7 * 24 * 60 * 60 * 1000,
-          isPerfect: mistakeCount === 0,
         };
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       }
