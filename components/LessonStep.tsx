@@ -1,4 +1,5 @@
 import { AudioPlayer } from "./AudioPlayer";
+import Image from "next/image";
 
 interface LessonStepProps {
   nextStep: (isMistake: boolean) => void;
@@ -42,7 +43,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
                       />
                       <div className="ml-4 min-h-28 flex flex-col justify-center">
                         <p>{sound}</p>
-                        <p>{`like in '${englishWord}'`}</p>
+                        {englishWord && <p>{`like in '${englishWord}'`}</p>}
                       </div>
                     </div>
                   )
@@ -50,7 +51,18 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
               </div>
             </>
           ) : infoDisplayType === "image" ? (
-            <></>
+            <>
+              <div>
+                <p className="mb-2">{text}</p>
+                <p>{info.text}</p>
+                <Image
+                  src={info.data.imagePath}
+                  alt={info.data.imageAlt}
+                  width={400}
+                  height={400}
+                />
+              </div>
+            </>
           ) : (
             <></>
           )}
