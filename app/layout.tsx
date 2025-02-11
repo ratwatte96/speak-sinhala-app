@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SharedStateProvider } from "@/components/StateProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Speak Sinhala",
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SharedStateProvider>
-        <body className={inter.className}>{children}</body>
+        <body className="bg-[#EAEAEA]">{children}</body>
       </SharedStateProvider>
     </html>
   );

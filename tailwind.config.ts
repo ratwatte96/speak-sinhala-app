@@ -49,11 +49,16 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-25%)" },
         },
+        loadingBar: {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
       },
       animation: {
         bounce: "bounce 1s infinite",
         fadeIn: "fadeIn 1s ease-in-out forwards",
         fadeInDelay: "fadeIn 1s ease-in-out 1s forwards",
+        "loading-bar": "loadingBar 2s ease-in-out",
       },
       transitionDelay: {
         "200": "200ms",
