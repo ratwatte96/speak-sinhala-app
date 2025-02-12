@@ -18,7 +18,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
+  let token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
   let isPremium;
   try {
@@ -29,7 +29,10 @@ export default async function RootLayout({
       isPremium = false;
     }
   } catch (error) {
-    redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
+    console.log(error);
+    //redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
+    token = false;
+    isPremium = false;
   }
 
   return (

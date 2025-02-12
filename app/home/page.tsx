@@ -41,6 +41,7 @@ export default async function Home() {
       readStatus = user.readStatus;
       units = await getUserWithQuizRecords(user);
     } catch (error) {
+      readStatus = 1;
       console.log(error);
       // redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
     }
@@ -75,7 +76,11 @@ export default async function Home() {
             }
           />
         </div>
-        {decoded && <ProfileCard userData={userData} isPremium={isPremium} />}
+        {decoded && (
+          <div className="h-screen">
+            <ProfileCard userData={userData} isPremium={isPremium} />
+          </div>
+        )}
       </div>
     </div>
   );
