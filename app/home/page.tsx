@@ -58,7 +58,7 @@ export default async function Home() {
     <div className="flex min-h-screen flex-col mt-10">
       <div className="mx-4 flex flex-col md:flex-row justify-around">
         {decoded && (
-          <div className="w-full">
+          <div className="w-full pl-8 pr-12">
             <Shop />
           </div>
         )}
@@ -81,7 +81,7 @@ export default async function Home() {
           />
         </div>
         {decoded && (
-          <div className="h-screen w-full flex justify-center">
+          <div className="w-full flex justify-center pl-12 pr-8">
             <ProfileCard userData={userData} isPremium={isPremium} />
           </div>
         )}
