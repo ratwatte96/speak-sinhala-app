@@ -60,8 +60,8 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       <button
         id={`${id}Button`}
         data-dropdown-toggle={`${id}Dropdown`}
-        className={`flex items-center justify-center rounded-lg border border-600-grey px-2 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-white sm:px-4 sm:py-2 sm:text-sm ${
-          buttonTailwindOveride ? buttonTailwindOveride : "w-24 sm:w-40"
+        className={`flex items-center justify-center rounded-lg border h-8 border-gray-200 px-1 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-4 sm:py-2 ${
+          buttonTailwindOveride ? buttonTailwindOveride : "w-32"
         }`}
         type="button"
         onClick={() => setShowItems(!showItems)}
@@ -84,12 +84,12 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           className="absolute right-0 top-full z-10 w-full shadow"
         >
           <ul
-            className="custom-scrollbar max-h-44 overflow-y-auto bg-white text-sm text-black"
+            className="custom-scrollbar max-h-44 overflow-y-auto bg-gray-300 text-sm text-black"
             aria-labelledby={`${id}Button`}
           >
             {items.map(({ name, value }, index) => (
               <li
-                className={`block break-words border border-solid border-skin-base py-2 text-center text-xs hover:bg-white/20 cursor-pointer ${
+                className={`block break-words border border-solid border-gray-200 py-2 text-center text-xs hover:bg-white/20 cursor-pointer ${
                   index === 0
                     ? "rounded-t-lg"
                     : index === items.length - 1
