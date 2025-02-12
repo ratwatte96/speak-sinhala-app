@@ -10,7 +10,7 @@ function LoginComponent() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl") || "/home";
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleLogin = async () => {
     setMessage("");

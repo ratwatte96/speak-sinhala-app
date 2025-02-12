@@ -43,7 +43,6 @@ export default async function Home() {
     } catch (error) {
       readStatus = 1;
       console.log(error);
-      // redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
     }
   } else {
     readStatus = 1;
@@ -54,14 +53,36 @@ export default async function Home() {
     name: char,
   }));
 
+  console.log(userData);
   return (
     <div className="flex min-h-screen flex-col mt-10">
       <div className="mx-4 flex flex-col md:flex-row justify-around">
-        {decoded && (
-          <div className="w-full pl-8 pr-12">
+        <div className="relative w-full pl-8 pr-12">
+          {!decoded && (
+            <div className="absolute inset-0 flex items-center justify-center h-screen">
+              <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
+              <div className="flex flex-col">
+                <a href="/login" className="relative z-10">
+                  <button className="bg-blue-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                    Login
+                  </button>
+                </a>
+                <a href="/signup" className="relative z-10">
+                  <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40">
+                    Signup to Unlock
+                  </button>
+                </a>
+              </div>
+            </div>
+          )}
+          <div
+            className={`${
+              !decoded ? "blur-md pointer-events-none opacity-70" : ""
+            }`}
+          >
             <Shop />
           </div>
-        )}
+        </div>
         <div className="mx-4 w-full flex justify-center">
           <Tabs
             readComponent={
@@ -80,11 +101,42 @@ export default async function Home() {
             }
           />
         </div>
-        {decoded && (
-          <div className="w-full flex justify-center pl-12 pr-8">
-            <ProfileCard userData={userData} isPremium={isPremium} />
+        <div className="relative w-full flex justify-center pl-12 pr-8">
+          {!decoded && (
+            <div className="absolute inset-0 flex items-center justify-center h-screen">
+              <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
+              <div className="flex flex-col">
+                <a href="/login" className="relative z-10">
+                  <button className="bg-blue-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                    Login
+                  </button>
+                </a>
+                <a href="/signup" className="relative z-10">
+                  <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40">
+                    Signup to Unlock
+                  </button>
+                </a>
+              </div>
+            </div>
+          )}
+          <div
+            className={`${
+              !decoded ? "blur-md pointer-events-none opacity-70" : ""
+            }`}
+          >
+            <ProfileCard
+              userData={
+                userData ?? {
+                  username: "",
+                  email: "",
+                  readPercentage: 0,
+                  premiumEndDate: null,
+                }
+              }
+              isPremium={isPremium}
+            />
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
