@@ -20,7 +20,6 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   setSelectedItems,
   iconStart = null,
   iconEnd = null,
-  dropdownTitle,
   buttonTailwindOveride,
 }) => {
   const [showItems, setShowItems] = useState(false);
@@ -55,13 +54,13 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
 
   return (
     <div
-      className="relative inline-block bg-skin-muted text-left"
+      className="relative inline-block text-black text-left"
       ref={dropdownRef}
     >
       <button
         id={`${id}Button`}
         data-dropdown-toggle={`${id}Dropdown`}
-        className={`flex items-center justify-center rounded-lg border border-skin-base px-2 py-1 text-xs font-medium text-skin-base focus:z-10 focus:outline-none focus:ring-4  sm:px-4 sm:py-2 sm:text-sm ${
+        className={`flex items-center justify-center rounded-lg border border-600-grey px-2 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-white sm:px-4 sm:py-2 sm:text-sm ${
           buttonTailwindOveride ? buttonTailwindOveride : "w-24 sm:w-40"
         }`}
         type="button"
@@ -85,7 +84,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           className="absolute right-0 top-full z-10 w-full shadow"
         >
           <ul
-            className="custom-scrollbar max-h-44 overflow-y-auto bg-skin-muted text-sm text-skin-base"
+            className="custom-scrollbar max-h-44 overflow-y-auto bg-white text-sm text-black"
             aria-labelledby={`${id}Button`}
           >
             {items.map(({ name, value }, index) => (

@@ -11,7 +11,7 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
   const [activeTab, setActiveTab] = useState<"READ" | "SPEAK">("READ");
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="flex flex-col w-[35rem]">
       {/* Tab Navigation */}
       <div className="flex border-b">
         <button
@@ -37,7 +37,7 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
       </div>
 
       {/* Tab Content */}
-      <div className="mt-4">
+      <div className="mt-4 w-full">
         {activeTab === "READ" ? readComponent : speakComponent}
       </div>
     </div>

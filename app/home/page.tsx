@@ -57,8 +57,12 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col mt-10">
       <div className="mx-4 flex flex-col md:flex-row justify-around">
-        {decoded && <Shop />}
-        <div className="mx-4 w-full">
+        {decoded && (
+          <div className="w-full">
+            <Shop />
+          </div>
+        )}
+        <div className="mx-4 w-full flex justify-center">
           <Tabs
             readComponent={
               <>
@@ -77,7 +81,7 @@ export default async function Home() {
           />
         </div>
         {decoded && (
-          <div className="h-screen">
+          <div className="h-screen w-full flex justify-center">
             <ProfileCard userData={userData} isPremium={isPremium} />
           </div>
         )}

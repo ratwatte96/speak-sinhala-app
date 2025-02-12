@@ -50,8 +50,8 @@ export default async function Read() {
 
   return (
     <div className="flex min-h-screen flex-col items-center mt-10 pb-24">
-      <div className="mx-4">
-        <h1>READ</h1>
+      <div className="mx-4 w-96">
+        <h1 className="font-serif text-3xl">READ</h1>
         <div
           className="bg-green-500 h-2.5 rounded-full"
           style={{ width: `${80}%` }}
@@ -62,7 +62,9 @@ export default async function Read() {
             isPremium={isPremium}
           />
         )}
-        <Lessons unitData={units} readStatus={readStatus} />
+        <div>
+          <Lessons unitData={units} readStatus={readStatus} />
+        </div>
       </div>
     </div>
   );

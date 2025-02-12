@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import Quiz from "./Quiz";
-import { fetchWithToken } from "@/utils/fetch";
 import { useRouter } from "next/navigation";
 // import ChevronDownIcon from "../../public/chevron-down.svg";
 // import FilterIcon from "../../public/filter.svg";

@@ -28,7 +28,7 @@ export default async function UserProfile() {
   const isPremium = await updatePremiumStatus(user.id);
   return (
     <div className="flex min-h-screen flex-col mt-10">
-      <div className="mx-4">
+      <div className="mx-4 flex justify-center">
         <ProfileCard userData={userData} isPremium={isPremium} />
       </div>
     </div>
