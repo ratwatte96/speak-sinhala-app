@@ -126,7 +126,7 @@ const Shop = () => {
       </div>
 
       <h2 className="text-lg font-semibold mt-6">Premium</h2>
-      <div className="grid grid-cols-2 gap-4 mt-2">
+      <div className="grid grid-cols-2 gap-4 mt-2 mb-20 sm:mb-0">
         {items
           .filter((item) => item.type === "Premium")
           .map((item, index) => (

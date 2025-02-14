@@ -58,7 +58,7 @@ export default async function Read() {
   return (
     <div className="flex min-h-screen flex-col items-center mt-10 pb-24">
       <div className="mx-4 w-[20rem] sm:w-96 ">
-        <h1 className="font-serif mb-1 text-2xl">READ</h1>
+        <h1 className="font-serif mb-1 text-xl">READ</h1>
         <CompletionBar quizPercentage={quizCompletionPercentage} />
         {decoded && (
           <CustomQuizForm
