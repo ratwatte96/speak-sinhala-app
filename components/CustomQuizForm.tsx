@@ -41,28 +41,32 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
           start.
         </p>
       </div>
-      <div className="ml-2">
-        <MultiSelectDropdown
-          id="filters"
-          buttonLabel={
-            selectedItems.length !== 0
-              ? selectedItems.join(", ")
-              : "Choose Letters"
-          }
-          items={dropDownLetters}
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
-          // iconStart={<FilterIcon />}
-          // iconEnd={<ChevronDownIcon />}
-        />
+      <div>
+        <p className="text-center mb-1 text-red-600">{message}</p>
+        <div className="flex">
+          <div className="ml-2">
+            <MultiSelectDropdown
+              id="filters"
+              buttonLabel={
+                selectedItems.length !== 0
+                  ? selectedItems.join(", ")
+                  : "Choose Letters"
+              }
+              items={dropDownLetters}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
+              // iconStart={<FilterIcon />}
+              // iconEnd={<ChevronDownIcon />}
+            />
+          </div>
+          <button
+            className="flex items-center justify-center bg-green-500 ml-2 p-1 h-8 rounded-md w-28 text-xs font-medium text-black focus:z-10 focus:outline-none focus:ring-4"
+            onClick={handleRouting}
+          >
+            Start Quiz
+          </button>
+        </div>
       </div>
-      <button
-        className="flex items-center justify-center bg-green-500 ml-2 p-1 h-8 rounded-md w-28 text-xs font-medium text-black focus:z-10 focus:outline-none focus:ring-4"
-        onClick={handleRouting}
-      >
-        Start Quiz
-      </button>
-      <p>{message}</p>
     </div>
   );
 };
