@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { RefillCounter } from "./RefillCounter";
+import ThemeToggle from "./ThemeToggle";
 
 interface TopNavBarProps {
   loggedOut?: boolean;
@@ -27,16 +28,7 @@ const Navbar: React.FC<TopNavBarProps> = ({ loggedOut, isPremium }) => {
             <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
           </div>
         </div>
-        <button
-          className="relative w-10 h-6 flex items-center bg-gray-200 rounded-full p-1"
-          onClick={() => setIsToggled(!isToggled)}
-        >
-          <div
-            className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${
-              isToggled ? "translate-x-4" : "translate-x-0"
-            }`}
-          ></div>
-        </button>
+        <ThemeToggle />
       </div>
     </header>
   );
