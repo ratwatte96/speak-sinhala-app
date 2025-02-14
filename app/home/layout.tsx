@@ -1,11 +1,9 @@
-import Footer from "@/components/Footer";
 import TopNavbar from "@/components/TopNavBar";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +29,6 @@ export default async function RootLayout({
     }
   } catch (error) {
     console.log(error);
-    //redirect(`/login?callbackUrl=${encodeURIComponent("/home")}`);
     token = false;
     isPremium = false;
   }
