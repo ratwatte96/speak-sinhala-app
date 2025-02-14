@@ -33,7 +33,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
   };
 
   return (
-    <div className="flex pb-4 justify-between items-end border rounded-lg p-3 shadow-md bg-white flex  text-xs sm:text-sm mx-auto my-3">
+    <div className="flex pb-4 justify-between items-end border rounded-lg p-3 shadow-md bg-white flex dark:bg-black dark:border dark:border-solid dark:border-gray-600  text-xs sm:text-sm mx-auto my-3">
       <div>
         <h2 className="text-md font-semibold">Custom Quiz</h2>
         <p className="text-gray-500 text-xs/4 mt-1 sm:text-sm/4">

@@ -100,7 +100,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
     <div className="flex flex-col h-auto mb-20">
       <h1 className="text-xl font-bold pl-1 pt-[8px]">PROFILE</h1>
       <div className="flex flex-col items-center h-auto">
-        <div className="rounded-lg text-center">
+        <div className="rounded-lg text-center ">
           <div className="relative w-[80px] h-[80px] mx-auto">
             <Image
               src="/avatar.webp"
@@ -127,11 +127,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
             </p>
           )}
           <div className="flex justify-between mt-4">
-            <div className="bg-gray-300 p-2 rounded-md w-1/2 mx-1 text-center">
+            <div className="bg-gray-300 dark:bg-black dark:border dark:border-solid dark:border-gray-600 p-2 rounded-md w-1/2 mx-1 text-center">
               <p className="text-sm">Reading Completion</p>
               <p className="text-lg font-bold">{`${userData.readPercentage}%`}</p>
             </div>
-            <div className="relative bg-gray-300 p-2 rounded-md w-1/2 mx-1 text-center">
+            <div className="relative bg-gray-300 dark:bg-black dark:border dark:border-solid dark:border-gray-600 p-2 rounded-md w-1/2 mx-1 text-center">
               <p className="text-sm">Speaking Completion</p>
               <p className="text-lg font-bold">0%</p>
               <div className="absolute bottom-0 right-0 bg-yellow-500 text-[7px] text-black px-1.5 py-0.5 rounded-bl-sm shadow-md">
@@ -189,7 +189,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
                 <p className="text-sm text-red-500 mt-2">{message}</p>
               )}
               <div className="mt-4 flex space-x-2">
-                <button className="bg-green-500 text-white w-1/2 p-2 rounded-md">
+                <button className="bg-green-500 dark:text-black text-white w-1/2 p-2 rounded-md">
                   Update Password
                 </button>
                 <button

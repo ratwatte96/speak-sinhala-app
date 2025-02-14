@@ -16,7 +16,7 @@ const Navbar: React.FC<TopNavBarProps> = ({ loggedOut, isPremium }) => {
 
   return (
     <header className="sticky top-0 z-20 h-[10vh]">
-      <div className="w-screen h-full relative flex justify-between items-center p-4 bg-white shadow-md">
+      <div className="w-screen h-full relative flex justify-between items-center p-4 bg-white shadow-md dark:bg-black dark:border-b dark:border-solid dark:border-gray-500">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <LivesCounter loggedOut={loggedOut} />

@@ -111,7 +111,7 @@ const Shop = () => {
           .map((item, index) => (
             <div
               key={index}
-              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
+              className="bg-white dark:bg-black  p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600"
               onClick={() => {
                 setShowRefillModal(true);
                 setRefillTotal(item.amount);
@@ -130,7 +130,7 @@ const Shop = () => {
           .map((item, index) => (
             <div
               key={index}
-              className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
+              className="bg-white dark:bg-black  p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600"
               onClick={() => {
                 setPremiumType(
                   item.amount === 1
@@ -144,13 +144,11 @@ const Shop = () => {
             >
               <Crown className="text-yellow-500" size={40} />
               <p className="mt-2 font-semibold">
-                Month
                 {typeof item.amount != "number"
-                  ? item.amount
+                  ? "Lifetime Premium"
                   : item.amount > 1
-                  ? "s"
-                  : ""}
-                x {item.amount}
+                  ? `${item.amount} Months`
+                  : `${item.amount} Month`}
               </p>
             </div>
           ))}

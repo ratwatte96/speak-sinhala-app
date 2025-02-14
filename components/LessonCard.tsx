@@ -26,15 +26,17 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
   const statusIcons = {
     complete: <CheckCircle className="text-green-500" size={24} />, // Reduced size
     incomplete: <XCircle className="text-red-500" size={24} />, // Reduced size
-    locked: <Lock className="text-black" size={24} />, // Reduced size
+    locked: <Lock className="text-black dark:text-white" size={24} />, // Reduced size
   };
 
   return (
-    <div className="border rounded-lg p-3 shadow-md bg-white flex justify-between items-center text-xs sm:text-sm mx-auto my-3">
+    <div className="border rounded-lg p-3 shadow-md bg-white flex justify-between items-center text-xs sm:text-sm mx-auto my-3 dark:bg-black dark:border dark:border-solid dark:border-gray-600">
       <div>
         <h2 className="text-sm sm:text-md font-bold">{lesson.quizName}</h2>
-        <p className="text-gray-600 text-xs sm:text-sm">Type: {lesson.type}</p>
-        <p className="text-gray-600 text-xs sm:text-sm">
+        <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
+          Type: {lesson.type}
+        </p>
+        <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
           Content: {lesson.content}
         </p>
         <p className="text-gray-500 mt-1 text-xs sm:text-sm">
@@ -42,9 +44,17 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
         </p>
       </div>
       <div className="flex flex-col items-center">
-        {lesson.isPerfect ? "Perfect Score" : "No perfect score"}
+        <p className="mb-1 w-32 text-center">
+          {lesson.isPerfect ? "Perfect Score" : "No perfect score"}
+        </p>
         {statusIcons[lesson.status]}
-        <span className="text-gray-700 text-xs sm:text-sm capitalize">
+        <span
+          className={`text-gray-700 text-xs sm:text-sm capitalize ${
+            lesson.status === "complete"
+              ? "dark:text-green-500"
+              : "dark:text-white"
+          }`}
+        >
           {lesson.status}
         </span>
         {lesson.status !== "locked" && (
