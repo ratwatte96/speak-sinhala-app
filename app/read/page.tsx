@@ -1,3 +1,4 @@
+import { CompletionBar } from "@/components/CompletionBar";
 import { CustomQuizForm } from "@/components/CustomQuizForm";
 import Lessons from "@/components/Lessons";
 import prisma from "@/lib/prisma";
@@ -41,6 +42,7 @@ export default async function Read() {
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
     } else {
       readStatus = 1;
+      quizCompletionPercentage = 0;
     }
   } catch (error) {
     console.log(error);
@@ -57,16 +59,7 @@ export default async function Read() {
     <div className="flex min-h-screen flex-col items-center mt-10 pb-24">
       <div className="mx-4 w-[20rem] sm:w-96 ">
         <h1 className="font-serif mb-1 text-2xl">READ</h1>
-        <div className="relative w-full h-3 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gray-400 dark:bg-gray-500 transition-all duration-100"
-            style={{ width: `${Math.floor(quizCompletionPercentage ?? 0)}%` }}
-          ></div>
-
-          <div className="absolute inset-0 flex items-center justify-center text-xs text-black dark:text-white font-semibold">
-            {Math.floor(quizCompletionPercentage ?? 0)}%
-          </div>
-        </div>
+        <CompletionBar quizPercentage={quizCompletionPercentage} />
         {decoded && (
           <CustomQuizForm
             dropDownLetters={sinhalaObjects}

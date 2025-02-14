@@ -7,11 +7,13 @@ import prisma from "@/lib/prisma";
 import Lessons from "@/components/Lessons";
 import Tabs from "@/components/Tabs";
 import {
+  getQuizCompletionPercentage,
   getUserData,
   getUserWithQuizRecords,
   sinhalaCharacters,
 } from "@/utils/random";
 import { CustomQuizForm } from "@/components/CustomQuizForm";
+import { CompletionBar } from "@/components/CompletionBar";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -28,6 +30,7 @@ export default async function Home() {
       },
     },
   });
+  let quizCompletionPercentage;
 
   if (token) {
     try {
@@ -40,12 +43,15 @@ export default async function Home() {
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
       readStatus = user.readStatus;
       units = await getUserWithQuizRecords(user);
+      quizCompletionPercentage = await getQuizCompletionPercentage(user.id);
     } catch (error) {
       readStatus = 1;
+      quizCompletionPercentage = 0;
       console.log(error);
     }
   } else {
     readStatus = 1;
+    quizCompletionPercentage = 0;
   }
 
   const sinhalaObjects = sinhalaCharacters.map((char) => ({
@@ -86,6 +92,7 @@ export default async function Home() {
           <Tabs
             readComponent={
               <>
+                <CompletionBar quizPercentage={quizCompletionPercentage} />
                 {decoded && (
                   <CustomQuizForm
                     dropDownLetters={sinhalaObjects}
