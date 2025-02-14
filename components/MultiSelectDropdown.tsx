@@ -60,7 +60,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       <button
         id={`${id}Button`}
         data-dropdown-toggle={`${id}Dropdown`}
-        className={`flex items-center justify-center rounded-lg border h-8 border-gray-200 px-1 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-4 sm:py-2 ${
+        className={`flex items-center justify-center rounded-lg border h-8 border-gray-200 px-1 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-4 sm:py-2 dark:bg-black dark:border dark:border-solid dark:border-gray-600 dark:text-white transition-transform transform hover:scale-105 hover:shadow-lg ${
           buttonTailwindOveride ? buttonTailwindOveride : "w-32"
         }`}
         type="button"
@@ -89,7 +89,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           >
             {items.map(({ name, value }, index) => (
               <li
-                className={`block break-words border border-solid border-gray-200 py-2 text-center text-xs hover:bg-white/20 cursor-pointer ${
+                className={`block break-words border border-solid border-gray-200 py-2 text-center text-xs hover:bg-white/20 cursor-pointer dark:bg-black dark:border dark:border-solid dark:border-gray-400 dark:text-gray-400 ${
                   index === 0
                     ? "rounded-t-lg"
                     : index === items.length - 1

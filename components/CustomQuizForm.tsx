@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
-import Quiz from "./Quiz";
 import { useRouter } from "next/navigation";
 // import ChevronDownIcon from "../../public/chevron-down.svg";
 // import FilterIcon from "../../public/filter.svg";
@@ -17,6 +16,8 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
 }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   const handleRouting = () => {
     if (!isPremium) {
@@ -28,6 +29,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
       return;
     }
 
+    setIsLoading(true);
     const encodedLetters = encodeURIComponent(JSON.stringify(selectedItems));
     router.push(`/custom-quiz?letters=${encodedLetters}`);
   };
@@ -37,8 +39,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
       <div>
         <h2 className="text-md font-semibold">Custom Quiz</h2>
         <p className="text-gray-500 text-xs/4 mt-1 sm:text-sm/4">
-          Select up to 5 letters/accents you would like to practice and click
-          start.
+          Select up to 5 letters you would like to practice and click start.
         </p>
       </div>
       <div>
@@ -60,10 +61,11 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
             />
           </div>
           <button
-            className="flex items-center justify-center bg-green-500 ml-2 p-1 h-8 rounded-md w-28 text-xs font-medium text-black focus:z-10 focus:outline-none focus:ring-4"
+            className="flex items-center justify-center bg-green-500 dark:bg-green-600 ml-2 p-1 h-8 rounded-md w-28 text-xs font-medium text-black focus:z-10 focus:outline-none focus:ring-4 hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black"
             onClick={handleRouting}
+            disabled={isLoading}
           >
-            Start Quiz
+            {isLoading ? "Loading..." : "Start Quiz"}
           </button>
         </div>
       </div>

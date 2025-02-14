@@ -21,11 +21,11 @@ const Modal = ({ show, onClose, heading, children }: ModalProps) => {
       className="fixed inset-0 z-20 h-full w-full overflow-y-auto bg-gray-600 bg-opacity-50 "
       onClick={handleBackgroundClick}
     >
-      <div className="fade-in-quick relative h-100vh h-full rounded-md border bg-skin-base p-5 shadow-lg sm:top-20 sm:mx-auto sm:w-3/4">
+      <div className="fade-in-quick relative h-3/4 rounded-md border bg-[#eaeaea] dark:bg-black p-5 shadow-lg sm:top-20 sm:mx-auto sm:w-2/5">
         <div className="absolute left-0 top-0 p-4">
           <button
             onClick={onClose}
-            className="text-2xl text-skin-accent text-skin-base focus:outline-none"
+            className="text-2xl text-black dark:text-white focus:outline-none"
           >
             &times;
           </button>

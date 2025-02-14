@@ -19,7 +19,7 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
           className={`px-4 py-2 flex ${
             activeTab === "READ"
               ? "border-b-2 border-green-500 text-green-500 font-bold"
-              : "text-gray-300"
+              : "text-gray-500 transition-transform transform hover:scale-105 hover:shadow-lg"
           }`}
           onClick={() => setActiveTab("READ")}
         >
@@ -30,7 +30,7 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
           className={`px-4 py-2 flex ${
             activeTab === "SPEAK"
               ? "border-b-2 border-green-500 text-green-500 font-bold"
-              : "text-gray-500"
+              : "text-gray-500 transition-transform transform hover:scale-105 hover:shadow-lg"
           }`}
           onClick={() => setActiveTab("SPEAK")}
         >

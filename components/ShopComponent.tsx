@@ -48,6 +48,7 @@ const Shop = () => {
         } catch (error: any) {
           console.log(error);
         }
+        setUseRefill(false);
       };
       refill();
     }
@@ -71,6 +72,7 @@ const Shop = () => {
         } else {
           setRefillMessage(data.error);
         }
+        setBuyRefill(false);
         return data;
       };
       updateRefill(refillTotal);
@@ -111,7 +113,7 @@ const Shop = () => {
           .map((item, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-black  p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600"
+              className="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
               onClick={() => {
                 setShowRefillModal(true);
                 setRefillTotal(item.amount);
@@ -130,7 +132,7 @@ const Shop = () => {
           .map((item, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-black  p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600"
+              className="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
               onClick={() => {
                 setPremiumType(
                   item.amount === 1
@@ -177,18 +179,20 @@ const Shop = () => {
           setPremiumMessage("");
           setShowPremiumModal(false);
         }}
-        heading={"Note"}
+        heading={""}
       >
         <div>
           <button
             onClick={() => setBuyPremium(true)}
-            className="w-24 rounded-lg border border-skin-base m-4 px-3 py-1 text-xs text-skin-muted hover:text-skin-accent focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
+            className="w-24 rounded-lg border bg-yellow-400 border-skin-base m-4 px-3 py-1 text-xs text-black hover:text-white dark:text-white hover:text-black dark:hover:border dark:hover:border-red-400 dark:hover:text-yellow-400 dark:hover:bg-black focus:outline-none sm:ml-2 sm:w-40 sm:text-base"
             disabled={buyPremium}
           >
-            Buy Premium: {premiumType}
+            {buyPremium ? "Buying..." : "Buy Premium"}
           </button>
         </div>
-        <p>{premiumMessage}</p>
+        <p className="text-black dark:text-white text-center">
+          {premiumMessage}
+        </p>
       </Modal>
     </div>
   );

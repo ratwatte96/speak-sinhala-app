@@ -1,6 +1,7 @@
 "use client";
 import { CheckCircle, XCircle, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export interface Lesson {
   number: null | undefined;
@@ -18,8 +19,10 @@ interface LessonCardProps {
 }
 
 const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleRouting = (value: string) => {
+    setIsLoading(true);
     router.push(`/quiz/${lesson.quizId}`);
   };
 
@@ -60,9 +63,9 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
         {lesson.status !== "locked" && (
           <button
             onClick={() => handleRouting(lesson.quizId)}
-            className="bg-green-500 text-black p-1 rounded-md w-28"
+            className="bg-green-500 dark:bg-green-600 text-black p-1 rounded-md w-28 text-black hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black"
           >
-            Start
+            {isLoading ? "Loading..." : "Start"}
           </button>
         )}
       </div>
