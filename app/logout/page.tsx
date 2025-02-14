@@ -33,13 +33,13 @@ export default function LogoutPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="p-6 bg-white shadow-lg rounded-lg text-center">
-        <h1 className="text-xl font-semibold text-gray-700">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-black">
+      <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-white">
+        <h1 className="text-md sm:text-xl font-semibold text-gray-700 dark:text-white">
           {error ? "Logout Failed" : message}
         </h1>
 
-        {error && <p className="mt-4 text-red-600">{error}</p>}
+        {error && <p className="text-sm mt-4 text-red-600">{error}</p>}
 
         {isLoggedOut && (
           <button
