@@ -135,7 +135,7 @@ export default function Signup() {
 
       <button
         onClick={handleSignup}
-        className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-md"
+        className="mt-4 bg-green-500 text-white px-6 py-2 rounded-md"
       >
         Sign Up
       </button>

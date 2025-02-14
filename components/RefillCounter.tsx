@@ -49,7 +49,7 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
 
   return (
     <p className="flex items-center">
-      <RefreshCcw className="text-blue-500" size={24} />
+      <RefreshCcw className="text-green-500" size={24} />
       <span className="ml-1 font-bold text-lg">
         {loadingRefills ? (
           "loading"

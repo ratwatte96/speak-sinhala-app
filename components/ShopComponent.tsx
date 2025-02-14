@@ -102,7 +102,7 @@ const Shop = () => {
   }, [useRefill, buyRefill, buyPremium]);
 
   return (
-    <div className="min-h-screen">
+    <div>
       <h1 className="text-xl font-bold pt-[8px]">SHOP</h1>
       <h2 className="text-lg font-semibold mt-4">Refills</h2>
       <div className="grid grid-cols-2 gap-4 mt-2">

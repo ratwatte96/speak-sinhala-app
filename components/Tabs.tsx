@@ -1,5 +1,6 @@
 "use client";
 
+import { BookOpen, MessageSquare } from "lucide-react";
 import { useState } from "react";
 
 interface TabsProps {
@@ -15,29 +16,31 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
       {/* Tab Navigation */}
       <div className="flex border-b text-xl">
         <button
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 flex ${
             activeTab === "READ"
-              ? "border-b-2 border-blue-500 font-bold"
+              ? "border-b-2 border-green-500 text-green-500 font-bold"
               : "text-gray-500"
           }`}
           onClick={() => setActiveTab("READ")}
         >
-          READ
+          <span className="pr-2">READ</span>
+          <BookOpen />
         </button>
         <button
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 flex ${
             activeTab === "SPEAK"
-              ? "border-b-2 border-blue-500 font-bold"
+              ? "border-b-2 border-green-500 text-green-500 font-bold"
               : "text-gray-500"
           }`}
           onClick={() => setActiveTab("SPEAK")}
         >
-          SPEAK
+          <span className="pr-2">SPEAK</span>
+          <MessageSquare />
         </button>
       </div>
 
-      {/* Tab Content */}
-      <div className="mt-4 w-full">
+      {/* Scrollable Tab Content */}
+      <div className="mt-4 w-full overflow-y-auto">
         {activeTab === "READ" ? readComponent : speakComponent}
       </div>
     </div>

@@ -52,7 +52,7 @@ export default function ResendVerification() {
           />
           <button
             type="submit"
-            className="mt-4 w-full bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+            className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
           >
             Resend Email
           </button>

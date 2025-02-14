@@ -14,7 +14,7 @@ export default function NoAccessPage() {
         </p>
         <button
           onClick={() => router.push("/read")}
-          className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+          className="mt-6 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
         >
           Go to Homepage
         </button>

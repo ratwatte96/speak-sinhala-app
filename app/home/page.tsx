@@ -53,17 +53,16 @@ export default async function Home() {
     name: char,
   }));
 
-  console.log(userData);
   return (
-    <div className="flex min-h-screen flex-col mt-10">
-      <div className="mx-4 flex flex-col md:flex-row justify-around">
+    <div className="flex max-h-8/10 flex-col mt-10">
+      <div className="mx-4 flex flex-col md:flex-row justify-around max-h-[80vh]">
         <div className="relative w-full pl-8 pr-12">
           {!decoded && (
-            <div className="absolute inset-0 flex items-center justify-center h-screen">
-              <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black opacity-10 rounded-lg max-h-[80vh]"></div>
               <div className="flex flex-col">
                 <a href="/login" className="relative z-10">
-                  <button className="bg-blue-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                  <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
                     Login
                   </button>
                 </a>
@@ -103,11 +102,11 @@ export default async function Home() {
         </div>
         <div className="relative w-full flex justify-center pl-12 pr-8">
           {!decoded && (
-            <div className="absolute inset-0 flex items-center justify-center h-screen">
+            <div className="absolute inset-0 flex items-center justify-center max-h-[80vh] ">
               <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
               <div className="flex flex-col">
                 <a href="/login" className="relative z-10">
-                  <button className="bg-blue-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                  <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
                     Login
                   </button>
                 </a>

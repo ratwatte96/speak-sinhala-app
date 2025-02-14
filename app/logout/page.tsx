@@ -44,7 +44,7 @@ export default function LogoutPage() {
         {isLoggedOut && (
           <button
             onClick={() => router.push("/login")}
-            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+            className="mt-6 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
           >
             Go to Login
           </button>
