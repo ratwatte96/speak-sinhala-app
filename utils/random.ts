@@ -45,7 +45,9 @@ export async function getUserWithQuizRecords(user: any) {
   }
 }
 
-async function getQuizCompletionPercentage(userId: number): Promise<number> {
+export async function getQuizCompletionPercentage(
+  userId: number
+): Promise<number> {
   const totalQuizzes = 74;
   const completedQuizzes = await prisma.usersOnQuizes.count({
     where: {

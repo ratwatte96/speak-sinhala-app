@@ -34,7 +34,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
 
   return (
     <div className="border rounded-lg p-3 shadow-md bg-white flex justify-between items-center text-xs sm:text-sm mx-auto my-3 dark:bg-black dark:border dark:border-solid dark:border-gray-600">
-      <div>
+      <div className="w-3/4">
         <h2 className="text-sm sm:text-md font-bold">{lesson.quizName}</h2>
         <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
           Type: {lesson.type}
@@ -47,7 +47,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
         </p>
       </div>
       <div className="flex flex-col items-center">
-        <p className="mb-1 w-32 text-center">
+        <p className="mb-1 w-[5rem] sm:w-32 text-center">
           {lesson.isPerfect ? "Perfect Score" : "No perfect score"}
         </p>
         {statusIcons[lesson.status]}

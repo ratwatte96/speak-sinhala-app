@@ -34,7 +34,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="flex min-w-screen min-h-screen flex-col bg-[#EAEAEA]">
+      <body className="flex min-w-screen min-h-screen flex-col bg-[#EAEAEA] dark:bg-black">
         <TopNavbar loggedOut={!decoded} isPremium={isPremium} />
         <main className="min-h-[80vh]">{children}</main>
         <BottomNavbar />

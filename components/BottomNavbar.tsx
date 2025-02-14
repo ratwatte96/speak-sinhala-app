@@ -14,12 +14,14 @@ const BottomNavbar = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white shadow-md p-4 flex justify-around border-t md:hidden">
+    <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md p-4 flex justify-around border-t dark:border-gray-500 md:hidden">
       {navItems.map((item) => (
         <Link key={item.name} href={item.href}>
           <div
             className={`flex flex-col items-center cursor-pointer transition-colors duration-200 ${
-              active === item.name ? "text-green-500" : "text-black"
+              active === item.name
+                ? "text-green-500"
+                : "text-black dark:text-white"
             }`}
             onClick={() => setActive(item.name)}
           >

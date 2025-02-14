@@ -60,7 +60,11 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
     <p className="flex items-center">
       <Heart className="text-red-500" size={24} />
       <span className="ml-1 font-bold text-lg">
-        {loadingLives ? "loading" : sharedState.lives ?? 0}
+        {loadingLives ? (
+          <span className="text-xs sm:text-lg">loading</span>
+        ) : (
+          sharedState.lives ?? 0
+        )}
       </span>
     </p>
   );

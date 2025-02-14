@@ -61,7 +61,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
         id={`${id}Button`}
         data-dropdown-toggle={`${id}Dropdown`}
         className={`flex items-center justify-center rounded-lg border h-8 border-gray-200 px-1 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-4 sm:py-2 dark:bg-black dark:border dark:border-solid dark:border-gray-600 dark:text-white transition-transform transform hover:scale-105 hover:shadow-lg ${
-          buttonTailwindOveride ? buttonTailwindOveride : "w-32"
+          buttonTailwindOveride ? buttonTailwindOveride : "w-full"
         }`}
         type="button"
         onClick={() => setShowItems(!showItems)}

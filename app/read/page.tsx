@@ -3,7 +3,11 @@ import Lessons from "@/components/Lessons";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
-import { getUserWithQuizRecords, sinhalaCharacters } from "@/utils/random";
+import {
+  getQuizCompletionPercentage,
+  getUserWithQuizRecords,
+  sinhalaCharacters,
+} from "@/utils/random";
 import { cookies } from "next/headers";
 
 export default async function Read() {
@@ -22,7 +26,7 @@ export default async function Read() {
   let readStatus: any;
   let decoded: any;
   let isPremium = false;
-
+  let quizCompletionPercentage;
   try {
     if (token && verifyAccessToken(token.value)) {
       decoded = verifyAccessToken(token.value);
@@ -32,7 +36,7 @@ export default async function Read() {
         },
       });
       readStatus = user.readStatus;
-
+      quizCompletionPercentage = await getQuizCompletionPercentage(user.id);
       units = await getUserWithQuizRecords(user);
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
     } else {
@@ -40,6 +44,7 @@ export default async function Read() {
     }
   } catch (error) {
     console.log(error);
+    quizCompletionPercentage = 0;
     readStatus = 1;
   }
 
@@ -50,12 +55,18 @@ export default async function Read() {
 
   return (
     <div className="flex min-h-screen flex-col items-center mt-10 pb-24">
-      <div className="mx-4 w-96">
-        <h1 className="font-serif text-3xl">READ</h1>
-        <div
-          className="bg-green-500 h-2.5 rounded-full"
-          style={{ width: `${80}%` }}
-        ></div>
+      <div className="mx-4 w-[20rem] sm:w-96 ">
+        <h1 className="font-serif mb-1 text-2xl">READ</h1>
+        <div className="relative w-full h-3 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gray-400 dark:bg-gray-500 transition-all duration-100"
+            style={{ width: `${Math.floor(quizCompletionPercentage ?? 0)}%` }}
+          ></div>
+
+          <div className="absolute inset-0 flex items-center justify-center text-xs text-black dark:text-white font-semibold">
+            {Math.floor(quizCompletionPercentage ?? 0)}%
+          </div>
+        </div>
         {decoded && (
           <CustomQuizForm
             dropDownLetters={sinhalaObjects}

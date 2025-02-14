@@ -29,7 +29,7 @@ const RedirectWithLoading = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen bg-gray-100 dark:bg-black">
+    <div className="flex flex-col items-center justify-center w-full h-screen dark:bg-black">
       <div className="flex flex-col items-center justify-center ">
         <p className="text-8xl md:text-9xl">🇱🇰</p>
         <p className="text-sm text-gray-600 mb-4 md:text-lg lg:text-xl dark:text-white">
@@ -37,13 +37,13 @@ const RedirectWithLoading = () => {
         </p>
       </div>
 
-      <div className="relative w-60 md:w-80 lg:w-96 h-3 bg-gray-300 dark:bg-black rounded-full overflow-hidden">
+      <div className="relative w-60 md:w-80 lg:w-96 h-3 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gray-600 transition-all duration-100"
+          className="h-full bg-gray-400 dark:bg-gray-500 transition-all duration-100"
           style={{ width: `${progress}%` }}
         ></div>
 
-        <div className="absolute inset-0 flex items-center justify-center text-xs text-white font-semibold">
+        <div className="absolute text-xs sm:text-sm inset-0 flex items-center justify-center text-black dark:text-white font-semibold">
           {progress}%
         </div>
       </div>

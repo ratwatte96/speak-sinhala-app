@@ -52,7 +52,7 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
       <RefreshCcw className="text-green-500" size={24} />
       <span className="ml-1 font-bold text-lg">
         {loadingRefills ? (
-          "loading"
+          <span className="text-xs sm:text-lg">loading</span>
         ) : notSignedUp ? (
           <Infinity className="w-6 h-6 text-black-500" />
         ) : (
