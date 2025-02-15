@@ -183,7 +183,7 @@ export const CustomQuiz: React.FC<CustomQuizProps> = async ({ letters }) => {
   const quizSteps = createSteps(order, existingPairs);
 
   return (
-    <div className="flex justify-between w-1/4">
+    <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black">
       <Quiz
         steps={quizSteps}
         quiz_title={"Custom Quiz"}

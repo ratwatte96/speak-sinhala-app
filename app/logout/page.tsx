@@ -2,6 +2,7 @@
 import { fetchWithToken } from "@/utils/fetch";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function LogoutPage() {
   const router = useRouter();
@@ -33,23 +34,25 @@ export default function LogoutPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-black">
-      <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400">
-        <h1 className="text-md sm:text-xl font-semibold text-gray-700 dark:text-white">
-          {error ? "Logout Failed" : message}
-        </h1>
+    <ThemeProvider>
+      <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-black">
+        <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400">
+          <h1 className="text-md sm:text-xl font-semibold text-gray-700 dark:text-white">
+            {error ? "Logout Failed" : message}
+          </h1>
 
-        {error && <p className="text-sm mt-4 text-red-600">{error}</p>}
+          {error && <p className="text-sm mt-4 text-red-600">{error}</p>}
 
-        {isLoggedOut && (
-          <button
-            onClick={() => router.push("/login")}
-            className="mt-6 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
-          >
-            Go to Login
-          </button>
-        )}
+          {isLoggedOut && (
+            <button
+              onClick={() => router.push("/login")}
+              className="mt-6 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+            >
+              Go to Login
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }

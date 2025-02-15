@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default async function CustomQuizPage({
   searchParams,
@@ -37,8 +38,8 @@ export default async function CustomQuizPage({
     : [];
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
+    <ThemeProvider>
       <CustomQuiz letters={letters} />
-    </main>
+    </ThemeProvider>
   );
 }

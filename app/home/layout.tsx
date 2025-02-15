@@ -9,8 +9,8 @@ import { cookies } from "next/headers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Speak Sinhala",
-  description: "Website to make learning how to speak sinhala fun",
+  title: "Learn Sinhala",
+  description: "Website to make learning how to read and speak sinhala fun",
 };
 
 export default async function RootLayout({

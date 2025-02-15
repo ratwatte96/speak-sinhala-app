@@ -1,4 +1,3 @@
-import BottomNavbar from "@/components/BottomNavbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import TopNavbar from "@/components/TopNavBar";
 import { verifyAccessToken } from "@/utils/auth";
@@ -6,7 +5,6 @@ import { updatePremiumStatus } from "@/utils/checkPremium";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,28 +19,30 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
-  let isPremium;
+  let isPremium = false;
+  let loggedIn = false;
+
   try {
     if (token) {
       const decoded: any = verifyAccessToken(token.value);
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
-    } else {
-      isPremium = false;
+      loggedIn = true;
     }
   } catch (error) {
-    redirect(`/login?callbackUrl=${encodeURIComponent("/user-profile")}`);
+    console.log("quiz/[id]/layout.tsx", error);
   }
 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col">
         <ThemeProvider>
-          <TopNavbar loggedOut={!token} isPremium={isPremium} />
-          <main className="min-h-[80vh] bg-[#EAEAEA] dark:bg-black  ">
-            {children}
-          </main>
-          <BottomNavbar />
+          <TopNavbar
+            loggedOut={!loggedIn}
+            isPremium={isPremium}
+            showValues={false}
+          />
         </ThemeProvider>
+        <main>{children}</main>
       </body>
     </html>
   );
