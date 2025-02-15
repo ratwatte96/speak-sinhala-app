@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SharedStateProvider } from "@/components/StateProvider";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
       <SharedStateProvider>
         <body className="bg-[#EAEAEA]">{children}</body>
       </SharedStateProvider>
-      {/* </ThemeProvider> */}
     </html>
   );
 }

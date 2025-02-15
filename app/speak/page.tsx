@@ -1,9 +1,7 @@
-import { CompletionBar } from "@/components/CompletionBar";
-
 export default function Speak() {
   return (
-    <div className="flex min-h-screen flex-col mt-10 pb-24">
-      <div className="mx-4">
+    <div className="flex min-h-screen flex-col pb-24">
+      <div className="mx-4 mt-10 ">
         <h1 className="font-serif mb-1 text-xl">SPEAK</h1>
         <div className="relative w-full h-3 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
           <div

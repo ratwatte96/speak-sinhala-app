@@ -14,6 +14,7 @@ import {
 } from "@/utils/random";
 import { CustomQuizForm } from "@/components/CustomQuizForm";
 import { CompletionBar } from "@/components/CompletionBar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -60,90 +61,92 @@ export default async function Home() {
   }));
 
   return (
-    <div className="flex max-h-8/10 flex-col mt-10">
-      <div className="mx-4 flex flex-col md:flex-row justify-around max-h-[80vh]">
-        <div className="relative w-full pl-8 pr-12">
-          {!decoded && (
-            <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
-              <div className="absolute inset-0 bg-black opacity-10 rounded-lg max-h-[80vh]"></div>
-              <div className="flex flex-col">
-                <a href="/login" className="relative z-10">
-                  <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
-                    Login
-                  </button>
-                </a>
-                <a href="/signup" className="relative z-10">
-                  <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40 dark:text-black">
-                    Signup to Unlock
-                  </button>
-                </a>
+    <ThemeProvider>
+      <div className="flex max-h-8/10 flex-col mt-10">
+        <div className="mx-4 flex flex-col md:flex-row justify-around max-h-[80vh]">
+          <div className="relative w-full pl-8 pr-12">
+            {!decoded && (
+              <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
+                <div className="absolute inset-0 bg-black opacity-10 rounded-lg max-h-[80vh]"></div>
+                <div className="flex flex-col">
+                  <a href="/login" className="relative z-10">
+                    <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                      Login
+                    </button>
+                  </a>
+                  <a href="/signup" className="relative z-10">
+                    <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40 dark:text-black">
+                      Signup to Unlock
+                    </button>
+                  </a>
+                </div>
               </div>
+            )}
+            <div
+              className={`${
+                !decoded ? "blur-md pointer-events-none opacity-70" : ""
+              }`}
+            >
+              <Shop />
             </div>
-          )}
-          <div
-            className={`${
-              !decoded ? "blur-md pointer-events-none opacity-70" : ""
-            }`}
-          >
-            <Shop />
           </div>
-        </div>
-        <div className="mx-4 w-full flex justify-center">
-          <Tabs
-            readComponent={
-              <>
-                <CompletionBar quizPercentage={quizCompletionPercentage} />
-                {decoded && (
-                  <CustomQuizForm
-                    dropDownLetters={sinhalaObjects}
-                    isPremium={isPremium}
-                  />
-                )}
-                <Lessons unitData={units} readStatus={readStatus} />
-              </>
-            }
-            speakComponent={
-              <div className="text-center">🎤 Speak section coming soon!</div>
-            }
-          />
-        </div>
-        <div className="relative w-full flex justify-center pl-12 pr-8">
-          {!decoded && (
-            <div className="absolute inset-0 flex items-center justify-center max-h-[80vh] dark:border-x dark:border-solid dark:border-gray-600">
-              <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
-              <div className="flex flex-col">
-                <a href="/login" className="relative z-10">
-                  <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
-                    Login
-                  </button>
-                </a>
-                <a href="/signup" className="relative z-10">
-                  <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40 dark:text-black">
-                    Signup to Unlock
-                  </button>
-                </a>
-              </div>
-            </div>
-          )}
-          <div
-            className={`${
-              !decoded ? "blur-md pointer-events-none opacity-70" : ""
-            }`}
-          >
-            <ProfileCard
-              userData={
-                userData ?? {
-                  username: "",
-                  email: "",
-                  readPercentage: 0,
-                  premiumEndDate: null,
-                }
+          <div className="mx-4 w-full flex justify-center">
+            <Tabs
+              readComponent={
+                <>
+                  <CompletionBar quizPercentage={quizCompletionPercentage} />
+                  {decoded && (
+                    <CustomQuizForm
+                      dropDownLetters={sinhalaObjects}
+                      isPremium={isPremium}
+                    />
+                  )}
+                  <Lessons unitData={units} readStatus={readStatus} />
+                </>
               }
-              isPremium={isPremium}
+              speakComponent={
+                <div className="text-center">🎤 Speak section coming soon!</div>
+              }
             />
+          </div>
+          <div className="relative w-full flex justify-center pl-12 pr-8">
+            {!decoded && (
+              <div className="absolute inset-0 flex items-center justify-center max-h-[80vh] dark:border-x dark:border-solid dark:border-gray-600">
+                <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
+                <div className="flex flex-col">
+                  <a href="/login" className="relative z-10">
+                    <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                      Login
+                    </button>
+                  </a>
+                  <a href="/signup" className="relative z-10">
+                    <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40 dark:text-black">
+                      Signup to Unlock
+                    </button>
+                  </a>
+                </div>
+              </div>
+            )}
+            <div
+              className={`${
+                !decoded ? "blur-md pointer-events-none opacity-70" : ""
+              }`}
+            >
+              <ProfileCard
+                userData={
+                  userData ?? {
+                    username: "",
+                    email: "",
+                    readPercentage: 0,
+                    premiumEndDate: null,
+                  }
+                }
+                isPremium={isPremium}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }

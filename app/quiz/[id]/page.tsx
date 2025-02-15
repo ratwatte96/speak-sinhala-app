@@ -4,16 +4,8 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
-import LogoutButton from "@/components/LogoutButton";
 import { updatePremiumStatus } from "@/utils/checkPremium";
-
-function convertNewLetterData(data: any): NewLetterData[] {
-  return data.map((item: any) => ({
-    sound: item.newLetterData.sound,
-    sinhala: item.newLetterData.sinhala,
-    englishWord: item.newLetterData.englishWord,
-  }));
-}
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
   let answers = isSinhala
@@ -239,14 +231,16 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const quizQuestion = quizData!.quiz_name ?? "";
 
   return (
-    <main className="flex min-h-[80vh] flex-col items-center justify-center">
-      <Quiz
-        steps={quizSteps}
-        quiz_title={quizQuestion}
-        quiz_id={parseInt(id)}
-        loggedOut={!validToken}
-        isPremium={isPremium}
-      />
-    </main>
+    <ThemeProvider>
+      <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black">
+        <Quiz
+          steps={quizSteps}
+          quiz_title={quizQuestion}
+          quiz_id={parseInt(id)}
+          loggedOut={!validToken}
+          isPremium={isPremium}
+        />
+      </div>
+    </ThemeProvider>
   );
 }

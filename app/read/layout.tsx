@@ -1,4 +1,5 @@
 import BottomNavbar from "@/components/BottomNavbar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import TopNavbar from "@/components/TopNavBar";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
@@ -35,9 +36,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="flex min-w-screen min-h-screen flex-col bg-[#EAEAEA] dark:bg-black">
-        <TopNavbar loggedOut={!decoded} isPremium={isPremium} />
+        <ThemeProvider>
+          <TopNavbar loggedOut={!decoded} isPremium={isPremium} />
+        </ThemeProvider>
         <main className="min-h-[80vh]">{children}</main>
-        <BottomNavbar />
+        <ThemeProvider>
+          <BottomNavbar />
+        </ThemeProvider>
       </body>
     </html>
   );
