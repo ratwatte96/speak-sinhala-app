@@ -6,17 +6,15 @@ export default function LogoutButton() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const response = await fetchWithToken("/api/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    if (response.ok) {
-      router.push("/login");
-    } else {
-      console.error("Failed to logout");
-    }
+    router.push("/logout");
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button
+      className="p-2 rounded-md border border-solid border-gray-300 dark:bg-black dark:text-white transition-transform transform hover:scale-105 hover:shadow-lg"
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+  );
 }

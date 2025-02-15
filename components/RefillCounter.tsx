@@ -54,9 +54,9 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
         {loadingRefills ? (
           <span className="text-xs sm:text-lg">loading</span>
         ) : notSignedUp ? (
-          <Infinity className="w-6 h-6 text-black-500" />
+          <Infinity className="w-6 h-6 text-black-500 dark:text-white" />
         ) : (
-          sharedState.refills
+          sharedState.refills ?? 0
         )}
       </span>
     </p>
