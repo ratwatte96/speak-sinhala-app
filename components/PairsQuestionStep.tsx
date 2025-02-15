@@ -120,13 +120,14 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                     selectSinhala(sinhala);
                     checkPair(sinhala, "sinhala");
                   }}
-                  additionalClasses={
-                    completePairs.current.includes(sound)
-                      ? "text-skin-muted border-skin-base border-b-4 bg-skin-disabled"
-                      : selectedSinhala === sinhala
-                      ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                      : "text-skin-muted border-skin-base border-b-4"
-                  }
+                  additionalClasses={` dark:bg-black cursor-pointer mb-4 p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg
+                    ${
+                      completePairs.current.includes(sound)
+                        ? "text-gray-600 border-skin-base border-b-4 bg-gray-400"
+                        : selectedSinhala === sinhala
+                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"
+                        : "text-black dark:text-white bg-white border-skin-base border-b-4"
+                    }`}
                   disabledOveride={completePairs.current.includes(sound)}
                   isButtonNoAudio={isHard}
                   isHard={isHard}
@@ -143,12 +144,12 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                   selectSound(pair.sound);
                   checkPair(pair.sound, "sound");
                 }}
-                className={`rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 min-h-28 ${
+                className={`dark:bg-black text-3xl mb-4 flex flex-col items-center justify-center min-w-32 min-h-28  cursor-pointer mb-4 p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg ${
                   completePairs.current.includes(pair.sound)
-                    ? "text-skin-muted border-skin-base border-b-4 bg-skin-disabled"
+                    ? "text-gray-600 border-skin-base border-b-4 bg-gray-400"
                     : selectedSound === pair.sound
-                    ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                    : "text-skin-muted border-skin-base border-b-4"
+                    ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"
+                    : "text-black dark:text-white border-skin-base border-b-4 bg-white "
                 }`}
                 disabled={completePairs.current.includes(pair.sound)}
               >

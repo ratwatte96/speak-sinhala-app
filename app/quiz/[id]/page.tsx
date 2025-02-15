@@ -175,7 +175,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   let user: any;
   let readStatus: any;
   let isPremium: any;
-
+  console.log("validToken", validToken);
   if (
     (validToken && ["28", "29", "30", "31", "32", "33"].includes(id)) ||
     !["28", "29", "30", "31", "32", "33"].includes(id)
@@ -194,6 +194,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     }
   }
 
+  console.log("ji");
   const unit: any = await prisma.quizesOnUnits.findFirst({
     where: {
       quizId: parseInt(id), // Find the row where the given quiz exists
@@ -239,10 +240,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const quizQuestion = quizData!.quiz_name ?? "";
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-skin-base text-skin-base">
-      <div>
-        <LogoutButton />
-      </div>
+    <main className="flex min-h-[80vh] flex-col items-center justify-center">
       <Quiz
         steps={quizSteps}
         quiz_title={quizQuestion}

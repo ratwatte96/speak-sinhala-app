@@ -265,15 +265,6 @@ const Quiz: React.FC<QuizProps> = ({
 
     return (
       <div className="text-center">
-        <div className="flex justify-start w-56 sm:w-40">
-          <StreakCounter loggedOut={loggedOut} />
-          <LivesCounter
-            startingLives={lives}
-            setMainLives={setLives}
-            loggedOut={loggedOut}
-          />
-          <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
-        </div>
         <h2 className="text-2xl font-bold mb-4">
           Congratulations! You&apos;ve completed the quiz.
         </h2>
@@ -315,15 +306,6 @@ const Quiz: React.FC<QuizProps> = ({
 
   return quizFailed ? (
     <div className="text-center">
-      <div className="flex justify-start w-56 sm:w-40">
-        <StreakCounter loggedOut={loggedOut} />
-        <LivesCounter
-          startingLives={lives}
-          setMainLives={setLives}
-          loggedOut={loggedOut}
-        />
-        <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
-      </div>
       <h2 className="text-2xl font-bold mb-4">
         Sorry! You&apos;ve run out of lives.
       </h2>
@@ -332,23 +314,16 @@ const Quiz: React.FC<QuizProps> = ({
       </Link>
     </div>
   ) : (
-    <div className="flex flex-col items-center">
-      <div className="flex justify-start w-56 sm:w-40">
-        <StreakCounter loggedOut={loggedOut} />
-        <LivesCounter
-          startingLives={lives}
-          setMainLives={setLives}
-          loggedOut={loggedOut}
-        />
-        <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
-      </div>
-      <div className="w-80 bg-gray-200 rounded-full h-2.5 mb-4">
-        <div
-          className="bg-skin-accent h-2.5 rounded-full"
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
-      <h1 className="text-xl mb-2">{quiz_title}</h1>
+    <div className="flex flex-col items-center mt-8">
+      {steps && steps[currentStep].type === "question" && (
+        <div className="w-full bg-gray-300 dark:bg-gray-200 rounded-full h-2.5 mb-4">
+          <div
+            className="bg-skin-accent h-2.5 rounded-full"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      )}
+      <h1 className="text-2xl">{quiz_title}</h1>
       {steps !== undefined ? (
         <Step
           step={steps[currentStep]}

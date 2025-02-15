@@ -10,7 +10,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
   //?infoDisplay= list, image, table, sound buttons
   //TODO: table and image
   return (
-    <div className="sm:w-2/3 w-full text-sm sm:text-base">
+    <div className="w-4/5 sm:w-3/5 text-sm sm:text-base">
       {data.map(({ text, infoDisplayType, info }: any, i: number) => (
         <div key={i} className="flex mt-4">
           {infoDisplayType === "list" ? (
@@ -30,24 +30,30 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
               <div>
                 <p className="mb-2">{text}</p>
                 <p>{info.text}</p>
-                {info.data.map(
-                  ({ sound, sinhala, englishWord }: any, i: number) => (
-                    <div key={i} className="flex mt-4">
-                      <AudioPlayer
-                        audioPath={`/audioClips/${sound}.mp3`}
-                        display_text={sinhala}
-                        onClick={() => {}}
-                        additionalClasses={
-                          "text-skin-muted border-skin-base border-b-4"
-                        }
-                      />
-                      <div className="ml-4 min-h-28 flex flex-col justify-center">
-                        <p>{sound}</p>
-                        {englishWord && <p>{`like in '${englishWord}'`}</p>}
+                <div className="grid grid-cols-2 gap-4">
+                  {info.data.map(
+                    ({ sound, sinhala, englishWord }: any, i: number) => (
+                      <div
+                        key={i}
+                        className="flex flex-col justify-center items-center mt-4"
+                      >
+                        <AudioPlayer
+                          audioPath={`/audioClips/${sound}.mp3`}
+                          display_text={sinhala}
+                          onClick={() => {}}
+                          additionalClasses="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
+                        />
+                        <div className="mt-1">
+                          {englishWord ? (
+                            <p>{`${sound} like in '${englishWord}'`}</p>
+                          ) : (
+                            <p>{sound}</p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )
-                )}
+                    )
+                  )}
+                </div>
               </div>
             </>
           ) : infoDisplayType === "image" ? (
@@ -142,11 +148,11 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
           </table>
         </div>
       </p> */}
-      <div className="flex justify-center">
+      <div className="flex justify-center items-center mt-4">
         <button
           key="confirm-button"
           onClick={() => nextStep(false)}
-          className="w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1"
+          className="flex items-center justify-center bg-green-500 dark:bg-green-600 ml- p-1 h-8 rounded-md font-medium text-black focus:z-10 focus:outline-none focus:ring-4 hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black w-2/5"
         >
           Start Quiz
         </button>

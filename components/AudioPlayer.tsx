@@ -104,14 +104,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
-      className={`relative rounded-lg border-2 text-5xl mb-4 p-4 flex flex-col min-w-32 justify-center min-h-28 ${
+      className={`relative rounded-lg border-2 p-4 flex flex-col min-w-32 justify-center min-h-28 sm:min-h-28 ${
         isPressed ? "" : additionalClasses
       }`}
       onClick={togglePlay}
       disabled={disabledOveride || playing}
     >
       {display_text ? (
-        <div className="flex flex-col items-center w-full sm:text-base">
+        <div className="flex flex-col items-center sm:w-full text-lg">
           <span>{display_text}</span>
           {extraa_text && <p className="text-skin-base">{extraa_text}</p>}
           {extra_text && <p className="text-skin-base">{extra_text}</p>}

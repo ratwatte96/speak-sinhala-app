@@ -108,9 +108,12 @@ export const QuizStep: React.FC<QuizStepProps> = ({
             }
             extra_text={questionType == 5 ? question_word : undefined}
             extraa_text={questionType == 5 ? correctAnswer : undefined}
+            additionalClasses="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
           />
         ) : (
-          <p className="text-skin-base text-5xl mb-4">{question_word}</p>
+          <p className="text-black dark:text-white text-5xl mb-4">
+            {question_word}
+          </p>
         )}
         {/* <div
             onMouseEnter={() => setVisible(true)}
@@ -148,14 +151,14 @@ export const QuizStep: React.FC<QuizStepProps> = ({
               <div
                 key={answer.id}
                 onClick={() => selectAnswer(answer.value)}
-                className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
+                className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base dark:border-gray-500 px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
                   selectedAnswer === answer.value
                     ? "text-skin-accent"
-                    : "text-skin-muted"
+                    : "text-black dark:text-white"
                 }`}
               >
                 <p>{answer.buttonLabel}</p>
-                <p className="text-skin-base">{answer.sinhala}</p>
+                <p>{answer.sinhala}</p>
               </div>
             ) : (
               <div key={answer.id}>
@@ -166,11 +169,12 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                     onEnd={handleAudioEnd}
                     display_text={answer.buttonLabel}
                     onClick={() => selectAnswer(answer.value)}
-                    additionalClasses={
-                      selectedAnswer === answer.value
-                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                        : "text-skin-muted border-skin-base border-b-4"
-                    }
+                    additionalClasses={`bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg mb-2 
+                      ${
+                        selectedAnswer === answer.value
+                          ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"
+                          : "border-skin-base dark:border-gray-600 border-b-4"
+                      }`}
                     isButtonNoAudio={isHard}
                     extra_text={!isLetterQuiz ? answer.audio : undefined}
                     isHard={isHard}
@@ -178,10 +182,10 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                 ) : (
                   <button
                     onClick={() => selectAnswer(answer.value)}
-                    className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent focus:outline-none sm:text-base w-80 mb-4 ${
+                    className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent dark:border-gray-600 focus:outline-none sm:text-base w-80 mb-4 ${
                       selectedAnswer === answer.value
-                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20"
-                        : "text-skin-muted border-skin-base border-b-4"
+                        ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"
+                        : "text-black dark:text-white bg-white dark:bg-black"
                     }`}
                   >
                     {answer.buttonLabel}
@@ -195,10 +199,10 @@ export const QuizStep: React.FC<QuizStepProps> = ({
           key="confirm-button"
           onClick={() => handleAnswer()}
           disabled={selectedAnswer === ""}
-          className={`w-80 my-4 bg-skin-accent rounded-lg border border-0 border-skin-base px-3 py-1 ${
+          className={`w-80 my-4 rounded-lg border border-0 border-skin-base px-3 py-1 ${
             selectedAnswer === ""
-              ? "text-skin-muted border-skin-base bg-skin-disabled"
-              : ""
+              ? "text-skin-muted border-skin-base  bg-gray-400 dark:bg-skin-disabled"
+              : "bg-skin-accent "
           }`}
         >
           Confirm

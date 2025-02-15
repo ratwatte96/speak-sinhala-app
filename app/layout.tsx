@@ -18,11 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <SharedStateProvider>
-          <body className="bg-[#EAEAEA]">{children}</body>
-        </SharedStateProvider>
-      </ThemeProvider>
+      {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
+      <SharedStateProvider>
+        <body className="bg-[#EAEAEA]">{children}</body>
+      </SharedStateProvider>
+      {/* </ThemeProvider> */}
     </html>
   );
 }
