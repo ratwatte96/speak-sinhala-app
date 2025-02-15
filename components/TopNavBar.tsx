@@ -10,9 +10,14 @@ import LogoutButton from "./LogoutButton";
 interface TopNavBarProps {
   loggedOut?: boolean;
   isPremium?: boolean;
+  showValues?: boolean;
 }
 
-const Navbar: React.FC<TopNavBarProps> = ({ loggedOut, isPremium }) => {
+const Navbar: React.FC<TopNavBarProps> = ({
+  loggedOut,
+  isPremium,
+  showValues = true,
+}) => {
   const [isToggled, setIsToggled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -39,11 +44,14 @@ const Navbar: React.FC<TopNavBarProps> = ({ loggedOut, isPremium }) => {
     <header className="sticky top-0 z-20 h-[10vh]">
       <div className="w-screen h-full relative flex justify-between items-center p-4 bg-white shadow-md dark:bg-black dark:border-b dark:border-solid dark:border-gray-500">
         <div className="flex items-center space-x-4">
-          <LivesCounter loggedOut={loggedOut} />
-          <StreakCounter loggedOut={loggedOut} />
-          <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
+          {showValues && (
+            <>
+              <LivesCounter loggedOut={loggedOut} />
+              <StreakCounter loggedOut={loggedOut} />
+              <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
+            </>
+          )}
         </div>
-
         {/* Container for the theme and logout buttons */}
         <div className="relative">
           {/* Inline display on md and larger screens */}

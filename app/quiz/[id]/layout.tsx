@@ -36,7 +36,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col bg-[#EAEAEA] dark:bg-black">
-        <TopNavbar loggedOut={!loggedIn} isPremium={isPremium} />
+        <TopNavbar
+          loggedOut={!loggedIn}
+          isPremium={isPremium}
+          showValues={false}
+        />
         <main>{children}</main>
       </body>
     </html>

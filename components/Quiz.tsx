@@ -316,12 +316,23 @@ const Quiz: React.FC<QuizProps> = ({
   ) : (
     <div className="flex flex-col items-center mt-8">
       {steps && steps[currentStep].type === "question" && (
-        <div className="w-full bg-gray-300 dark:bg-gray-200 rounded-full h-2.5 mb-4">
-          <div
-            className="bg-skin-accent h-2.5 rounded-full"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
+        <>
+          <div className="flex justify-around w-40">
+            <LivesCounter
+              startingLives={lives}
+              setMainLives={setLives}
+              loggedOut={loggedOut}
+            />
+            <StreakCounter loggedOut={loggedOut} />
+            <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
+          </div>
+          <div className="w-full bg-gray-300 dark:bg-gray-200 rounded-full h-2.5 mb-4">
+            <div
+              className="bg-skin-accent h-2.5 rounded-full"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </>
       )}
       <h1 className="text-2xl">{quiz_title}</h1>
       {steps !== undefined ? (

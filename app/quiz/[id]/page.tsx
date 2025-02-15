@@ -194,7 +194,6 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     }
   }
 
-  console.log("ji");
   const unit: any = await prisma.quizesOnUnits.findFirst({
     where: {
       quizId: parseInt(id), // Find the row where the given quiz exists
