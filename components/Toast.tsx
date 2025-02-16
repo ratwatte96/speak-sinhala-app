@@ -23,10 +23,10 @@ const Toast: React.FC<ToastProps> = ({ message, onClose, toastType }) => {
           : toastType === "Incorrect"
           ? "bg-red-800"
           : "bg-grey-800"
-      } fixed bottom-5 left-1/2 z-50 -translate-x-1/2 transform rounded  px-4 py-2 text-white shadow-lg`}
+      } fixed top-20 left-1/2 z-50 -translate-x-1/2 transform rounded flex justify-between px-4 py-2 text-white shadow-lg`}
     >
       {message}
-      <button onClick={onClose} className="ml-4 text-white">
+      <button onClick={onClose} className="text-white ml-2">
         X
       </button>
     </div>
