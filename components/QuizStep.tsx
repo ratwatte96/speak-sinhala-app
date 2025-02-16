@@ -75,6 +75,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
     }
     setToastMessage(toastMessageRef.current);
     setToastType(toastTypeRef.current);
+    setSelectedAnswer("");
   };
 
   const handleAudioEnd = useCallback(() => {

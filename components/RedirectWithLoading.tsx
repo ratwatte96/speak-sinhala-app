@@ -17,14 +17,14 @@ const RedirectWithLoading = () => {
     }, 100);
 
     // Redirect after 2 seconds
-    // setTimeout(() => {
-    //   clearInterval(interval);
-    //   if (screenWidth < 768) {
-    //     router.replace("/read");
-    //   } else {
-    //     router.replace("/home");
-    //   }
-    // }, 2000);
+    setTimeout(() => {
+      clearInterval(interval);
+      if (screenWidth < 768) {
+        router.replace("/read");
+      } else {
+        router.replace("/home");
+      }
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);

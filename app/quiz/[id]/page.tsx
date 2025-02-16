@@ -167,7 +167,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   let user: any;
   let readStatus: any;
   let isPremium: any;
-  console.log("validToken", validToken);
+
   if (
     (validToken && ["28", "29", "30", "31", "32", "33"].includes(id)) ||
     !["28", "29", "30", "31", "32", "33"].includes(id)

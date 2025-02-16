@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button } from "./Button";
-import Link from "next/link";
 import { LivesCounter } from "./LivesCounter";
 import { StreakCounter } from "./StreakCounter";
 import { Step } from "./Step";
@@ -11,6 +9,9 @@ import { usePathname } from "next/navigation";
 import RefillModal from "./RefillModal";
 import { useSharedState } from "./StateProvider";
 import { RefillCounter } from "./RefillCounter";
+import QuizCompletionScreen from "./QuizCompletionScreen";
+import QuizFailedScreen from "./QuizFailedScreen";
+import StreakUpdateScreen from "./StreakUpdatedScreen";
 
 interface QuizProps {
   steps?: Step[];
@@ -30,6 +31,8 @@ const Quiz: React.FC<QuizProps> = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
+  const [currentStreak, setCurrentStreak] = useState<any>(undefined);
+  const [showStreakUpdated, setShowStreakUpdated] = useState(false);
   const [lives, setLives] = useState(1);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -46,8 +49,35 @@ const Quiz: React.FC<QuizProps> = ({
     );
 
   useEffect(() => {
-    if (lives === 0) {
-      setShowModal(true);
+    if (!currentStreak) {
+      if (notSignedUp) {
+        let storedStreak: any = localStorage.getItem("streak");
+        if (!storedStreak) {
+          storedStreak = "0";
+          localStorage.setItem("streak", storedStreak);
+        }
+        setCurrentStreak(parseInt(storedStreak));
+        return;
+      } else {
+        try {
+          fetchWithToken(`/api/streak`)
+            .then((res) => res.json())
+            .then((streaksData: any) => {
+              setCurrentStreak(parseInt(streaksData.current_streak));
+            });
+        } catch (error: any) {
+          console.log(error);
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (quizFailed && lives === 5) {
+      setQuizFailed(false);
+    }
+    if (!quizFailed && lives <= 0) {
+      setQuizFailed(true);
     }
 
     if (useRefill) {
@@ -60,7 +90,7 @@ const Quiz: React.FC<QuizProps> = ({
             setRefillMessage("Lives are already full");
             return;
           }
-          const newLives = parseInt(storedLives) + 5;
+          const newLives = 5;
           storedLives = localStorage.setItem("lives", `${newLives}`);
           setSharedState("lives", parseInt(storedLives));
           setUseRefill(false);
@@ -92,6 +122,7 @@ const Quiz: React.FC<QuizProps> = ({
         }
       };
       refill();
+      setShowModal(false);
     }
 
     if (buyRefill) {
@@ -127,11 +158,18 @@ const Quiz: React.FC<QuizProps> = ({
     }
   }, [lives, useRefill, buyRefill]);
 
-  const nextStep = (isMistake: boolean) => {
-    if (lives === 0) {
-      setQuizFailed(true);
-    } else if (steps !== undefined && currentStep === steps.length - 1) {
-      setQuizCompleted(true);
+  const nextStep = async (isMistake: boolean) => {
+    if (steps !== undefined && currentStep === steps.length - 1) {
+      const updatedStreak = await updateStreak();
+      if (
+        typeof currentStreak === "number" &&
+        parseInt(updatedStreak) > currentStreak
+      ) {
+        setCurrentStreak(updatedStreak);
+        setShowStreakUpdated(true);
+      } else {
+        setQuizCompleted(true);
+      }
     } else {
       if (isMistake) {
         setMistakeCount(mistakeCount + 1);
@@ -148,7 +186,7 @@ const Quiz: React.FC<QuizProps> = ({
     }
   };
 
-  const updateStreak = () => {
+  const updateStreak = async () => {
     if (notSignedUp) {
       let storedStreakDate: any = localStorage.getItem("streakDate");
       if (!storedStreakDate) {
@@ -162,26 +200,32 @@ const Quiz: React.FC<QuizProps> = ({
       // Get difference in days
       const diffInTime = today.getTime() - stored.getTime();
       const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
-
-      if (diffInDays === 1) {
-        let storedStreak: any = localStorage.getItem("streak");
+      let storedStreak: any = localStorage.getItem("streak");
+      if (diffInDays >= 1) {
         let newStreak: any = parseInt(storedStreak) + 1;
         localStorage.setItem("streak", `${newStreak}`);
         localStorage.setItem("streakDate", today.toISOString().split("T")[0]);
-        return;
+        return newStreak;
       }
+      return storedStreak;
     } else {
       try {
-        fetchWithToken("/api/streak", {
+        const response = await fetchWithToken("/api/streak", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-        })
-          .then((res) => res.json())
-          .then((streakData) => {});
+        });
+
+        const responseData = await response.json();
+        if (response.ok) {
+          return responseData.current_streak;
+        } else {
+          return currentStreak;
+        }
       } catch (error: any) {
         console.log(error);
+        return currentStreak;
       }
     }
   };
@@ -255,24 +299,8 @@ const Quiz: React.FC<QuizProps> = ({
     }
   };
 
-  if (quizFailed) {
-    updateStreak();
-  }
-
   if (quizCompleted) {
-    updateStreak();
     updateStatus();
-
-    return (
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">
-          Congratulations! You&apos;ve completed the quiz.
-        </h2>
-        {/* <Link href="/">
-          <Button buttonLabel="Back to Home" callback={() => null} />
-        </Link> */}
-      </div>
-    );
   }
 
   const updateLives = () => {
@@ -305,14 +333,40 @@ const Quiz: React.FC<QuizProps> = ({
   const progress = steps !== undefined ? (currentStep / steps.length) * 100 : 0;
 
   return quizFailed ? (
-    <div className="text-center">
-      <h2 className="text-2xl font-bold mb-4">
-        Sorry! You&apos;ve run out of lives.
-      </h2>
-      <Link href="/">
-        <Button buttonLabel="Back to Home" callback={() => null} />
-      </Link>
-    </div>
+    <>
+      <QuizFailedScreen
+        lives={lives}
+        setLives={setLives}
+        loggedOut={loggedOut}
+        isPremium={isPremium}
+        progress={progress}
+        setShowModal={setShowModal}
+      />
+      <RefillModal
+        show={showModal}
+        onClose={() => {
+          setUseRefill(false);
+          setBuyRefill(false);
+          setRefillMessage("");
+          setShowModal(false);
+        }}
+        onBuyRefill={() => setBuyRefill(true)}
+        onUseRefill={() => setUseRefill(true)}
+        refillMessage={refillMessage}
+        disableBuy={buyRefill}
+        disableUse={useRefill}
+      />
+    </>
+  ) : showStreakUpdated ? (
+    <StreakUpdateScreen
+      streak={currentStreak}
+      onNext={() => {
+        setShowStreakUpdated(false);
+        setQuizCompleted(true);
+      }}
+    />
+  ) : quizCompleted && !showStreakUpdated ? (
+    <QuizCompletionScreen isPerfect={mistakeCount === 0} />
   ) : (
     <div className="flex flex-col items-center mt-8">
       {steps && steps[currentStep].type === "question" && (
@@ -345,20 +399,6 @@ const Quiz: React.FC<QuizProps> = ({
       ) : (
         <p>Loading...</p>
       )}
-      <RefillModal
-        show={showModal}
-        onClose={() => {
-          setUseRefill(false);
-          setBuyRefill(false);
-          setRefillMessage("");
-          setShowModal(false);
-        }}
-        onBuyRefill={() => setBuyRefill(true)}
-        onUseRefill={() => setUseRefill(true)}
-        refillMessage={refillMessage}
-        disableBuy={buyRefill}
-        disableUse={useRefill}
-      />
     </div>
   );
 };
