@@ -49,7 +49,7 @@ export default function QuizFailedScreen({
         <XCircle className="text-red-500 w-24 h-24 mb-6" />
 
         <h2 className="text-xl font-semibold text-gray-800 text-center dark:text-white">
-          Quiz Failed! Don't give up!
+          Quiz Failed! Don&apos;t give up!
         </h2>
 
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">

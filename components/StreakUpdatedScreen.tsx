@@ -22,8 +22,8 @@ export default function StreakUpdateScreen({
         </h2>
 
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
-          You're on a <span className="font-bold">{streak}-day</span> streak!
-          Keep it going! 🚀
+          You&apos;re on a <span className="font-bold">{streak}-day</span>{" "}
+          streak! Keep it going! 🚀
         </p>
 
         <div className="mt-6 w-full">
