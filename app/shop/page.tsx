@@ -15,8 +15,8 @@ export default function ShopPage() {
 
   return (
     <ThemeProvider>
-      <div className="flex min-h-screen flex-col  bg-[#EAEAEA] dark:bg-black">
-        <div className="mx-4 mt-10">
+      <div className="flex min-h-screen flex-col  bg-[#EAEAEA] dark:bg-black animate-fadeIn">
+        <div className="mx-8 mt-10">
           {!decoded && (
             <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
               <div className="absolute inset-0 bg-black opacity-10 rounded-lg max-h-[80vh]"></div>

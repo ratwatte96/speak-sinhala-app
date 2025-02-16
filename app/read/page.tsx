@@ -57,9 +57,9 @@ export default async function Read() {
   }));
 
   return (
-    <div className="flex min-h-screen flex-col items-center mt-10 pb-24">
+    <div className="flex min-h-screen flex-col items-center mt-10 pb-24 animate-fadeIn">
       <ThemeProvider>
-        <div className="mx-4 w-[20rem] sm:w-96 ">
+        <div className="mx-8 sm:w-96 ">
           <h1 className="font-serif mb-1 text-xl">READ</h1>
           <CompletionBar quizPercentage={quizCompletionPercentage} />
           {decoded && (

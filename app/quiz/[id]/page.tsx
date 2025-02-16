@@ -232,7 +232,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
 
   return (
     <ThemeProvider>
-      <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black">
+      <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black animate-fadeIn">
         <Quiz
           steps={quizSteps}
           quiz_title={quizQuestion}

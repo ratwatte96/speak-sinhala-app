@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function UserProfile() {
-  const callbackUrl = "/user-profile";
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
   let decoded: any;
@@ -28,8 +27,8 @@ export default async function UserProfile() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col ">
-      <div className="mx-4  mt-10 flex justify-center">
+    <div className="flex min-h-screen flex-col animate-fadeIn">
+      <div className="mx-8 mt-10 flex justify-center">
         {!decoded && (
           <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
             <div className="absolute inset-0 bg-black opacity-10 rounded-lg max-h-[80vh]"></div>

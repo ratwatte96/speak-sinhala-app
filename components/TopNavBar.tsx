@@ -88,7 +88,7 @@ const Navbar: React.FC<TopNavBarProps> = ({
             </button>
 
             {isToggled && (
-              <div className="h-28 p-6 flex flex-col absolute right-0 mt-2 w-40 bg-white dark:bg-black shadow-md rounded">
+              <div className="h-40 p-6 flex flex-col absolute right-0 mt-2 w-40 bg-white dark:bg-black shadow-md rounded">
                 <ThemeToggle />
                 <LogoutButton loggedIn={!loggedOut} />
                 <SignupButton />

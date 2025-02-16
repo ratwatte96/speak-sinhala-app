@@ -6,7 +6,6 @@ import { updatePremiumStatus } from "@/utils/checkPremium";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,23 +20,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
-  let isPremium;
+  let isPremium = false;
+  let decoded: any;
   try {
     if (token) {
-      const decoded: any = verifyAccessToken(token.value);
+      decoded = verifyAccessToken(token.value);
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
     } else {
       isPremium = false;
     }
   } catch (error) {
-    redirect(`/login?callbackUrl=${encodeURIComponent("/shop")}`);
+    console.log(error);
   }
 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col ">
         <ThemeProvider>
-          <TopNavbar isPremium={isPremium} loggedOut={!token} />
+          <TopNavbar isPremium={isPremium} loggedOut={!decoded} />
         </ThemeProvider>
         <main className="min-h-[80vh]">{children}</main>
         <ThemeProvider>
