@@ -10,26 +10,50 @@ export default async function UserProfile() {
   const callbackUrl = "/user-profile";
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
 
-  if (!token) {
-    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-  }
-
   let decoded: any;
+  let user: any;
+  let userData: any = {};
+  let isPremium = false;
+
   try {
     decoded = verifyAccessToken(token.value);
+    user = await prisma.user.findUnique({
+      where: { id: parseInt(decoded.userId) },
+      include: { lives: true },
+    });
+    userData = await getUserData(user);
+    isPremium = await updatePremiumStatus(user.id);
   } catch (error) {
-    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    console.log(error);
   }
-  const user: any = await prisma.user.findUnique({
-    where: { id: parseInt(decoded.userId) },
-    include: { lives: true },
-  });
-  const userData = await getUserData(user);
-  const isPremium = await updatePremiumStatus(user.id);
+
   return (
     <div className="flex min-h-screen flex-col ">
       <div className="mx-4  mt-10 flex justify-center">
-        <ProfileCard userData={userData} isPremium={isPremium} />
+        {!decoded && (
+          <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
+            <div className="absolute inset-0 bg-black opacity-10 rounded-lg max-h-[80vh]"></div>
+            <div className="flex flex-col">
+              <a href="/login" className="relative z-10">
+                <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
+                  Login
+                </button>
+              </a>
+              <a href="/signup" className="relative z-10">
+                <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40 dark:text-black">
+                  Signup to Unlock
+                </button>
+              </a>
+            </div>
+          </div>
+        )}
+        <div
+          className={`${
+            !decoded ? "blur-md pointer-events-none opacity-70" : ""
+          }`}
+        >
+          <ProfileCard userData={userData} isPremium={isPremium} />
+        </div>
       </div>
     </div>
   );
