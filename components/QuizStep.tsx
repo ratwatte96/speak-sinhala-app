@@ -170,7 +170,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                     onEnd={handleAudioEnd}
                     display_text={answer.buttonLabel}
                     onClick={() => selectAnswer(answer.value)}
-                    additionalClasses={`bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg mb-2 
+                    additionalClasses={`text-2xl bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg mb-2 
                       ${
                         selectedAnswer === answer.value
                           ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"
@@ -183,7 +183,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                 ) : (
                   <button
                     onClick={() => selectAnswer(answer.value)}
-                    className={`rounded-lg border border-2 px-3 py-1 text-xs hover:text-skin-accent dark:border-gray-600 focus:outline-none sm:text-base w-80 mb-4 ${
+                    className={`rounded-lg border border-2 px-3 py-1 text-md hover:text-skin-accent dark:border-gray-600 focus:outline-none sm:text-base w-80 mb-4 ${
                       selectedAnswer === answer.value
                         ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"
                         : "text-black dark:text-white bg-white dark:bg-black"

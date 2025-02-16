@@ -120,7 +120,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                     selectSinhala(sinhala);
                     checkPair(sinhala, "sinhala");
                   }}
-                  additionalClasses={` dark:bg-black cursor-pointer mb-4 p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg
+                  additionalClasses={`text-2xl dark:bg-black cursor-pointer mb-4 p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg
                     ${
                       completePairs.current.includes(sound)
                         ? "text-gray-600 border-skin-base border-b-4 bg-gray-400"

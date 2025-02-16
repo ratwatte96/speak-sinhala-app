@@ -111,18 +111,18 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       disabled={disabledOveride || playing}
     >
       {display_text ? (
-        <div className="flex flex-col items-center sm:w-full text-lg">
+        <div className="flex flex-col items-center sm:w-full">
           <span>{display_text}</span>
           {extraa_text && <p className="text-skin-base">{extraa_text}</p>}
           {extra_text && <p className="text-skin-base">{extra_text}</p>}
           {!isHard && !isButtonNoAudio && (
-            <span className="absolute bottom-0 right-0 pr-1 pb-1">
+            <span className="absolute text-lg bottom-0 right-0 pr-1 pb-1">
               &#x1F50A;
             </span>
           )}
         </div>
       ) : (
-        <span className="ml-1 text-skin-accent">&#x1F50A;</span>
+        <span className="ml-1 text-lg text-skin-accent">&#x1F50A;</span>
       )}
     </button>
   );
