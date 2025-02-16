@@ -62,8 +62,10 @@ function LoginComponent() {
             <h1 className="text-xl font-semibold text-gray-700 dark:text-white">
               Login
             </h1>
-            <div>
-              <label>Email</label>
+            <div className="mt-4 text-left">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Email
+              </label>
               <input
                 type="email"
                 value={email}
@@ -73,8 +75,10 @@ function LoginComponent() {
                 className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 mb-2"
               />
             </div>
-            <div>
-              <label>Password</label>
+            <div className="mt-4 text-left">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Password
+              </label>
               <input
                 type="password"
                 value={password}
@@ -85,7 +89,7 @@ function LoginComponent() {
               />
             </div>
             <button
-              className="mt-6 bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+              className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
               onClick={handleLogin}
             >
               Login
