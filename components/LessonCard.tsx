@@ -16,9 +16,10 @@ export interface Lesson {
 
 interface LessonCardProps {
   lesson: Lesson;
+  quizId: any;
 }
 
-const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
+const LessonCard: React.FC<LessonCardProps> = ({ lesson, quizId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleRouting = (value: string) => {
@@ -60,6 +61,11 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson }) => {
         >
           {lesson.status}
         </span>
+        {lesson.status === "locked" && quizId > 1 && (
+          <p className="text-center">{`Complete Unit ${
+            quizId - 1
+          } to unlock`}</p>
+        )}
         {lesson.status !== "locked" && (
           <button
             onClick={() => handleRouting(lesson.quizId)}

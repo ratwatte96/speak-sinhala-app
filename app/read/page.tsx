@@ -68,8 +68,12 @@ export default async function Read() {
               isPremium={isPremium}
             />
           )}
-          <div>
-            <Lessons unitData={units} readStatus={readStatus} />
+          <div className="mt-2">
+            <Lessons
+              unitData={units}
+              readStatus={readStatus}
+              loggedIn={decoded}
+            />
           </div>
         </div>
       </ThemeProvider>

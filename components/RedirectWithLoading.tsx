@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import SriLankanFlag from "./SriLankanFlag";
 
 const RedirectWithLoading = () => {
   const router = useRouter();
@@ -16,14 +17,14 @@ const RedirectWithLoading = () => {
     }, 100);
 
     // Redirect after 2 seconds
-    setTimeout(() => {
-      clearInterval(interval);
-      if (screenWidth < 768) {
-        router.replace("/read");
-      } else {
-        router.replace("/home");
-      }
-    }, 2000);
+    // setTimeout(() => {
+    //   clearInterval(interval);
+    //   if (screenWidth < 768) {
+    //     router.replace("/read");
+    //   } else {
+    //     router.replace("/home");
+    //   }
+    // }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -31,8 +32,8 @@ const RedirectWithLoading = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen dark:bg-black">
       <div className="flex flex-col items-center justify-center ">
-        <p className="text-8xl md:text-9xl">🇱🇰</p>
-        <p className="text-sm text-gray-600 mb-4 md:text-lg lg:text-xl dark:text-white">
+        <SriLankanFlag />
+        <p className="text-sm text-gray-600 mb-4 md:text-lg lg:text-xl dark:text-white mt-2">
           Please wait a few moments...
         </p>
       </div>

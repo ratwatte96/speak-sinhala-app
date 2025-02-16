@@ -5,9 +5,14 @@ import LessonCard from "./LessonCard";
 interface LessonsProps {
   unitData: any;
   readStatus: any;
+  loggedIn?: boolean;
 }
 
-const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
+const Lessons: React.FC<LessonsProps> = ({
+  unitData,
+  readStatus,
+  loggedIn,
+}) => {
   let processedUnitData: any = [];
   const localStorageJson: any = localStorage.getItem("quizProgress");
   unitData.forEach((unit: any, unitIndex: number) => {
@@ -49,9 +54,34 @@ const Lessons: React.FC<LessonsProps> = ({ unitData, readStatus }) => {
     <>
       {processedUnitData.map((unitData: any, unitIndex: number) => (
         <div key={unitIndex} className="w-full">
-          <h2 className="text-xl pl-[10px] font-serif">{`Unit: ${unitData.unitId}`}</h2>
+          <div className="flex items-center">
+            <h2 className="text-xl font-serif">{`Unit: ${unitData.unitId}`}</h2>
+            {!loggedIn && unitIndex !== 0 && (
+              <span className="text-xs sm:text-sm ml-4">
+                (
+                <a
+                  href="/login"
+                  className="relative z-10 text-green-600 underline"
+                >
+                  Login
+                </a>{" "}
+                or{" "}
+                <a
+                  href="/signup"
+                  className="relative z-10 text-yellow-500 underline"
+                >
+                  Signup
+                </a>{" "}
+                to access)
+              </span>
+            )}
+          </div>
           {unitData.quizes.map((quizData: any) => (
-            <LessonCard key={quizData.quizName} lesson={quizData} />
+            <LessonCard
+              key={quizData.quizName}
+              lesson={quizData}
+              quizId={unitIndex + 1}
+            />
           ))}
         </div>
       ))}

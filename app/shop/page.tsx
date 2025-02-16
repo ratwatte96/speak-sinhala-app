@@ -27,7 +27,7 @@ export default function ShopPage() {
                   </button>
                 </a>
                 <a href="/signup" className="relative z-10">
-                  <button className="bg-yellow-300 text-white px-2 py-1 rounded-lg font-semibold w-40 dark:text-black">
+                  <button className="bg-yellow-400 text-white px-2 py-1 rounded-lg font-semibold w-40">
                     Signup to Unlock
                   </button>
                 </a>

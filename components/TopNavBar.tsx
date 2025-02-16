@@ -6,6 +6,7 @@ import { StreakCounter } from "./StreakCounter";
 import { RefillCounter } from "./RefillCounter";
 import ThemeToggle from "./ThemeToggle";
 import LogoutButton from "./LogoutButton";
+import SignupButton from "./SignupButton";
 
 interface TopNavBarProps {
   loggedOut?: boolean;
@@ -55,9 +56,10 @@ const Navbar: React.FC<TopNavBarProps> = ({
         {/* Container for the theme and logout buttons */}
         <div className="relative">
           {/* Inline display on md and larger screens */}
-          <div className="hidden sm:flex justify-between w-40">
+          <div className="hidden sm:flex justify-between w-60">
             <ThemeToggle />
             <LogoutButton loggedIn={!loggedOut} />
+            <SignupButton />
           </div>
 
           {/* Hamburger menu on small screens */}
@@ -89,6 +91,7 @@ const Navbar: React.FC<TopNavBarProps> = ({
               <div className="h-28 p-6 flex flex-col absolute right-0 mt-2 w-40 bg-white dark:bg-black shadow-md rounded">
                 <ThemeToggle />
                 <LogoutButton loggedIn={!loggedOut} />
+                <SignupButton />
               </div>
             )}
           </div>
