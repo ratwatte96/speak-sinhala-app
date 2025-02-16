@@ -1,19 +1,27 @@
+"use client";
+
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 export default function VerificationSuccess() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-green-50">
-      <div className="p-8 bg-white shadow-lg rounded-xl text-center">
-        <h1 className="text-2xl font-bold text-green-600">Email Verified!</h1>
-        <p className="mt-4 text-gray-600">
-          Your email has been successfully verified. You can now log in and
-          start using your account.
-        </p>
-        <a
-          href="/login"
-          className="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
-        >
-          Go to Login
-        </a>
+    <ThemeProvider>
+      <div className="flex min-h-screen items-center justify-center bg-green-50 dark:bg-black">
+        <div className="w-80 p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400">
+          <h1 className="text-md sm:text-xl font-semibold text-green-600 dark:text-green-500">
+            Email Verified!
+          </h1>
+          <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+            Your email has been successfully verified. You can now log in and
+            start using your account.
+          </p>
+          <a
+            href="/login"
+            className="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
+          >
+            Go to Login
+          </a>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }

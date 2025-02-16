@@ -90,7 +90,7 @@ export default function Signup() {
   return (
     <ThemeProvider>
       <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-50 dark:bg-black">
-        <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg dark:bg-black dark:border dark:border-gray-400 text-center w-80">
+        <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg dark:bg-black dark:border dark:border-solid dark:border-gray-400 text-center w-80">
           <h1 className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white">
             Sign Up
           </h1>
