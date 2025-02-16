@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams, redirect } from "next/navigation";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const ResetPasswordComponent = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -21,7 +22,7 @@ const ResetPasswordComponent = () => {
       return;
     }
 
-    // Validate password strength
+    // Password strength validation
     if (newPassword.length < 8) {
       setMessage("Password must be at least 8 characters long.");
       return;
@@ -34,7 +35,7 @@ const ResetPasswordComponent = () => {
       setMessage("Password must contain at least one number.");
       return;
     }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
+    if (!/[!@#$%^&*(),.?\":{}|<>]/.test(newPassword)) {
       setMessage("Password must contain at least one special character.");
       return;
     }
@@ -60,30 +61,36 @@ const ResetPasswordComponent = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-6 min-h-screen">
-      <div className="p-6 rounded-lg w-80 text-center">
-        <h2 className="text-lg font-bold">Reset Password</h2>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-black">
+      <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80">
+        <h2 className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white">
+          Reset Password
+        </h2>
         <div className="mt-4">
           <input
             type="password"
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full p-2 border rounded-md text-center"
+            className="w-full p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
           <input
             type="password"
             placeholder="Confirm New Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-2 border rounded-md text-center mt-2"
+            className="w-full p-2 border border-gray-300 rounded-md text-center mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
         </div>
-        {message && <p className="text-sm text-red-500 mt-2">{message}</p>}
-        <div className="mt-4 flex space-x-2">
+        {message && (
+          <p className="text-sm mt-2 text-red-600 dark:text-red-400">
+            {message}
+          </p>
+        )}
+        <div className="mt-4">
           <button
             onClick={handleResetPassword}
-            className="bg-green-500 text-white w-full p-2 rounded-md"
+            className="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-all"
           >
             Reset Password
           </button>
@@ -95,8 +102,10 @@ const ResetPasswordComponent = () => {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <ResetPasswordComponent />
-    </Suspense>
+    <ThemeProvider>
+      <Suspense fallback={<p>Loading...</p>}>
+        <ResetPasswordComponent />
+      </Suspense>
+    </ThemeProvider>
   );
 }
