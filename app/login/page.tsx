@@ -1,5 +1,6 @@
 "use client";
 
+import Logo from "@/components/Logo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -58,7 +59,8 @@ function LoginComponent() {
     <ThemeProvider>
       <main className="flex justify-center items-centers min-h-screen p-24 bg-gray-100 dark:bg-black">
         <div className="flex flex-col justify-center items-center">
-          <div className="p-6 bg-white shadow-lg w-80 rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400">
+          <Logo width={120} height={80} textSize={"text-3xl"} />
+          <div className="p-6 bg-white shadow-lg w-80 rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 mt-6">
             <h1 className="text-xl font-semibold text-gray-700 dark:text-white">
               Login
             </h1>

@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams, redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Logo from "@/components/Logo";
 
 const ResetPasswordComponent = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -61,8 +62,9 @@ const ResetPasswordComponent = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-black">
-      <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-gray-50 dark:bg-black">
+      <Logo width={120} height={80} textSize={"text-3xl"} />
+      <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80 mt-6">
         <h2 className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white">
           Reset Password
         </h2>

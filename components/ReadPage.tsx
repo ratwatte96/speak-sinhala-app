@@ -24,7 +24,7 @@ export default function ReadPage({
   let tutorialText = [
     "This site will help you practice reading and speaking Sinhala. During the beta phase, only reading exercises are available.",
     "Our structured course includes 13 quiz-based units to help you master Sinhala reading. You can start with Unit 1 for free. No sign-up required!",
-    "Unlock all units for free by signing up. Start learning today and make steady progress on your Sinhala journey!",
+    "Access all units for free by signing up. Start learning today and make steady progress on your Sinhala journey!",
   ];
   if (decoded) {
     storageName = "firstLogin";

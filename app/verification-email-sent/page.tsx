@@ -1,12 +1,14 @@
 "use client";
 
+import Logo from "@/components/Logo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function VerificationEmailSent() {
   return (
     <ThemeProvider>
-      <div className="flex min-h-screen items-center justify-center bg-green-50 dark:bg-black">
-        <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80">
+      <div className="flex flex-col min-h-screen items-center justify-center bg-green-50 dark:bg-black">
+        <Logo width={120} height={80} textSize={"text-3xl"} />
+        <div className="p-6 mt-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80">
           <h1 className="text-md sm:text-xl font-semibold text-green-600 dark:text-green-500">
             Verification Email Sent
           </h1>
