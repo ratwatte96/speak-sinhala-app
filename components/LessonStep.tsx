@@ -10,7 +10,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
   //?infoDisplay= list, image, table, sound buttons
   //TODO: table and image
   return (
-    <div className="min-w-w-4/5 sm:min-w-3/5 text-sm sm:text-base my-4">
+    <div className="min-w-w-4/5 sm:min-w-3/5 text-sm sm:text-base mb-4">
       {data.map(({ text, infoDisplayType, info }: any, i: number) => (
         <div key={i} className="flex mt-4">
           {infoDisplayType === "list" ? (
@@ -148,6 +148,9 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
           </table>
         </div>
       </p> */}
+      <div className=" flex justify-center mt-2 text-red-600">
+        <p>Make sure your volume is turned up!!!</p>
+      </div>
       <div className="flex justify-center items-center mt-4">
         <button
           key="confirm-button"

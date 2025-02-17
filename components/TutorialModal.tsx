@@ -3,16 +3,20 @@
 import { useState } from "react";
 import Modal from "./Modal";
 
-export default function TutorialModal() {
-  const firstTime = localStorage.getItem("firstTime");
+export const TutorialModal = ({
+  localStorageName,
+  tutorialText,
+  title,
+  display = () => <></>,
+}: {
+  localStorageName: string;
+  tutorialText: string[];
+  title: string;
+  display?: any;
+}) => {
+  const firstTime = localStorage.getItem(localStorageName);
   const [showModal, setShowModal] = useState(firstTime === null);
   const [currentStep, setCurrentStep] = useState(0);
-
-  const tutorialText = [
-    "This site will help you practice reading and speaking Sinhala. During the beta phase, only reading exercises are available.",
-    "Our structured course includes 13 quiz-based units to help you master Sinhala reading. You can start with Unit 1 for free. No sign-up required!",
-    "Unlock all units for free by signing up. Start learning today and make steady progress on your Sinhala journey!",
-  ];
 
   return (
     <Modal
@@ -24,8 +28,11 @@ export default function TutorialModal() {
     >
       <div className="bg-white dark:bg-black dark:border dark:border-solid dark:border-gray-600 p-6 rounded-lg shadow-lg max-w-lg text-center w-full">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Learn Sinhala
+          {title}
         </h1>
+        <div className="flex justify-center text-black dark:text-white mt-2">
+          {display()}
+        </div>
         <p className="text-gray-700 dark:text-gray-300 text-base mt-3 leading-relaxed">
           {tutorialText[currentStep]}
         </p>
@@ -35,7 +42,7 @@ export default function TutorialModal() {
             if (currentStep + 1 < tutorialText.length) {
               setCurrentStep(currentStep + 1);
             } else {
-              localStorage.setItem("firstTime", "false");
+              localStorage.setItem(localStorageName, "false");
               setShowModal(false);
             }
           }}
@@ -45,4 +52,4 @@ export default function TutorialModal() {
       </div>
     </Modal>
   );
-}
+};

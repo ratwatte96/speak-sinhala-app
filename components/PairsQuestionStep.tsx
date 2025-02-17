@@ -106,7 +106,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
         {isHard && <p className="text-skin-accent">Hard!!!</p>}
         <p>
           Tap the matching pairs. (You lose a heart each time you get two
-          guesses wrong.)
+          guesses wrong)
         </p>
         <div className="flex justify-between w-full mt-4">
           <div>

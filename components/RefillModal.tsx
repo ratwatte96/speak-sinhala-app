@@ -22,7 +22,12 @@ const RefillModal: React.FC<RefillModalProps> = ({
   disableUse,
 }) => {
   return (
-    <Modal show={show} onClose={onClose} heading={""}>
+    <Modal
+      show={show}
+      onClose={onClose}
+      heading={""}
+      additionalClasses="h-1/2 mt-[50%]"
+    >
       <div>
         <button
           onClick={onBuyRefill}

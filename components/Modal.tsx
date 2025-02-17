@@ -43,7 +43,7 @@ const Modal = ({
             </button>
           )}
         </div>
-        <div className="flex flex-col justify-center items-center mt-6  h-full">
+        <div className="flex flex-col justify-center items-center h-full">
           <h3 className="text-2xl font-medium leading-6 text-skin-base">
             {heading}
           </h3>

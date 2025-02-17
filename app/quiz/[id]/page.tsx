@@ -1,5 +1,4 @@
 import Quiz from "@/components/Quiz";
-import { NewLetterData, Step } from "@/components/Step";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";

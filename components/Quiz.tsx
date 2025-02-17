@@ -12,6 +12,7 @@ import { RefillCounter } from "./RefillCounter";
 import QuizCompletionScreen from "./QuizCompletionScreen";
 import QuizFailedScreen from "./QuizFailedScreen";
 import StreakUpdateScreen from "./StreakUpdatedScreen";
+import { TutorialModal } from "./TutorialModal";
 
 interface QuizProps {
   steps?: Step[];
@@ -250,10 +251,11 @@ const Quiz: React.FC<QuizProps> = ({
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       } else {
         const { quizes, expiry } = JSON.parse(storedData);
-        if (Date.now() > expiry) {
-          localStorage.removeItem("quizProgress"); // Remove expired data
-          return [];
-        }
+        //! should i remove local storage?
+        // if (Date.now() > expiry) {
+        //   localStorage.removeItem("quizProgress"); // Remove expired data
+        //   return [];
+        // }
 
         // Prevent duplicate quizId entries
         const newQuiz = {
@@ -399,6 +401,24 @@ const Quiz: React.FC<QuizProps> = ({
       ) : (
         <p>Loading...</p>
       )}
+      <TutorialModal
+        localStorageName={"firstQuiz"}
+        tutorialText={[
+          "These quizzes are designed to help you learn Sinhala characters and accents. Before each quiz, you'll see the letters and accents you'll be learning. Take your time practicing before starting the quiz.",
+          "The number next to the heart icon represents your lives. Each incorrect answer costs a life. If you run out of lives, you'll fail the quiz and need a refill to continue.",
+          "The number next to the refresh icon shows your available refills. Before signing up, you'll have unlimited refills for Unit 1 (indicated by the infinity symbol). Using a refill restores your lives to 5, allowing you to keep going.",
+          "The number next to the crown icon tracks your quiz streak. Your streak increases by 1 for each consecutive day you complete a quiz.",
+          "Good luck, and enjoy learning Sinhala!",
+        ]}
+        title={"Learn Sinhala: Quiz"}
+        display={() => (
+          <div className="flex items-center space-x-4">
+            <LivesCounter loggedOut={loggedOut} />
+            <StreakCounter loggedOut={loggedOut} />
+            <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
+          </div>
+        )}
+      />
     </div>
   );
 };

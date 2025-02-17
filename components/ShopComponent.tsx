@@ -188,6 +188,7 @@ const Shop = () => {
           setShowPremiumModal(false);
         }}
         heading={""}
+        additionalClasses="h-1/2 mt-[50%]"
       >
         <div>
           <button

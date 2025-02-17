@@ -139,13 +139,15 @@ export const QuizStep: React.FC<QuizStepProps> = ({
 
       <div className="flex flex-col items-start w-80">
         {isHard && <p className="text-skin-accent">Hard!!!</p>}
-        <p>
-          {questionType === 1
-            ? "Choose the corresponding english word and click confirm"
-            : questionType === 2
-            ? `Select the correct character for the '${question_word}'`
-            : "What sound does this make?"}
-        </p>
+        <div className="w-full flex justify-center">
+          <p>
+            {questionType === 1
+              ? "Choose the corresponding english word and click confirm:"
+              : questionType === 2
+              ? `Select the correct character for '${question_word}' and click confirm:`
+              : "What sound does this make?"}
+          </p>
+        </div>
         <div className="flex flex-wrap justify-around items-start pt-2">
           {answers.map((answer) =>
             Object.hasOwn(answer, "sinhala") ? (
