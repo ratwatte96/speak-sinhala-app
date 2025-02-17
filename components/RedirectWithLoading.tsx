@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SriLankanFlag from "./SriLankanFlag";
+import Logo from "./Logo";
 
 const RedirectWithLoading = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const RedirectWithLoading = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen dark:bg-black">
       <div className="flex flex-col items-center justify-center ">
-        <SriLankanFlag />
+        <Logo width={160} height={120} textSize={"text-5xl"} />
         <p className="text-sm text-gray-600 mb-4 md:text-lg lg:text-xl dark:text-white mt-2">
           Please wait a few moments...
         </p>

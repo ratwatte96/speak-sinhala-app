@@ -7,6 +7,7 @@ import { RefillCounter } from "./RefillCounter";
 import ThemeToggle from "./ThemeToggle";
 import LogoutButton from "./LogoutButton";
 import SignupButton from "./SignupButton";
+import Logo from "./Logo";
 
 interface TopNavBarProps {
   loggedOut?: boolean;
@@ -42,9 +43,10 @@ const Navbar: React.FC<TopNavBarProps> = ({
   }, [isToggled]);
 
   return (
-    <header className="sticky top-0 z-20 h-[10vh]">
+    <header className="sticky top-0 z-20 h-[10vh] my-1">
       <div className="w-screen h-full relative flex justify-between items-center p-4 bg-white shadow-md dark:bg-black dark:border-b dark:border-solid dark:border-gray-500">
         <div className="flex items-center space-x-4">
+          <Logo width={40} height={30} textSize={"text-xs"} />
           {showValues && (
             <>
               <LivesCounter loggedOut={loggedOut} />
@@ -54,46 +56,47 @@ const Navbar: React.FC<TopNavBarProps> = ({
           )}
         </div>
         {/* Container for the theme and logout buttons */}
-        <div className="relative">
-          {/* Inline display on md and larger screens */}
-          <div className="hidden sm:flex justify-between w-60">
-            <ThemeToggle />
-            <LogoutButton loggedIn={!loggedOut} />
-            <SignupButton />
-          </div>
+        <div className="flex">
+          <ThemeToggle />
+          <div className="relative">
+            {/* Inline display on md and larger screens */}
+            <div className="hidden sm:flex justify-between">
+              <LogoutButton loggedIn={!loggedOut} />
+              <SignupButton />
+            </div>
 
-          {/* Hamburger menu on small screens */}
-          <div className="sm:hidden" ref={menuRef}>
-            <button
-              onClick={() => setIsToggled(!isToggled)}
-              className="p-2 focus:outline-none"
-              aria-label="Toggle menu"
-              aria-expanded={isToggled}
-            >
-              {/* Hamburger Icon */}
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            {/* Hamburger menu on small screens */}
+            <div className="sm:hidden" ref={menuRef}>
+              <button
+                onClick={() => setIsToggled(!isToggled)}
+                className="p-2 focus:outline-none"
+                aria-label="Toggle menu"
+                aria-expanded={isToggled}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
+                {/* Hamburger Icon */}
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
 
-            {isToggled && (
-              <div className="h-40 p-6 flex flex-col absolute right-0 mt-2 w-40 bg-white dark:bg-black shadow-md rounded">
-                <ThemeToggle />
-                <LogoutButton loggedIn={!loggedOut} />
-                <SignupButton />
-              </div>
-            )}
+              {isToggled && (
+                <div className="h-28 p-6 flex flex-col absolute right-0 mt-2 w-40 bg-white dark:bg-black shadow-md rounded">
+                  <LogoutButton loggedIn={!loggedOut} />
+                  <SignupButton />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

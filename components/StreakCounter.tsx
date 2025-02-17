@@ -69,7 +69,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({ loggedOut }) => {
       <Crown className="text-yellow-500" size={24} />
       <span className="ml-1 font-bold text-lg">
         {streak === "loading" ? (
-          <span className="text-xs sm:text-lg">loading</span>
+          <span className="text-xs sm:text-lg">...</span>
         ) : (
           streak ?? 0
         )}

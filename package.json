@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
+    "@tailwindcss/typography": "^0.5.16",
     "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",
     "howler": "^2.2.4",

@@ -39,6 +39,7 @@ const config: Config = {
         fontFamily: {
           sans: ["var(--font-geist-sans)"],
           mono: ["var(--font-geist-mono)"],
+          inter: ["Inter", "sans-serif"],
         },
       },
       keyframes: {
@@ -67,6 +68,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
 export default config;
