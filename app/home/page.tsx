@@ -15,6 +15,7 @@ import {
 import { CustomQuizForm } from "@/components/CustomQuizForm";
 import { CompletionBar } from "@/components/CompletionBar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import TutorialModal from "@/components/TutorialModal";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -153,6 +154,7 @@ export default async function Home() {
           </div>
         </div>
       </div>
+      <TutorialModal />
     </ThemeProvider>
   );
 }

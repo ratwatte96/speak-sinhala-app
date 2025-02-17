@@ -1,6 +1,4 @@
-import { CompletionBar } from "@/components/CompletionBar";
-import { CustomQuizForm } from "@/components/CustomQuizForm";
-import Lessons from "@/components/Lessons";
+import ReadPage from "@/components/ReadPage";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
@@ -59,23 +57,14 @@ export default async function Read() {
   return (
     <div className="flex min-h-screen flex-col items-center mt-10 pb-24 animate-fadeIn">
       <ThemeProvider>
-        <div className="mx-8 sm:w-96 ">
-          <h1 className="font-serif mb-1 text-xl">READ</h1>
-          <CompletionBar quizPercentage={quizCompletionPercentage} />
-          {decoded && (
-            <CustomQuizForm
-              dropDownLetters={sinhalaObjects}
-              isPremium={isPremium}
-            />
-          )}
-          <div className="mt-2">
-            <Lessons
-              unitData={units}
-              readStatus={readStatus}
-              loggedIn={decoded}
-            />
-          </div>
-        </div>
+        <ReadPage
+          quizCompletionPercentage={quizCompletionPercentage}
+          decoded={decoded}
+          sinhalaObjects={sinhalaObjects}
+          isPremium={isPremium}
+          units={units}
+          readStatus={readStatus}
+        />
       </ThemeProvider>
     </div>
   );
