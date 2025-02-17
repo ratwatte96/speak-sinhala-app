@@ -34,21 +34,22 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson, quizId }) => {
   };
 
   return (
-    <div className="border rounded-lg p-3 shadow-md bg-white flex justify-between items-end mx-auto my-3 dark:bg-black dark:border dark:border-solid dark:border-gray-600">
+    <div className="border rounded-lg p-3 shadow-md bg-white flex justify-between mx-auto my-3 dark:bg-black dark:border dark:border-solid dark:border-gray-600">
       <div className="w-3/4">
         <h2 className="text-lg">{lesson.quizName}</h2>
         <p className="text-gray-600 dark:text-gray-400 text-sm">
           Type: {lesson.type}
         </p>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
+        <p className="text-gray-600 dark:text-gray-400 text-sm  w-5/6">
           Content: {lesson.content}
         </p>
         <p className="text-gray-500 mt-1 text-xs w-5/6">{lesson.description}</p>
       </div>
-      <div className="flex flex-col items-center">
-        <p className="mb-1 w-[5rem] sm:w-32 text-center text-sm">
-          {lesson.isPerfect ? "Perfect 🏆" : "No perfect score"}
+      <div className="flex flex-col items-center justify-center">
+        <p className="mb-1 sm:w-32 text-center text-sm">
+          {lesson.isPerfect ? "Perfect 🏆" : "Not Perfect 🤏"}
         </p>
+
         {statusIcons[lesson.status]}
         <span
           className={`text-gray-700 capitalize text-sm ${
