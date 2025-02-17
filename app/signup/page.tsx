@@ -65,6 +65,7 @@ export default function Signup() {
           email,
           password,
           quizProgress: localStorage.getItem("quizProgress"),
+          streak: localStorage.getItem("streak"),
         }),
       });
 
@@ -144,7 +145,7 @@ export default function Signup() {
 
           <button
             onClick={handleSignup}
-            className="mt-4 w-full bg-yellow-600 text-white px-6 py-2 rounded-md hover:bg-yellow-700 transition-all"
+            className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
           >
             Sign Up
           </button>

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 export async function POST(req: any) {
-  const { username, email, password, quizProgress } = await req.json();
+  const { username, email, password, quizProgress, streak } = await req.json();
 
   // Validate input fields
   if (!username || !email || !password) {
@@ -109,15 +109,16 @@ export async function POST(req: any) {
     });
 
     // Create initial streak
-    const streak = await prisma.streak.create({
-      data: { current_streak: 0, last_active_date: new Date() },
+    const currentStreak = streak ? parseInt(streak) : 0;
+    const newStreak = await prisma.streak.create({
+      data: { current_streak: currentStreak, last_active_date: new Date() },
     });
 
     await prisma.user.update({
       where: { id: user.id },
       data: {
         streaks: {
-          create: { streak: { connect: { id: streak.id } } },
+          create: { streak: { connect: { id: newStreak.id } } },
         },
       },
     });
