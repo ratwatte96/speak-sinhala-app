@@ -55,7 +55,7 @@ const Lessons: React.FC<LessonsProps> = ({
       {processedUnitData.map((unitData: any, unitIndex: number) => (
         <div key={unitIndex} className="w-full">
           <div className="flex items-center">
-            <h2 className="text-xl font-serif">{`Unit: ${unitData.unitId}`}</h2>
+            <h2 className="text-xl font-bold font-serif ml-2">{`Unit: ${unitData.unitId}`}</h2>
             {!loggedIn && unitIndex !== 0 && (
               <span className="text-xs sm:text-sm ml-4">
                 (

@@ -38,8 +38,7 @@ export default function ReadPage({
   }
 
   return (
-    <div className="mx-8 sm:w-96">
-      <h1 className="font-serif mb-1 text-xl">READ</h1>
+    <div className="mx-6 sm:w-96">
       <CompletionBar quizPercentage={quizCompletionPercentage} />
       {decoded && (
         <CustomQuizForm

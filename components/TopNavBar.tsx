@@ -43,8 +43,8 @@ const Navbar: React.FC<TopNavBarProps> = ({
   }, [isToggled]);
 
   return (
-    <header className="sticky top-0 z-20 h-[10vh] my-1">
-      <div className="w-screen h-full relative flex justify-between items-center p-4 bg-white shadow-md dark:bg-black dark:border-b dark:border-solid dark:border-gray-500">
+    <header className="sticky top-0 z-20 h-[10vh] ">
+      <div className="w-screen h-full relative flex justify-between items-center p-4 md:py-4 md:px-12 bg-white shadow-md dark:bg-black dark:border-b dark:border-solid dark:border-gray-500">
         <div className="flex items-center space-x-4">
           <Logo width={40} height={30} textSize={"text-xs"} />
           {showValues && (
@@ -69,7 +69,7 @@ const Navbar: React.FC<TopNavBarProps> = ({
             <div className="sm:hidden" ref={menuRef}>
               <button
                 onClick={() => setIsToggled(!isToggled)}
-                className="p-2 focus:outline-none"
+                className="py-2 pl-2 focus:outline-none"
                 aria-label="Toggle menu"
                 aria-expanded={isToggled}
               >

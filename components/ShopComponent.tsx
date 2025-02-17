@@ -105,7 +105,6 @@ const Shop = () => {
 
   return (
     <div>
-      <h1 className="text-xl font-bold pt-[8px]">SHOP</h1>
       <h2 className="text-lg font-semibold mt-4">Refills</h2>
       <p>
         Keep learning and practicing using refills. Each refill will reset your
