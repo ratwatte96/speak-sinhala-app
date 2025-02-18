@@ -16,6 +16,7 @@ import { CustomQuizForm } from "@/components/CustomQuizForm";
 import { CompletionBar } from "@/components/CompletionBar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { TutorialModal } from "@/components/TutorialModal";
+import { errorWithFile } from "@/utils/logger";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -49,7 +50,7 @@ export default async function Home() {
     } catch (error) {
       readStatus = 1;
       quizCompletionPercentage = 0;
-      console.log(error);
+      errorWithFile(error);
     }
   } else {
     readStatus = 1;

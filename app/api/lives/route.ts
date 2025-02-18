@@ -2,6 +2,7 @@ import { verifyAccessToken } from "@/utils/auth";
 import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
 import { access } from "fs";
+import { errorWithFile } from "@/utils/logger";
 
 function isToday(date: Date) {
   const today = new Date();
@@ -64,7 +65,7 @@ export async function GET(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json({ error: "Failed to get lives" }, { status: 500 });
   }
 }
@@ -124,7 +125,7 @@ export async function POST(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Failed to update lives" },
       { status: 500 }

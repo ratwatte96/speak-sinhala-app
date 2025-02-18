@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
   try {
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Reset password error:", error);
+    errorWithFile("Reset password error:", error);
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 }

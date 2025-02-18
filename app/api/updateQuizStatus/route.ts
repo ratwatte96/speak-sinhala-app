@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { errorWithFile, logWithFile } from "@/utils/logger";
 
 export async function POST(req: any) {
   const cookies = req.headers.get("cookie");
@@ -87,7 +88,7 @@ export async function POST(req: any) {
         const quizIds = quizes.map((q) => q.quizId);
 
         if (quizIds.length === 0) {
-          console.log("No quizzes found for this unit.");
+          logWithFile("No quizzes found for this unit.");
           return;
         }
 
@@ -167,7 +168,7 @@ export async function POST(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Failed to update user quiz status" },
       { status: 500 }

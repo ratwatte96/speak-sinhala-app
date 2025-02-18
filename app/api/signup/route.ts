@@ -2,6 +2,7 @@ import { sendEmail } from "@/utils/email";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: any) {
   const { username, email, password, quizProgress, streak } = await req.json();
@@ -201,7 +202,7 @@ export async function POST(req: any) {
     );
   } catch (error: any) {
     if (error.responseCode === 452) {
-      console.error("Daily limit reached.");
+      errorWithFile("Daily limit reached.");
       await prisma.user.updateMany({
         where: { email },
         data: { isVerified: true },
@@ -210,7 +211,7 @@ export async function POST(req: any) {
         status: 201,
       });
     } else {
-      console.error("Error sending email:", error.message);
+      errorWithFile("Error sending email:", error.message);
     }
     return new Response(JSON.stringify({ error: "Something went wrong" }), {
       status: 500,

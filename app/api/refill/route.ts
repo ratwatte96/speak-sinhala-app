@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { errorWithFile } from "@/utils/logger";
 
 export async function GET(req: any) {
   const cookies = req.headers.get("cookie");
@@ -44,7 +45,7 @@ export async function GET(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Failed to get refills" },
       { status: 500 }
@@ -147,7 +148,7 @@ export async function POST(req: Request) {
       }
     );
   } catch (error) {
-    console.error("Error updating lives/refill:", error);
+    errorWithFile("Error updating lives/refill:", error);
     return NextResponse.json(
       { error: "Failed to update lives or refill" },
       { status: 500 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Howl } from "howler";
 import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
+import { errorWithFile } from "@/utils/logger";
 
 interface AudioPlayerProps {
   audioPath: string;
@@ -56,10 +57,10 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           const blob = await response.blob();
           setSrc(URL.createObjectURL(blob));
         } else {
-          console.error("Failed to fetch audio file.");
+          errorWithFile("Failed to fetch audio file.");
         }
       } catch (error) {
-        console.error("Error fetching audio:", error);
+        errorWithFile("Error fetching audio:", error);
       }
     };
 

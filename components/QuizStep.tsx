@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import Toast, { ToastType } from "./Toast";
 import { AudioPlayer } from "./AudioPlayer";
 import Modal from "./Modal";
+import { logWithFile } from "@/utils/logger";
 
 type Answer = {
   sinhala?: string;
@@ -79,7 +80,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
   };
 
   const handleAudioEnd = useCallback(() => {
-    console.log("Audio finished playing");
+    logWithFile("Audio finished playing");
   }, []);
 
   const selectAnswer = (answer: string) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchWithToken } from "@/utils/fetch";
+import { errorWithFile } from "@/utils/logger";
 import { Crown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -60,7 +61,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({ loggedOut }) => {
             setStreak(streaksData.current_streak);
           });
       } catch (error: any) {
-        console.log(error);
+        errorWithFile(error);
       }
     }
   }, []);

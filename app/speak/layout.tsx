@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import TopNavbar from "@/components/TopNavBar";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
+import { errorWithFile } from "@/utils/logger";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
@@ -30,7 +31,7 @@ export default async function RootLayout({
       isPremium = false;
     }
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
   }
 
   return (

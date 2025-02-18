@@ -13,6 +13,7 @@ import QuizCompletionScreen from "./QuizCompletionScreen";
 import QuizFailedScreen from "./QuizFailedScreen";
 import StreakUpdateScreen from "./StreakUpdatedScreen";
 import { TutorialModal } from "./TutorialModal";
+import { errorWithFile } from "@/utils/logger";
 
 interface QuizProps {
   steps?: Step[];
@@ -67,7 +68,7 @@ const Quiz: React.FC<QuizProps> = ({
               setCurrentStreak(parseInt(streaksData.current_streak));
             });
         } catch (error: any) {
-          console.log(error);
+          errorWithFile(error);
         }
       }
     }
@@ -117,7 +118,7 @@ const Quiz: React.FC<QuizProps> = ({
               setRefillMessage(responseData.error);
             }
           } catch (error: any) {
-            console.log(error);
+            errorWithFile(error);
           }
           setUseRefill(false);
         }
@@ -225,7 +226,7 @@ const Quiz: React.FC<QuizProps> = ({
           return currentStreak;
         }
       } catch (error: any) {
-        console.log(error);
+        errorWithFile(error);
         return currentStreak;
       }
     }
@@ -295,7 +296,7 @@ const Quiz: React.FC<QuizProps> = ({
             .then((res) => res.json())
             .then((statusData) => {});
         } catch (error: any) {
-          console.log(error);
+          errorWithFile(error);
         }
       }
     }
@@ -327,7 +328,7 @@ const Quiz: React.FC<QuizProps> = ({
             setLives(livesData.total_lives);
           });
       } catch (error: any) {
-        console.log(error);
+        errorWithFile(error);
       }
     }
   };

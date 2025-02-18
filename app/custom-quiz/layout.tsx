@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import TopNavbar from "@/components/TopNavBar";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
+import { errorWithFile } from "@/utils/logger";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
@@ -29,7 +30,7 @@ export default async function RootLayout({
       loggedIn = true;
     }
   } catch (error) {
-    console.log("quiz/[id]/layout.tsx", error);
+    errorWithFile(error);
   }
 
   return (

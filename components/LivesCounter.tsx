@@ -5,6 +5,7 @@ import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
 import { Heart } from "lucide-react";
 import { useSharedState } from "@/components/StateProvider";
+import { errorWithFile } from "@/utils/logger";
 
 interface LivesCounterProps {
   startingLives?: number;
@@ -51,7 +52,7 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
             if (setMainLives) setMainLives(livesData.total_lives);
           });
       } catch (error: any) {
-        console.log(error);
+        errorWithFile(error);
       }
     }
   }, [startingLives, sharedState.lives]);

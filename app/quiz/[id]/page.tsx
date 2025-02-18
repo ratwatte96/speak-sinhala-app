@@ -5,6 +5,7 @@ import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { errorWithFile } from "@/utils/logger";
 
 function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
   let answers = isSinhala
@@ -161,7 +162,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   try {
     validToken = verifyAccessToken(token.value);
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
   }
   let user: any;
   let readStatus: any;
@@ -180,7 +181,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
       isPremium = await updatePremiumStatus(parseInt(validToken.userId));
       readStatus = user.readStatus;
     } catch (error) {
-      console.log(error);
+      errorWithFile(error);
       redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
     }
   }

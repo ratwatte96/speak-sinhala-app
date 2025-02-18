@@ -5,6 +5,7 @@ import { fetchWithToken } from "@/utils/fetch";
 import { usePathname } from "next/navigation";
 import { RefreshCcw, Infinity } from "lucide-react";
 import { useSharedState } from "@/components/StateProvider";
+import { errorWithFile } from "@/utils/logger";
 
 interface RefillCounterProps {
   loggedOut?: boolean;
@@ -42,7 +43,7 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
             setLoadingRefills(false);
           });
       } catch (error: any) {
-        console.log(error);
+        errorWithFile(error);
       }
     }
   }, [sharedState.refills]);

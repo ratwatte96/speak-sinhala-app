@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/utils/email";
 import { generateResetToken, verifyAccessToken } from "@/utils/auth";
 import prisma from "@/lib/prisma";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
   try {
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Forgot password error:", error);
+    errorWithFile("Forgot password error:", error);
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 }

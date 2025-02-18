@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/utils/email";
 import crypto from "crypto";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
   const { email } = await req.json();
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

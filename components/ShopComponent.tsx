@@ -5,6 +5,7 @@ import { fetchWithToken } from "@/utils/fetch";
 import { useSharedState } from "@/components/StateProvider";
 import RefillModal from "./RefillModal";
 import Modal from "./Modal";
+import { errorWithFile } from "@/utils/logger";
 
 const Shop = () => {
   const [showRefillModal, setShowRefillModal] = useState<boolean>(false);
@@ -46,7 +47,7 @@ const Shop = () => {
             setRefillMessage(responseData.error);
           }
         } catch (error: any) {
-          console.log(error);
+          errorWithFile(error);
         }
         setUseRefill(false);
       };
@@ -66,7 +67,6 @@ const Shop = () => {
         const data = await res.json();
 
         if (res.ok) {
-          console.log(data.total_refill);
           setSharedState("refills", data.total_refill);
           setRefillMessage("Refill Purchased");
         } else {
@@ -91,7 +91,6 @@ const Shop = () => {
         const data = await res.json();
 
         if (res.ok) {
-          console.log(data.total_refill);
           setPremiumMessage("Premium Activated");
         } else {
           setPremiumMessage(data.error);

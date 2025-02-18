@@ -1,6 +1,7 @@
 import Shop from "@/components/ShopComponent";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { verifyAccessToken } from "@/utils/auth";
+import { errorWithFile } from "@/utils/logger";
 import { cookies } from "next/headers";
 
 export default function ShopPage() {
@@ -10,7 +11,7 @@ export default function ShopPage() {
   try {
     decoded = verifyAccessToken(token.value);
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
   }
 
   return (

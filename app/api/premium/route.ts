@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: NextRequest) {
   const cookies = req.headers.get("cookie");
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Premium activated successfully" });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Failed to update premium status" },
       { status: 500 }

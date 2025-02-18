@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { AudioPlayer } from "./AudioPlayer";
 import Toast, { ToastType } from "./Toast";
+import { logWithFile } from "@/utils/logger";
 
 interface PairsQuestionStepProps {
   nextStep: (isMistake: boolean) => void;
@@ -27,7 +28,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
   const wrongGuessCount = useRef<number>(0);
 
   const handleAudioEnd = useCallback(() => {
-    console.log("Audio finished playing");
+    logWithFile("Audio finished playing");
   }, []);
 
   const [selectedSinhala, setSelectedSinhala] = useState<string>("");

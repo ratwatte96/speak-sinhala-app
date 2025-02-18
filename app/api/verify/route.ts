@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { errorWithFile } from "@/utils/logger";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -27,7 +28,7 @@ export async function GET(req: Request) {
 
     return NextResponse.redirect(new URL("/verification-success", req.url));
   } catch (error) {
-    console.error(error);
+    errorWithFile(error);
     return NextResponse.redirect(new URL("/verification-error", req.url));
   }
 }

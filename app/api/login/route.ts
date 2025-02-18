@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "@/utils/auth";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: any) {
   const { email, password } = await req.json();
@@ -114,7 +115,7 @@ export async function POST(req: any) {
       }
     );
   } catch (error: any) {
-    console.error("Error during login:", error.message);
+    errorWithFile("Error during login:", error.message);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

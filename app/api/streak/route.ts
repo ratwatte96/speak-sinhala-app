@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
+import { errorWithFile } from "@/utils/logger";
 
 function isToday(date: Date) {
   const today = new Date();
@@ -76,7 +77,7 @@ export async function GET(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Failed to get streak" },
       { status: 500 }
@@ -154,7 +155,7 @@ export async function POST(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     return NextResponse.json(
       { error: "Failed to update streak" },
       { status: 500 }

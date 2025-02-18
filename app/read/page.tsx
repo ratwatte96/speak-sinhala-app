@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
+import { errorWithFile } from "@/utils/logger";
 import {
   getQuizCompletionPercentage,
   getUserWithQuizRecords,
@@ -44,7 +45,7 @@ export default async function Read() {
       quizCompletionPercentage = 0;
     }
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     quizCompletionPercentage = 0;
     readStatus = 1;
   }

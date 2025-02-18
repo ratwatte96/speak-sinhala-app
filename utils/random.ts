@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { errorWithFile } from "./logger";
 
 export async function getUserWithQuizRecords(user: any) {
   try {
@@ -40,7 +41,7 @@ export async function getUserWithQuizRecords(user: any) {
 
     return units;
   } catch (error) {
-    console.error("Error fetching user quiz data:", error);
+    errorWithFile("Error fetching user quiz data:", error);
     throw error;
   }
 }
@@ -82,7 +83,7 @@ export async function getUserData(user: any) {
       premiumEndDate: user.premiumEndDate,
     };
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    errorWithFile("Error fetching user data:", error);
     throw error;
   }
 }

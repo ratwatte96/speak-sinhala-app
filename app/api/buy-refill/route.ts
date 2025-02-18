@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
+import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
   const cookies = req.headers.get("cookie");
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(refill, { status: 200 });
   } catch (error) {
-    console.error("Error updating refill:", error);
+    errorWithFile("Error updating refill:", error);
     return NextResponse.json(
       { error: "Failed to update refill" },
       { status: 500 }

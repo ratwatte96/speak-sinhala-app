@@ -2,6 +2,7 @@ import ProfileCard from "@/components/ProfileCard";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
+import { errorWithFile } from "@/utils/logger";
 import { getUserData } from "@/utils/random";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -23,7 +24,7 @@ export default async function UserProfile() {
     userData = await getUserData(user);
     isPremium = await updatePremiumStatus(user.id);
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
   }
 
   return (

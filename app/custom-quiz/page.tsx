@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { errorWithFile } from "@/utils/logger";
 
 export default async function CustomQuizPage({
   searchParams,
@@ -23,7 +24,7 @@ export default async function CustomQuizPage({
     const decoded: any = verifyAccessToken(token.value);
     isPremium = await updatePremiumStatus(parseInt(decoded.userId));
   } catch (error) {
-    console.log(error);
+    errorWithFile(error);
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
