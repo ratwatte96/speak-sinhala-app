@@ -55,8 +55,12 @@ export default function Signup() {
       return;
     }
 
+    // AbortController to handle request timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000); // 10s timeout
+
     try {
-      setMessage("Signing up, please wait...");
+      setMessage("Signing up, please wait a minute...");
 
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -68,7 +72,10 @@ export default function Signup() {
           quizProgress: localStorage.getItem("quizProgress"),
           streak: localStorage.getItem("streak"),
         }),
+        signal: controller.signal, // Pass abort signal
       });
+
+      clearTimeout(timeout); // Clear timeout if request completes
 
       const data = await res.json();
 
@@ -84,8 +91,12 @@ export default function Signup() {
       } else {
         setMessage(data.error || "Signup failed.");
       }
-    } catch (error) {
-      setMessage("Something went wrong!");
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        setMessage("Request timed out. Please try again.");
+      } else {
+        setMessage("Something went wrong!");
+      }
     }
   };
 
