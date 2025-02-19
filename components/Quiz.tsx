@@ -14,6 +14,7 @@ import QuizFailedScreen from "./QuizFailedScreen";
 import StreakUpdateScreen from "./StreakUpdatedScreen";
 import { TutorialModal } from "./TutorialModal";
 import { errorWithFile } from "@/utils/logger";
+import CalculatingResultsScreen from "./CalculatingResultsScreen";
 
 interface QuizProps {
   steps?: Step[];
@@ -368,6 +369,11 @@ const Quiz: React.FC<QuizProps> = ({
         setQuizCompleted(true);
       }}
     />
+  ) : steps &&
+    currentStep === steps.length &&
+    !showStreakUpdated &&
+    !quizCompleted ? (
+    <CalculatingResultsScreen />
   ) : quizCompleted && !showStreakUpdated ? (
     <QuizCompletionScreen isPerfect={mistakeCount === 0} />
   ) : (
