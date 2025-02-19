@@ -42,7 +42,7 @@ export default function QuizCompletionScreen({
             Retry Quiz
           </button>
           <button
-            onClick={() => router.push("/")}
+            onClick={() => setTimeout(() => router.push("/"), 2000)}
             className="bg-green-500 text-white w-full p-2 rounded-md"
           >
             Go Home

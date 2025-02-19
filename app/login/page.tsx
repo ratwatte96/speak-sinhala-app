@@ -41,11 +41,11 @@ function LoginComponent() {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage("Login successful!");
+        setMessage("Login successful!! Redirecting...");
         setEmail("");
         setPassword("");
         if (res.ok) {
-          router.push(callbackUrl); // Redirect back after login
+          setTimeout(() => router.push(callbackUrl), 2000);
         }
       } else {
         setMessage(data.error);
@@ -96,7 +96,7 @@ function LoginComponent() {
             >
               Login
             </button>
-            {message && <p>{message}</p>}
+            {message && <p className="mt-1">{message}</p>}
           </div>
         </div>
       </main>
