@@ -1,32 +1,51 @@
 "use client";
 import { useState } from "react";
-import { BookOpen, MessageSquare, ShoppingCart, Settings } from "lucide-react";
+import {
+  BookOpen,
+  MessageSquare,
+  ShoppingCart,
+  Settings,
+  LoaderCircle,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const BottomNavbar = () => {
-  const [active, setActive] = useState("home");
+  const pathname = usePathname();
+  const currentPage = pathname.split("/").pop();
+  const [active, setActive] = useState(currentPage);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navItems = [
     { name: "read", icon: <BookOpen />, href: "/read" },
     { name: "speak", icon: <MessageSquare />, href: "/speak" },
     { name: "shop", icon: <ShoppingCart />, href: "/shop" },
-    { name: "user", icon: <Settings />, href: "/user-profile" },
+    { name: "user-profile", icon: <Settings />, href: "/user-profile" },
   ];
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md px-4 flex justify-around border-t dark:border-gray-500 md:hidden">
       {navItems.map((item) => (
         <Link key={item.name} href={item.href}>
-          <div
-            className={`flex flex-col items-center cursor-pointer transition-colors duration-200 w-[25vw] py-4 ${
-              active === item.name
-                ? "text-green-500"
-                : "text-black dark:text-white"
-            }`}
-            onClick={() => setActive(item.name)}
-          >
-            {item.icon}
-          </div>
+          {isLoading && active === item.name ? (
+            <div className="w-[25vw] flex items-center justify-center h-full">
+              <LoaderCircle className="text-green-500 w-full animate-spin" />
+            </div>
+          ) : (
+            <div
+              className={`flex flex-col items-center cursor-pointer transition-colors duration-200 w-[25vw] py-4 ${
+                active === item.name
+                  ? "text-green-500"
+                  : "text-black dark:text-white"
+              }`}
+              onClick={() => {
+                setActive(item.name);
+                setIsLoading(true);
+              }}
+            >
+              {item.icon}
+            </div>
+          )}
         </Link>
       ))}
     </nav>
