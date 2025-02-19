@@ -60,7 +60,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           errorWithFile("Failed to fetch audio file.");
         }
       } catch (error) {
-        errorWithFile("Error fetching audio:", error);
+        errorWithFile(error);
       }
     };
 
