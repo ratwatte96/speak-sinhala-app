@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Quiz from "./Quiz";
 import prisma from "@/lib/prisma";
 import { errorWithFile } from "@/utils/logger";
@@ -8,6 +7,7 @@ import { redirect } from "next/navigation";
 
 interface CustomQuizProps {
   letters: any;
+  isPremium: boolean;
 }
 
 function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
@@ -149,7 +149,10 @@ function createSteps(order: any, pairData: any): any {
   return steps;
 }
 
-export const CustomQuiz: React.FC<CustomQuizProps> = async ({ letters }) => {
+export const CustomQuiz: React.FC<CustomQuizProps> = async ({
+  letters,
+  isPremium,
+}) => {
   let existingPairs: any;
   try {
     existingPairs = await prisma.pair.findMany({
@@ -197,6 +200,7 @@ export const CustomQuiz: React.FC<CustomQuizProps> = async ({ letters }) => {
         quiz_title={"Custom Quiz"}
         quiz_id={0}
         loggedOut={false}
+        isPremium={isPremium}
       />
     </div>
   );

@@ -20,7 +20,7 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
   const pathname = usePathname();
   const { sharedState, setSharedState } = useSharedState();
 
-  const notSignedUp =
+  const infinityRefills =
     isPremium ||
     (loggedOut &&
       ((pathname.includes("quiz") &&
@@ -32,7 +32,7 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
         pathname.includes("home")));
 
   useEffect(() => {
-    if (notSignedUp) {
+    if (infinityRefills) {
       setLoadingRefills(false);
     } else {
       try {
@@ -54,7 +54,7 @@ export const RefillCounter: React.FC<RefillCounterProps> = ({
       <span className="ml-1 font-bold text-lg">
         {loadingRefills ? (
           <span className="text-xs sm:text-lg">...</span>
-        ) : notSignedUp ? (
+        ) : infinityRefills ? (
           <Infinity className="w-6 h-6 text-black-500 dark:text-white" />
         ) : (
           sharedState.refills ?? 0

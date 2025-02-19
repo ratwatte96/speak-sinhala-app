@@ -27,7 +27,7 @@ export default async function RootLayout({
     if (token) {
       const decoded: any = verifyAccessToken(token.value);
       isPremium = await updatePremiumStatus(parseInt(decoded.userId));
-      loggedIn = true;
+      loggedIn = decoded;
     }
   } catch (error) {
     errorWithFile(error);

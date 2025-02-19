@@ -19,7 +19,7 @@ export default async function CustomQuizPage({
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
-  let isPremium: any;
+  let isPremium = false;
   try {
     const decoded: any = verifyAccessToken(token.value);
     isPremium = await updatePremiumStatus(parseInt(decoded.userId));
@@ -30,7 +30,7 @@ export default async function CustomQuizPage({
 
   if (!isPremium) {
     //! do basic need premium page
-    redirect(`/read`);
+    redirect(`/`);
   }
 
   const encodedLetters = searchParams.letters;
@@ -40,7 +40,7 @@ export default async function CustomQuizPage({
 
   return (
     <ThemeProvider>
-      <CustomQuiz letters={letters} />
+      <CustomQuiz letters={letters} isPremium={isPremium} />
     </ThemeProvider>
   );
 }
