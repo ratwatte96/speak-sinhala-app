@@ -44,8 +44,8 @@ export default async function RootLayout({
             isPremium={isPremium}
             showValues={false}
           />
+          <main>{children}</main>
         </ThemeProvider>
-        <main>{children}</main>
       </body>
     </html>
   );

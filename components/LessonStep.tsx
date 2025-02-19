@@ -1,5 +1,5 @@
 import { AudioPlayer } from "./AudioPlayer";
-import Image from "next/image";
+import ClientImage from "./ClientImage";
 
 interface LessonStepProps {
   nextStep: (isMistake: boolean) => void;
@@ -12,7 +12,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
   return (
     <div className="min-w-w-4/5 sm:min-w-3/5 text-sm sm:text-base mb-4">
       {data.map(({ text, infoDisplayType, info }: any, i: number) => (
-        <div key={i} className="flex mt-4">
+        <div key={i} className="flex mt-4 justify-center">
           {infoDisplayType === "list" ? (
             <div className="flex flex-col items-center text-skin-base w-full">
               <p>{text}</p>
@@ -59,9 +59,9 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
           ) : infoDisplayType === "image" ? (
             <>
               <div>
-                <p className="mb-2">{text}</p>
+                <p className="mb-2 text-center">{text}</p>
                 <p>{info.text}</p>
-                <Image
+                <ClientImage
                   src={info.data.imagePath}
                   alt={info.data.imageAlt}
                   width={400}

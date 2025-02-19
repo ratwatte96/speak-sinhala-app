@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
 import { updatePremiumStatus } from "@/utils/checkPremium";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { errorWithFile } from "@/utils/logger";
 
 function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
@@ -238,16 +237,14 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const quizQuestion = quizData!.quiz_name ?? "";
 
   return (
-    <ThemeProvider>
-      <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black animate-fadeIn">
-        <Quiz
-          steps={quizSteps}
-          quiz_title={quizQuestion}
-          quiz_id={parseInt(id)}
-          loggedOut={!validToken}
-          isPremium={isPremium}
-        />
-      </div>
-    </ThemeProvider>
+    <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black animate-fadeIn">
+      <Quiz
+        steps={quizSteps}
+        quiz_title={quizQuestion}
+        quiz_id={parseInt(id)}
+        loggedOut={!validToken}
+        isPremium={isPremium}
+      />
+    </div>
   );
 }
