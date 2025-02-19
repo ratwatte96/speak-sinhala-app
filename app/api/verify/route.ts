@@ -10,9 +10,10 @@ export async function GET(req: Request) {
     return NextResponse.redirect(new URL("/verification-error", req.url));
   }
 
+  let user: any;
   try {
     // Find the user with the token
-    const user = await prisma.user.findFirst({
+    user = await prisma.user.findFirst({
       where: { verificationToken: token },
     });
 
@@ -28,7 +29,7 @@ export async function GET(req: Request) {
 
     return NextResponse.redirect(new URL("/verification-success", req.url));
   } catch (error) {
-    errorWithFile(error);
+    errorWithFile(error, user?.id);
     return NextResponse.redirect(new URL("/verification-error", req.url));
   }
 }

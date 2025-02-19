@@ -25,8 +25,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  let decoded: any;
   try {
-    const decoded: any = verifyAccessToken(accessToken);
+    decoded = verifyAccessToken(accessToken);
 
     const { type } = await req.json();
     if (!["1_month", "12_months", "lifetime"].includes(type)) {
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Premium activated successfully" });
   } catch (error) {
-    errorWithFile(error);
+    errorWithFile(error, decoded?.userId);
     return NextResponse.json(
       { error: "Failed to update premium status" },
       { status: 500 }

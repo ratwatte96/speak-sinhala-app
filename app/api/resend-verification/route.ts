@@ -11,8 +11,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
   }
 
+  let user: any;
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    errorWithFile(error);
+    errorWithFile(error, user?.id);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

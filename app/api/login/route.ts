@@ -24,9 +24,10 @@ export async function POST(req: any) {
     );
   }
 
+  let user: any;
   try {
     // Check if the user exists
-    const user = await prisma.user.findUnique({ where: { email } });
+    user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -115,7 +116,7 @@ export async function POST(req: any) {
       }
     );
   } catch (error: any) {
-    errorWithFile("Error during login:", error.message);
+    errorWithFile(error, user?.id);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

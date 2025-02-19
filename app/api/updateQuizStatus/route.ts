@@ -23,8 +23,10 @@ export async function POST(req: any) {
       { status: 401 }
     );
   }
+
+  let decoded: any;
   try {
-    const decoded: any = verifyAccessToken(accessToken);
+    decoded = verifyAccessToken(accessToken);
 
     const { quiz_id, perfect_score } = await req.json();
 
@@ -168,7 +170,7 @@ export async function POST(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    errorWithFile(error);
+    errorWithFile(error, decoded?.userId);
     return NextResponse.json(
       { error: "Failed to update user quiz status" },
       { status: 500 }

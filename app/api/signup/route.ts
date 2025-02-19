@@ -2,7 +2,7 @@ import { sendEmail } from "@/utils/email";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { errorWithFile } from "@/utils/logger";
+import { errorWithFile, logWithFile } from "@/utils/logger";
 
 export async function POST(req: any) {
   const { username, email, password, quizProgress, streak } = await req.json();
@@ -65,6 +65,7 @@ export async function POST(req: any) {
     );
   }
 
+  let user: any;
   try {
     // Check if email already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -91,7 +92,7 @@ export async function POST(req: any) {
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
     // Save the user to the database
-    const user = await prisma.user.create({
+    user = await prisma.user.create({
       data: { username, email, password: hashedPassword, verificationToken },
     });
 
@@ -202,7 +203,7 @@ export async function POST(req: any) {
     );
   } catch (error: any) {
     if (error.responseCode === 452) {
-      errorWithFile("Daily limit reached.");
+      logWithFile("Daily limit reached.");
       await prisma.user.updateMany({
         where: { email },
         data: { isVerified: true },
@@ -211,7 +212,7 @@ export async function POST(req: any) {
         status: 201,
       });
     } else {
-      errorWithFile("Error sending email:", error.message);
+      errorWithFile(error, user?.id);
     }
     return new Response(JSON.stringify({ error: "Something went wrong" }), {
       status: 500,

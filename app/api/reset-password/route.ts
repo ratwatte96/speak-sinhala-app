@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
+  let user: any;
   try {
     const { token, newPassword } = await req.json();
 
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
     }
 
     // Find user by reset token
-    const user = await prisma.user.findFirst({
+    user = await prisma.user.findFirst({
       where: { resetToken: token, resetExpires: { gt: new Date() } },
     });
 
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    errorWithFile("Reset password error:", error);
+    errorWithFile(error, user?.id);
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 }

@@ -26,8 +26,9 @@ export async function POST(req: Request) {
     );
   }
 
+  let decoded: any;
   try {
-    const decoded: any = verifyAccessToken(accessToken);
+    decoded = verifyAccessToken(accessToken);
     const isPremium = await updatePremiumStatus(parseInt(decoded.userId));
     if (isPremium) {
       return NextResponse.json(
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(refill, { status: 200 });
   } catch (error) {
-    errorWithFile("Error updating refill:", error);
+    errorWithFile(error, decoded?.userId);
     return NextResponse.json(
       { error: "Failed to update refill" },
       { status: 500 }

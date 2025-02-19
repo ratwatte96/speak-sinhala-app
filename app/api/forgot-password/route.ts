@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
+  let decoded: any;
   try {
     const cookies = req.headers.get("cookie");
     if (!cookies) {
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const decoded: any = verifyAccessToken(accessToken);
+    decoded = verifyAccessToken(accessToken);
     const email = decoded.email;
     // Check if user exists
     const user = await prisma.user.findUnique({
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    errorWithFile("Forgot password error:", error);
+    errorWithFile(error, decoded?.userId);
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 }

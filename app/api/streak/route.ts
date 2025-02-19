@@ -44,8 +44,9 @@ export async function GET(req: any) {
     );
   }
 
+  let decoded: any;
   try {
-    const decoded: any = verifyAccessToken(accessToken);
+    decoded = verifyAccessToken(accessToken);
     const user: any = await prisma.user.findUnique({
       where: {
         id: parseInt(decoded.userId),
@@ -77,7 +78,7 @@ export async function GET(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    errorWithFile(error);
+    errorWithFile(error, decoded?.userId);
     return NextResponse.json(
       { error: "Failed to get streak" },
       { status: 500 }
@@ -106,8 +107,9 @@ export async function POST(req: any) {
     );
   }
 
+  let decoded: any;
   try {
-    const decoded: any = verifyAccessToken(accessToken);
+    decoded = verifyAccessToken(accessToken);
     const user: any = await prisma.user.findUnique({
       where: {
         id: parseInt(decoded.userId),
@@ -155,7 +157,7 @@ export async function POST(req: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    errorWithFile(error);
+    errorWithFile(error, decoded?.userId);
     return NextResponse.json(
       { error: "Failed to update streak" },
       { status: 500 }
