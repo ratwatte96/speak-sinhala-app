@@ -2,15 +2,13 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const { userId, quizProgress } = await req.json();
-  console.log("quizProgress", quizProgress);
+
   try {
     // Fetch all quizzes belonging to Unit 1 and Unit 2
     const quizzes = await prisma.quizesOnUnits.findMany({
       where: { unitId: { in: [1, 2] } },
       select: { quizId: true },
     });
-
-    console.log("quizzes", quizzes);
 
     const parsedQuizProgress = JSON.parse(quizProgress);
     // Transform data for batch insert
@@ -24,7 +22,6 @@ export async function POST(req: Request) {
         parsedQuizProgress?.quizes?.find((q: any) => q.quizId === quizId)
           ?.isPerfect || false,
     }));
-    console.log("quizData", quizData);
 
     // Perform bulk insert
     await prisma.usersOnQuizes.createMany({

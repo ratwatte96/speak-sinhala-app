@@ -9,41 +9,63 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    const user = await prisma.user.create({
-      data: { username, email, password: hashedPassword, verificationToken },
-    });
-
-    const lives = await prisma.lives.create({
-      data: {
-        total_lives: 5,
-        last_active_time: new Date(),
-        users: { create: { user: { connect: { id: user.id } } } },
-      },
-    });
-
     const currentStreak = streak ? parseInt(streak) : 0;
-    await prisma.streak.create({
-      data: {
-        current_streak: currentStreak,
-        last_active_date: new Date(),
-        users: { create: { user: { connect: { id: user.id } } } },
-      },
-    });
 
-    const refill = await prisma.refill.create({
-      data: {
-        total_refill: 0,
-        users: { create: { user: { connect: { id: user.id } } } },
-      },
-    });
+    // Perform all operations in a single transaction
+    const [user, lives, streakRecord, refill] = await prisma.$transaction([
+      // Create User
+      prisma.user.create({
+        data: {
+          username,
+          email,
+          password: hashedPassword,
+          verificationToken,
+        },
+      }),
+
+      // Create Lives
+      prisma.lives.create({
+        data: {
+          total_lives: 5,
+          last_active_time: new Date(),
+        },
+      }),
+
+      // Create Streak
+      prisma.streak.create({
+        data: {
+          current_streak: currentStreak,
+          last_active_date: new Date(),
+        },
+      }),
+
+      // Create Refill
+      prisma.refill.create({
+        data: {
+          total_refill: 5, // Default to 5
+        },
+      }),
+    ]);
+
+    // Associate User with Lives, Streak, and Refill in a single batch insert
+    await prisma.$transaction([
+      prisma.livesOnUsers.create({
+        data: { userId: user.id, livesId: lives.id },
+      }),
+      prisma.streaksOnUsers.create({
+        data: { userId: user.id, streaksId: streakRecord.id },
+      }),
+      prisma.refillsOnUsers.create({
+        data: { userId: user.id, refillId: refill.id },
+      }),
+    ]);
 
     return new Response(
       JSON.stringify({ userId: user.id, verificationToken }),
-      {
-        status: 201,
-      }
+      { status: 201 }
     );
   } catch (error) {
+    console.error("User creation failed:", error);
     return new Response(JSON.stringify({ error: "User creation failed" }), {
       status: 500,
     });
