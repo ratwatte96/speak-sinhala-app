@@ -1,20 +1,24 @@
-export const logWithFile = (...args: any[]) => {
+export const logWithFile = (message: any, userId?: string, ...args: any[]) => {
   const filePath = getCallerFile();
-  console.log(`[${filePath}]`, ...args);
+  const userTag = userId ? `User:${userId}` : "";
+  console.log(`[${filePath}] ${userTag}`, message, ...args);
 };
 
-export const errorWithFile = (...args: any[]) => {
+export const errorWithFile = (
+  message: any,
+  userId?: string,
+  ...args: any[]
+) => {
   const filePath = getCallerFile();
-  console.error(`[${filePath}]`, ...args);
+  const userTag = userId ? `User:${userId}` : "";
+  console.error(`[${filePath}] ${userTag}`, message, ...args);
 };
 
 const getCallerFile = (): string => {
   if (typeof window !== "undefined") {
-    // Client-side: Filenames are not accessible, return generic identifier
     return "ClientComponent";
   }
 
-  // Server-side: Extract caller file from stack trace
   const stack = new Error().stack;
   if (!stack) return "Unknown";
 
@@ -24,13 +28,11 @@ const getCallerFile = (): string => {
   for (let i = 0; i < stackLines.length; i++) {
     const line = stackLines[i];
 
-    // Skip lines referring to logger.ts
     if (line.includes("logger.ts")) continue;
 
-    // Extract the file path from the stack trace
     const match = line.match(/\/(app|pages)\/([^:]+):\d+:\d+/);
     if (match) {
-      callerPath = `${match[1]}/${match[2]}`; // Include directory and file
+      callerPath = `${match[1]}/${match[2]}`;
       break;
     }
   }

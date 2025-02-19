@@ -41,7 +41,7 @@ export async function getUserWithQuizRecords(user: any) {
 
     return units;
   } catch (error) {
-    errorWithFile("Error fetching user quiz data:", error);
+    errorWithFile(error, user.id);
     throw error;
   }
 }
@@ -83,7 +83,7 @@ export async function getUserData(user: any) {
       premiumEndDate: user.premiumEndDate,
     };
   } catch (error) {
-    errorWithFile("Error fetching user data:", error);
+    errorWithFile(error, user.id);
     throw error;
   }
 }
