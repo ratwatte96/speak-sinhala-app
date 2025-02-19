@@ -11,92 +11,76 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
     setMessage("");
-
-    // Client-side validation
-    if (!username || !email || !password) {
-      setMessage("All fields are required.");
-      return;
-    }
-
-    // Validate username (at least 3 characters, no special characters)
-    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
-    if (!usernameRegex.test(username)) {
-      setMessage(
-        "Username must be at least 3 characters and contain only letters, numbers, or underscores."
-      );
-      return;
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage("Please enter a valid email address.");
-      return;
-    }
-
-    // Validate password strength
-    if (password.length < 8) {
-      setMessage("Password must be at least 8 characters long.");
-      return;
-    }
-    if (!/[A-Z]/.test(password)) {
-      setMessage("Password must contain at least one uppercase letter.");
-      return;
-    }
-    if (!/[0-9]/.test(password)) {
-      setMessage("Password must contain at least one number.");
-      return;
-    }
-    if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
-      setMessage("Password must contain at least one special character.");
-      return;
-    }
-
-    // AbortController to handle request timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60000); // 10s timeout
-
+    setLoading(true);
     try {
-      setMessage("Signing up, please wait a minute...");
+      setMessage("Validating details...");
+      const validateRes = await fetch("/api/signup/validate-user-details", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-      const res = await fetch("/api/signup", {
+      if (!validateRes.ok) {
+        throw new Error((await validateRes.json()).error);
+      }
+
+      setMessage("Creating account...");
+      const createUserRes = await fetch("/api/signup/create-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username,
           email,
           password,
-          quizProgress: localStorage.getItem("quizProgress"),
           streak: localStorage.getItem("streak"),
         }),
-        signal: controller.signal, // Pass abort signal
       });
 
-      clearTimeout(timeout); // Clear timeout if request completes
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage(data.message || "User created successfully!");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setTimeout(() => {
-          setMessage("Redirecting...");
-          router.push(`/login`);
-        }, 2000);
-      } else {
-        setMessage(data.error || "Signup failed.");
+      if (!createUserRes.ok) {
+        throw new Error((await createUserRes.json()).error);
       }
+
+      const { userId, verificationToken } = await createUserRes.json();
+
+      setMessage("Setting up quiz progress...");
+      const quizRes = await fetch("/api/signup/create-user-quiz-data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          quizProgress: localStorage.getItem("quizProgress"),
+        }),
+      });
+
+      if (!quizRes.ok) {
+        throw new Error((await quizRes.json()).error);
+      }
+
+      setMessage("Sending verification email...");
+      const emailRes = await fetch("/api/signup/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, verificationToken }),
+      });
+
+      if (!emailRes.ok) {
+        throw new Error((await emailRes.json()).error);
+      }
+
+      setMessage("Signup successful! Redirecting...");
+      setTimeout(() => router.push("/login"), 2000);
     } catch (error: any) {
-      if (error.name === "AbortError") {
+      if (error?.name === "AbortError") {
         setMessage("Request timed out. Please try again.");
       } else {
-        setMessage("Something went wrong!");
+        setMessage(error?.message || "Something went wrong.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,9 +142,12 @@ export default function Signup() {
 
           <button
             onClick={handleSignup}
-            className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
+            className={`mt-4 w-full ${
+              loading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"
+            } text-white px-6 py-2 rounded-md transition-all`}
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
           {message && (
