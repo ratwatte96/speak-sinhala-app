@@ -204,10 +204,11 @@ export async function POST(req: any) {
   } catch (error: any) {
     if (error.responseCode === 452) {
       logWithFile("Daily limit reached.");
-      await prisma.user.updateMany({
-        where: { email },
-        data: { isVerified: true },
-      });
+      //!
+      // await prisma.user.updateMany({
+      //   where: { email },
+      //   data: { isVerified: true },
+      // });
       return new Response(JSON.stringify({ message: "User created." }), {
         status: 201,
       });

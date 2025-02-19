@@ -10,17 +10,24 @@ import {
   sinhalaCharacters,
 } from "@/utils/random";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Read() {
-  let units: any = await prisma.unit.findMany({
-    select: {
-      quizes: {
-        include: {
-          quiz: true,
+  let units: any;
+  try {
+    units = await prisma.unit.findMany({
+      select: {
+        quizes: {
+          include: {
+            quiz: true,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    errorWithFile(error);
+    redirect(`/error`);
+  }
 
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
   let user: any;

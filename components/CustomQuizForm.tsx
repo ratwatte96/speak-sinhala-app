@@ -67,7 +67,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
             onClick={handleRouting}
             disabled={isLoading}
           >
-            {isLoading ? "Loading..." : "Start Quiz"}
+            {isLoading ? "Loading..." : "Start"}
           </button>
         </div>
       </div>

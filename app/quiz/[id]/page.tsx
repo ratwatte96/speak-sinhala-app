@@ -186,37 +186,44 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     }
   }
 
-  const unit: any = await prisma.quizesOnUnits.findFirst({
-    where: {
-      quizId: parseInt(id), // Find the row where the given quiz exists
-    },
-    include: {
-      unit: true, // Include the unit details
-    },
-  });
+  let quizData: any;
+  let quizItemsData = [];
+  try {
+    const unit: any = await prisma.quizesOnUnits.findFirst({
+      where: {
+        quizId: parseInt(id), // Find the row where the given quiz exists
+      },
+      include: {
+        unit: true, // Include the unit details
+      },
+    });
 
-  if (readStatus < unit?.unit.id) {
-    redirect(`/no-access`);
-  }
+    if (readStatus < unit?.unit.id) {
+      redirect(`/no-access`);
+    }
 
-  const quizData = await prisma.quiz.findFirst({
-    where: {
-      id: parseInt(id),
-    },
-  });
+    quizData = await prisma.quiz.findFirst({
+      where: {
+        id: parseInt(id),
+      },
+    });
 
-  const quizItemsData = await prisma.quiz.findMany({
-    where: {
-      id: parseInt(id),
-    },
-    include: {
-      pairs: {
-        include: {
-          pair: true,
+    quizItemsData = await prisma.quiz.findMany({
+      where: {
+        id: parseInt(id),
+      },
+      include: {
+        pairs: {
+          include: {
+            pair: true,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    errorWithFile(error);
+    redirect(`/error`);
+  }
 
   const quizSteps = createSteps(quizData?.order, quizItemsData[0]);
 
@@ -224,7 +231,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     //!add data from lesson content column
     quizSteps.unshift({
       type: "lesson",
-      content: { stepType: "lesson", data: quizData.lessonContent },
+      content: { stepType: "lesson", data: quizData?.lessonContent },
     });
   }
 

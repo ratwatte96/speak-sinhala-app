@@ -17,6 +17,7 @@ import { CompletionBar } from "@/components/CompletionBar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { TutorialModal } from "@/components/TutorialModal";
 import { errorWithFile } from "@/utils/logger";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies
@@ -24,16 +25,23 @@ export default async function Home() {
   let decoded: any;
   let userData: any;
   let isPremium = false;
-  let units: any = await prisma.unit.findMany({
-    select: {
-      quizes: {
-        include: {
-          quiz: true,
+  let quizCompletionPercentage;
+
+  let units: any;
+  try {
+    units = await prisma.unit.findMany({
+      select: {
+        quizes: {
+          include: {
+            quiz: true,
+          },
         },
       },
-    },
-  });
-  let quizCompletionPercentage;
+    });
+  } catch (error) {
+    errorWithFile(error);
+    redirect(`/error`);
+  }
 
   if (token) {
     try {
