@@ -14,7 +14,8 @@ export default function CalculatingResultsScreen() {
         </h2>
 
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center">
-          Please wait while we process your answers. This won't take long! ⏳
+          Please wait while we process your answers. This won&apos;t take long!
+          ⏳
         </p>
       </div>
     </div>
