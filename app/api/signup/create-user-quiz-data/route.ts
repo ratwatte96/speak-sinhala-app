@@ -2,45 +2,45 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const { userId, quizProgress } = await req.json();
-
+  console.log("quizProgress", quizProgress);
   try {
-    const units = await prisma.unit.findMany({
-      where: { id: { in: [1, 2] } },
-      include: { quizes: { select: { quizId: true } } },
+    // Fetch all quizzes belonging to Unit 1 and Unit 2
+    const quizzes = await prisma.quizesOnUnits.findMany({
+      where: { unitId: { in: [1, 2] } },
+      select: { quizId: true },
     });
 
-    for (const unit of units) {
-      for (const quiz of unit.quizes) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            quizes: {
-              create: {
-                quiz: { connect: { id: quiz.quizId } },
-                status:
-                  quizProgress?.quizes?.find(
-                    (q: any) => q.quizId === quiz.quizId
-                  )?.status || "incomplete",
-                perfect_score:
-                  quizProgress?.quizes?.find(
-                    (q: any) => q.quizId === quiz.quizId
-                  )?.isPerfect || false,
-              },
-            },
-          },
-        });
-      }
-    }
+    console.log("quizzes", quizzes);
 
-    return new Response(JSON.stringify({ message: "Quizzes assigned" }), {
-      status: 200,
+    const parsedQuizProgress = JSON.parse(quizProgress);
+    // Transform data for batch insert
+    const quizData = quizzes.map(({ quizId }) => ({
+      userId,
+      quizId,
+      status:
+        parsedQuizProgress?.quizes?.find((q: any) => q.quizId === quizId)
+          ?.status || "incomplete",
+      perfect_score:
+        parsedQuizProgress?.quizes?.find((q: any) => q.quizId === quizId)
+          ?.isPerfect || false,
+    }));
+    console.log("quizData", quizData);
+
+    // Perform bulk insert
+    await prisma.usersOnQuizes.createMany({
+      data: quizData,
+      skipDuplicates: true, // Avoid duplicate errors
     });
+
+    return new Response(
+      JSON.stringify({ message: "Quizzes successfully assigned!" }),
+      { status: 200 }
+    );
   } catch (error) {
+    console.error("Error assigning quizzes:", error);
     return new Response(
       JSON.stringify({ error: "Quiz data creation failed" }),
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }
