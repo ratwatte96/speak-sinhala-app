@@ -36,6 +36,8 @@ const Quiz: React.FC<QuizProps> = ({
   const [quizFailed, setQuizFailed] = useState(false);
   const [currentStreak, setCurrentStreak] = useState<any>(undefined);
   const [showStreakUpdated, setShowStreakUpdated] = useState(false);
+  const [showCalculatingResults, setShowCalculatingResults] =
+    useState<boolean>(false);
   const [lives, setLives] = useState(1);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -163,16 +165,21 @@ const Quiz: React.FC<QuizProps> = ({
 
   const nextStep = async (isMistake: boolean) => {
     if (steps !== undefined && currentStep === steps.length - 1) {
-      const updatedStreak = await updateStreak();
-      if (
-        typeof currentStreak === "number" &&
-        parseInt(updatedStreak) > currentStreak
-      ) {
-        setCurrentStreak(updatedStreak);
-        setShowStreakUpdated(true);
-      } else {
-        setQuizCompleted(true);
-      }
+      setShowCalculatingResults(true);
+      setTimeout(async () => {
+        setShowCalculatingResults(false);
+
+        const updatedStreak = await updateStreak();
+        if (
+          typeof currentStreak === "number" &&
+          parseInt(updatedStreak) > currentStreak
+        ) {
+          setCurrentStreak(updatedStreak);
+          setShowStreakUpdated(true);
+        } else {
+          setQuizCompleted(true);
+        }
+      }, 2000);
     } else {
       if (isMistake) {
         setMistakeCount(mistakeCount + 1);
@@ -369,10 +376,7 @@ const Quiz: React.FC<QuizProps> = ({
         setQuizCompleted(true);
       }}
     />
-  ) : steps &&
-    currentStep === steps.length &&
-    !showStreakUpdated &&
-    !quizCompleted ? (
+  ) : showCalculatingResults ? (
     <CalculatingResultsScreen />
   ) : quizCompleted && !showStreakUpdated ? (
     <QuizCompletionScreen isPerfect={mistakeCount === 0} />
