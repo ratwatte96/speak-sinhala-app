@@ -167,8 +167,6 @@ const Quiz: React.FC<QuizProps> = ({
     if (steps !== undefined && currentStep === steps.length - 1) {
       setShowCalculatingResults(true);
       setTimeout(async () => {
-        setShowCalculatingResults(false);
-
         const updatedStreak = await updateStreak();
         if (
           typeof currentStreak === "number" &&
@@ -179,6 +177,7 @@ const Quiz: React.FC<QuizProps> = ({
         } else {
           setQuizCompleted(true);
         }
+        setShowCalculatingResults(false);
       }, 2000);
     } else {
       if (isMistake) {
