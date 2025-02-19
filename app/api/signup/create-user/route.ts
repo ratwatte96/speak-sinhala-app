@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       // Create Refill
       prisma.refill.create({
         data: {
-          total_refill: 5, // Default to 5
+          total_refill: 0,
         },
       }),
     ]);
