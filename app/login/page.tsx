@@ -46,6 +46,7 @@ function LoginComponent() {
         setPassword("");
         if (res.ok) {
           router.push(callbackUrl);
+          window.location.reload(); // Forces a page reload after navigation
         }
       } else {
         setMessage(data.error);
