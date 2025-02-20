@@ -45,7 +45,7 @@ function LoginComponent() {
         setEmail("");
         setPassword("");
         if (res.ok) {
-          setTimeout(() => router.push(callbackUrl), 2000);
+          router.push(callbackUrl);
         }
       } else {
         setMessage(data.error);

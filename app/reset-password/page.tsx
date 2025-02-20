@@ -52,7 +52,7 @@ const ResetPasswordComponent = () => {
 
       if (response.ok) {
         setMessage("Password reset successfully! Redirecting...");
-        redirect("/user-profile");
+        redirect("/profile");
       } else {
         setMessage(data.error || "Something went wrong.");
       }

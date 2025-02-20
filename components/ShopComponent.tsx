@@ -106,8 +106,7 @@ const Shop = () => {
     <div>
       <h2 className="text-lg font-semibold mt-4">Refills</h2>
       <p>
-        Keep learning and practicing using refills. Each refill will reset your
-        lives to 5.
+        Keep learning using refills. Each refill will reset your lives to 5.
       </p>
       <div className="grid grid-cols-2 gap-4 mt-2">
         {items
@@ -130,7 +129,7 @@ const Shop = () => {
       <h2 className="text-lg font-semibold mt-6">Premium</h2>
       <p>
         The best way to keep practicing and learning. Get access to unlimited
-        refills as well as the custome quiz feature.
+        refills as well as the &quot;Custom Quiz&quot; feature.
       </p>
       <div className="grid grid-cols-2 gap-4 mt-2 mb-20 sm:mb-0">
         {items

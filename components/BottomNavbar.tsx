@@ -17,10 +17,10 @@ const BottomNavbar = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navItems = [
-    { name: "read", icon: <BookOpen />, href: "/read" },
-    { name: "speak", icon: <MessageSquare />, href: "/speak" },
-    { name: "shop", icon: <ShoppingCart />, href: "/shop" },
-    { name: "user-profile", icon: <Settings />, href: "/user-profile" },
+    { name: "Read", icon: <BookOpen />, href: "/read" },
+    { name: "Speak", icon: <MessageSquare />, href: "/speak" },
+    { name: "Shop", icon: <ShoppingCart />, href: "/shop" },
+    { name: "Profile", icon: <Settings />, href: "/profile" },
   ];
 
   return (
@@ -33,7 +33,7 @@ const BottomNavbar = () => {
             </div>
           ) : (
             <div
-              className={`flex flex-col items-center cursor-pointer transition-colors duration-200 w-[25vw] py-4 ${
+              className={`flex flex-col items-center cursor-pointer transition-colors duration-200 w-[25vw] pt-4 pb-3 ${
                 active === item.name
                   ? "text-green-500"
                   : "text-black dark:text-white"
@@ -44,6 +44,7 @@ const BottomNavbar = () => {
               }}
             >
               {item.icon}
+              <p className="text-xs">{item.name}</p>
             </div>
           )}
         </Link>
