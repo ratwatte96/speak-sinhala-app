@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
 function LoginComponent() {
-  const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
@@ -18,15 +18,8 @@ function LoginComponent() {
     setMessage("");
 
     // Client-side validation
-    if (!email || !password) {
+    if (!emailOrUsername || !password) {
       setMessage("Email and password are required");
-      return;
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage("Please enter a valid email address");
       return;
     }
 
@@ -36,13 +29,13 @@ function LoginComponent() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ emailOrUsername, password }),
       });
 
       const data = await res.json();
       if (res.ok) {
         setMessage("Login successful!! Redirecting...");
-        setEmail("");
+        setEmailOrUsername("");
         setPassword("");
         if (res.ok) {
           router.push(callbackUrl);
@@ -66,20 +59,20 @@ function LoginComponent() {
               Login
             </h1>
             <div className="mt-4 text-left">
-              <label className="block text-gray-700 dark:text-gray-300">
-                Email
+              <label className="block text-gray-700 dark:text-gray-300 text-sm">
+                Username or Email
               </label>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
+                placeholder="Enter your username/email"
                 required
-                className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 mb-2"
+                className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 mb-2 placeholder:text-sm"
               />
             </div>
             <div className="mt-4 text-left">
-              <label className="block text-gray-700 dark:text-gray-300">
+              <label className="block text-gray-700 dark:text-gray-300 text-sm">
                 Password
               </label>
               <input
@@ -88,7 +81,7 @@ function LoginComponent() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
-                className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1"
+                className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 placeholder:text-sm"
               />
             </div>
             <button

@@ -5,21 +5,26 @@ import { generateAccessToken, generateRefreshToken } from "@/utils/auth";
 import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: any) {
-  const { email, password } = await req.json();
+  const { emailOrUsername, password } = await req.json();
 
-  // Validate email and password
-  if (!email || !password) {
+  // Validate email/username and password
+  if (!emailOrUsername || !password) {
     return NextResponse.json(
       { error: "Email and password are required" },
       { status: 400 }
     );
   }
 
-  // Validate email format
+  //Validate username and email
+  const userCount = await prisma.user.count({
+    where: {
+      username: emailOrUsername,
+    },
+  });
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.test(emailOrUsername) && userCount === 0) {
     return NextResponse.json(
-      { error: "Invalid email format" },
+      { error: "Invalid email or username" },
       { status: 400 }
     );
   }
@@ -27,21 +32,19 @@ export async function POST(req: any) {
   let user: any;
   try {
     // Check if the user exists
-    user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: emailOrUsername }, { username: emailOrUsername }],
+      },
+    });
     if (!user) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid email" }, { status: 401 });
     }
 
     // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
     }
 
     // Check if user is within the 24-hour temp access period
