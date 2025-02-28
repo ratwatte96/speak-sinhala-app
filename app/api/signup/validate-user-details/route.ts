@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         error: "Invalid username",
         field: "username",
         message:
-          "Use at least 3 characters with only letters, numbers, or underscores.",
+          "Username should contain at least 3 characters with only letters, numbers, or underscores.",
       }),
       { status: 400 }
     );
