@@ -1,5 +1,6 @@
 "use client";
 
+import Dropdown from "@/components/Dropdown";
 import Logo from "@/components/Logo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [gender, setGender] = useState("");
 
   const handleSignup = async () => {
     setMessage("");
@@ -21,7 +23,7 @@ export default function Signup() {
       const validateRes = await fetch("/api/signup/validate-user-details", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, gender }),
       });
 
       if (!validateRes.ok) {
@@ -36,6 +38,7 @@ export default function Signup() {
           username,
           email,
           password,
+          gender,
           streak: localStorage.getItem("streak"),
         }),
       });
@@ -118,6 +121,22 @@ export default function Signup() {
               placeholder="Enter your email"
               required
               className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1"
+            />
+          </div>
+
+          <div className="mt-4 text-left">
+            <label className="block text-gray-700 dark:text-gray-300">
+              Gender
+            </label>
+            <Dropdown
+              id={"gender"}
+              buttonLabel={"Select Gender"}
+              items={[
+                { name: "Male", value: "male" },
+                { name: "Female", value: "female" },
+              ]}
+              selectedItem={gender}
+              setSelectedItem={setGender}
             />
           </div>
 

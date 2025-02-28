@@ -111,7 +111,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
         <div className="rounded-lg text-center ">
           <div className="relative w-[80px] h-[80px] mx-auto">
             <Image
-              src="/avatar.webp"
+              src={
+                userData.gender === "male" ? "/avatarMale.webp" : "/avatar.webp"
+              }
               alt="User Avatar"
               width={80}
               height={80}

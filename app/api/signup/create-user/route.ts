@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
-  const { username, email, password, streak } = await req.json();
+  const { username, email, password, gender, streak } = await req.json();
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -20,6 +20,7 @@ export async function POST(req: Request) {
           email,
           password: hashedPassword,
           verificationToken,
+          gender,
         },
       }),
 

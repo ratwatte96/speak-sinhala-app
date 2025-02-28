@@ -81,6 +81,7 @@ export async function getUserData(user: any) {
       email: user.email,
       readPercentage: Math.floor(readPercentage),
       premiumEndDate: user.premiumEndDate,
+      gender: user.gender,
     };
   } catch (error) {
     errorWithFile(error, user.id);

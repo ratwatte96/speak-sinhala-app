@@ -12,10 +12,10 @@ const passwordCriteria = {
 };
 
 export async function POST(req: Request) {
-  const { username, email, password } = await req.json();
+  const { username, email, password, gender } = await req.json();
 
   // Input Validation
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !gender) {
     return new Response(JSON.stringify({ error: "All fields are required" }), {
       status: 400,
     });
@@ -38,6 +38,16 @@ export async function POST(req: Request) {
       JSON.stringify({
         error: "Invalid email format",
         field: "email",
+      }),
+      { status: 400 }
+    );
+  }
+  console.log(gender);
+  if (gender !== "male" && gender !== "female") {
+    return new Response(
+      JSON.stringify({
+        error: "Invalid gender",
+        field: "gender",
       }),
       { status: 400 }
     );
