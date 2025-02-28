@@ -78,7 +78,6 @@ model Quiz {
   description String?
   content String?
   questions   QuestionsOnQuizes[]
-  newLetterDatas   NewLetterDatasOnQuizes[]
   pairs PairsOnQuizes[]
   units QuizesOnUnits[]
   users UsersOnQuizes[]
@@ -102,23 +101,6 @@ model QuizesOnUnits {
   unitId  Int 
 
   @@id([quizId, unitId])
-}
-
-model NewLetterData {
-  id    Int    @id @default(autoincrement())
-  englishWord String
-  sinhala  String
-  sound String
-  quizes NewLetterDatasOnQuizes[]
-}
-
-model NewLetterDatasOnQuizes {
-  newLetterData   NewLetterData @relation(fields: [newLetterDataId], references: [id])
-  newLetterDataId Int 
-  quiz     Quiz     @relation(fields: [quizId], references: [id])
-  quizId   Int
-
-  @@id([newLetterDataId, quizId])
 }
 
 model Question {
