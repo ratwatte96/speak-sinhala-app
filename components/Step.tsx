@@ -2,6 +2,8 @@ import { QuizData, QuizStep } from "./QuizStep";
 import { LessonStep } from "./LessonStep";
 import { PairsQuestionStep } from "./PairsQuestionStep";
 
+//!Refactor
+
 export interface Step {
   questionId?: number;
   type: "question" | "lesson" | "additional";

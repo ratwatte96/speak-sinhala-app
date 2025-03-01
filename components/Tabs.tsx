@@ -13,7 +13,6 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
 
   return (
     <div className="flex flex-col w-[35rem]">
-      {/* Tab Navigation */}
       <div className="flex border-b text-xl">
         <button
           className={`px-4 py-2 flex ${
@@ -39,7 +38,6 @@ export default function Tabs({ readComponent, speakComponent }: TabsProps) {
         </button>
       </div>
 
-      {/* Scrollable Tab Content */}
       <div className="mt-4 w-full overflow-y-auto">
         {activeTab === "READ" ? readComponent : speakComponent}
       </div>

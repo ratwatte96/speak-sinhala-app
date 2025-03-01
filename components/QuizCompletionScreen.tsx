@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle, Star } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface QuizCompletionScreenProps {
   isPerfect?: boolean;
@@ -11,7 +11,6 @@ export default function QuizCompletionScreen({
   isPerfect = false,
 }: QuizCompletionScreenProps) {
   const router = useRouter();
-  const pathname = usePathname(); // Get the current route
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 dark:bg-black">

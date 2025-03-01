@@ -3,6 +3,8 @@ import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { errorWithFile } from "@/utils/logger";
 
+//!Refactor
+
 export async function GET(req: any) {
   const cookies = req.headers.get("cookie");
   if (!cookies) {

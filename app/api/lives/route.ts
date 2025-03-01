@@ -1,7 +1,6 @@
 import { verifyAccessToken } from "@/utils/auth";
 import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
-import { access } from "fs";
 import { errorWithFile } from "@/utils/logger";
 
 function isToday(date: Date) {

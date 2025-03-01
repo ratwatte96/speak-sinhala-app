@@ -4,6 +4,8 @@ import fs from "fs";
 import { errorWithFile } from "@/utils/logger";
 import { verifyAccessToken } from "@/utils/auth";
 
+//!Refactor magic numbers?
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const quizId: any = url.searchParams.get("quizId");

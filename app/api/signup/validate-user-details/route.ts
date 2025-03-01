@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-  console.log(gender);
+
   if (gender !== "male" && gender !== "female") {
     return new Response(
       JSON.stringify({

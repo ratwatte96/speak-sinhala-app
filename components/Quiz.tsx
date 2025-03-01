@@ -1,4 +1,5 @@
 "use client";
+//!Refactor
 
 import React, { useEffect, useState } from "react";
 import { LivesCounter } from "./LivesCounter";

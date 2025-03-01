@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import SriLankanFlag from "./SriLankanFlag";
 import Logo from "./Logo";
 
 const RedirectWithLoading = () => {

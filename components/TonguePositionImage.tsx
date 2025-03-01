@@ -1,16 +1,20 @@
 "use client";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import { useEffect } from "react";
 
-interface ClientImageProps {
+interface TonguePositionImageProps {
   src: string;
   alt: string;
   width: number;
   height: number;
 }
 
-const ClientImage = ({ src, alt, width, height }: ClientImageProps) => {
+const TonguePositionImage = ({
+  src,
+  alt,
+  width,
+  height,
+}: TonguePositionImageProps) => {
   const { theme } = useTheme();
 
   // It's a good idea to check if the theme has been resolved to avoid mismatches during SSR.
@@ -38,4 +42,4 @@ const ClientImage = ({ src, alt, width, height }: ClientImageProps) => {
   );
 };
 
-export default ClientImage;
+export default TonguePositionImage;

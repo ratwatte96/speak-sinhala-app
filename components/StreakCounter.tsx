@@ -65,6 +65,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({ loggedOut }) => {
       }
     }
   }, []);
+
   return (
     <p className="flex items-center">
       <Crown className="text-yellow-500" size={24} />

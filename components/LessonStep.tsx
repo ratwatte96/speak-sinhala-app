@@ -1,5 +1,7 @@
 import { AudioPlayer } from "./AudioPlayer";
-import ClientImage from "./ClientImage";
+import TonguePositionImage from "./TonguePositionImage";
+
+//!Refactor
 
 interface LessonStepProps {
   nextStep: (isMistake: boolean) => void;
@@ -61,7 +63,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
               <div>
                 <p className="mb-2 text-center">{text}</p>
                 <p>{info.text}</p>
-                <ClientImage
+                <TonguePositionImage
                   src={info.data.imagePath}
                   alt={info.data.imageAlt}
                   width={400}

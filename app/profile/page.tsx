@@ -5,7 +5,6 @@ import { updatePremiumStatus } from "@/utils/checkPremium";
 import { errorWithFile } from "@/utils/logger";
 import { getUserData } from "@/utils/random";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function UserProfile() {
   const token: any = cookies().get("accessToken"); // Retrieve the token from cookies

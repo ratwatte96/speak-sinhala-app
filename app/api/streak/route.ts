@@ -3,6 +3,8 @@ import prisma from "../../../lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { errorWithFile } from "@/utils/logger";
 
+//!Refactor
+
 function isToday(date: Date) {
   const today = new Date();
   return (

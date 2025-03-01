@@ -6,6 +6,8 @@ import { cookies } from "next/headers";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import { errorWithFile } from "@/utils/logger";
 
+//!Refactor
+
 function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
   let answers = isSinhala
     ? pairsData.pairs

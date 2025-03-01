@@ -6,6 +6,7 @@ import { useSharedState } from "@/components/StateProvider";
 import RefillModal from "./RefillModal";
 import Modal from "./Modal";
 import { errorWithFile } from "@/utils/logger";
+//!Refactor
 
 const Shop = () => {
   const [showRefillModal, setShowRefillModal] = useState<boolean>(false);
