@@ -2,6 +2,7 @@
 
 import { fetchWithToken } from "@/utils/fetch";
 import { errorWithFile } from "@/utils/logger";
+import { checkPath } from "@/utils/random";
 import { Crown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,15 +14,7 @@ interface StreakCounterProps {
 export const StreakCounter: React.FC<StreakCounterProps> = ({ loggedOut }) => {
   const [streak, setStreak] = useState("loading");
   const pathname = usePathname();
-  const notSignedUp =
-    loggedOut &&
-    ((pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )) ||
-      pathname.includes("read") ||
-      pathname.includes("speak") ||
-      pathname.includes("home"));
+  const notSignedUp = loggedOut && checkPath(pathname);
 
   useEffect(() => {
     if (notSignedUp) {

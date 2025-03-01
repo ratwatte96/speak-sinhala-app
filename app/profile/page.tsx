@@ -15,7 +15,7 @@ export default async function UserProfile() {
   let isPremium = false;
 
   try {
-    decoded = verifyAccessToken(token.value);
+    decoded = verifyAccessToken(token?.value);
     user = await prisma.user.findUnique({
       where: { id: parseInt(decoded.userId) },
       include: { lives: true },

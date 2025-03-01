@@ -89,6 +89,20 @@ export async function getUserData(user: any) {
   }
 }
 
+export function checkPath(pathname: any) {
+  return (
+    (pathname.includes("quiz") &&
+      ["28", "29", "30", "31", "32", "33"].includes(
+        pathname.split("/").pop() || "0"
+      )) ||
+    pathname.includes("read") ||
+    pathname.includes("speak") ||
+    pathname.includes("shop") ||
+    pathname.includes("profile") ||
+    pathname.includes("home")
+  );
+}
+
 export const sinhalaCharacters = [
   "ක",
   "ඛ",

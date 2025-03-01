@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Heart } from "lucide-react";
 import { useSharedState } from "@/components/StateProvider";
 import { errorWithFile } from "@/utils/logger";
+import { checkPath } from "@/utils/random";
 
 interface LivesCounterProps {
   startingLives?: number;
@@ -22,15 +23,8 @@ export const LivesCounter: React.FC<LivesCounterProps> = ({
   const pathname = usePathname();
   const { sharedState, setSharedState } = useSharedState();
 
-  const notSignedUp =
-    loggedOut &&
-    ((pathname.includes("quiz") &&
-      ["28", "29", "30", "31", "32", "33"].includes(
-        pathname.split("/").pop() || "0"
-      )) ||
-      pathname.includes("read") ||
-      pathname.includes("speak") ||
-      pathname.includes("home"));
+  const notSignedUp = loggedOut && checkPath(pathname);
+
   // if this a quiz page and if this is a quiz number in unit 1 and if there is no token
   useEffect(() => {
     if (notSignedUp) {
