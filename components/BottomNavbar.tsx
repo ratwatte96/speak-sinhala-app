@@ -13,15 +13,17 @@ import Link from "next/link";
 const BottomNavbar = () => {
   const pathname = usePathname();
   const currentPage = pathname.split("/").pop();
-  const [active, setActive] = useState(currentPage);
-  const [isLoading, setIsLoading] = useState(false);
-
   const navItems = [
     { name: "Read", icon: <BookOpen />, href: "/read" },
     { name: "Speak", icon: <MessageSquare />, href: "/speak" },
     { name: "Shop", icon: <ShoppingCart />, href: "/shop" },
     { name: "Profile", icon: <Settings />, href: "/profile" },
   ];
+
+  const [active, setActive] = useState(
+    navItems.find((item: any) => item.href === `/${currentPage}`)?.name
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md px-4 flex justify-around border-t dark:border-gray-500 md:hidden">
@@ -40,7 +42,7 @@ const BottomNavbar = () => {
               }`}
               onClick={() => {
                 setActive(item.name);
-                setIsLoading(true);
+                if (active !== item.name) setIsLoading(true);
               }}
             >
               {item.icon}
