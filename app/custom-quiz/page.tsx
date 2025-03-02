@@ -6,6 +6,14 @@ import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { errorWithFile } from "@/utils/logger";
+import TopNavbar from "@/components/TopNavBar";
+import { SharedStateProvider } from "@/components/StateProvider";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Learn Sinhala",
+  description: "Website to make learning how to read and speak sinhala fun",
+};
 
 export default async function CustomQuizPage({
   searchParams,
@@ -19,10 +27,12 @@ export default async function CustomQuizPage({
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
+  let loggedIn = false;
   let isPremium = false;
   try {
     const decoded: any = verifyAccessToken(token.value);
     isPremium = await updatePremiumStatus(parseInt(decoded.userId));
+    loggedIn = decoded;
   } catch (error) {
     errorWithFile(error);
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
@@ -39,8 +49,15 @@ export default async function CustomQuizPage({
     : [];
 
   return (
-    <ThemeProvider>
-      <CustomQuiz letters={letters} isPremium={isPremium} />
-    </ThemeProvider>
+    <SharedStateProvider>
+      <ThemeProvider>
+        <TopNavbar
+          loggedOut={!loggedIn}
+          isPremium={isPremium}
+          showValues={false}
+        />
+        <CustomQuiz letters={letters} isPremium={isPremium} />
+      </ThemeProvider>
+    </SharedStateProvider>
   );
 }

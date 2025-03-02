@@ -5,8 +5,16 @@ import { verifyAccessToken } from "@/utils/auth";
 import { cookies } from "next/headers";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import { errorWithFile } from "@/utils/logger";
+import { SharedStateProvider } from "@/components/StateProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import TopNavbar from "@/components/TopNavBar";
+import { Metadata } from "next";
 
 //!Refactor
+export const metadata: Metadata = {
+  title: "Learn Sinhala",
+  description: "Website to make learning how to read and speak sinhala fun",
+};
 
 function getAnswers(pairsData: any, selectedPair: any, isSinhala: any) {
   let answers = isSinhala
@@ -160,14 +168,21 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const token: any = cookies().get("accessToken");
   let validToken: any;
+  let isPremium = false;
+  let loggedIn = false;
+  let user: any;
+  let readStatus: any;
+
   try {
+    if (token) {
+      const validToken: any = verifyAccessToken(token.value);
+      isPremium = await updatePremiumStatus(parseInt(validToken.userId));
+      loggedIn = true;
+    }
     validToken = verifyAccessToken(token.value);
   } catch (error) {
     errorWithFile(error);
   }
-  let user: any;
-  let readStatus: any;
-  let isPremium: any;
 
   if (
     (validToken && ["28", "29", "30", "31", "32", "33"].includes(id)) ||
@@ -239,14 +254,23 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   const quizQuestion = quizData!.quiz_name ?? "";
 
   return (
-    <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black animate-fadeIn">
-      <Quiz
-        steps={quizSteps}
-        quiz_title={quizQuestion}
-        quiz_id={parseInt(id)}
-        loggedOut={!validToken}
-        isPremium={isPremium}
-      />
-    </div>
+    <SharedStateProvider>
+      <ThemeProvider>
+        <TopNavbar
+          loggedOut={!loggedIn}
+          isPremium={isPremium}
+          showValues={false}
+        />
+        <div className="flex min-h-[90vh] flex-col items-center justify-center bg-[#EAEAEA] dark:bg-black animate-fadeIn">
+          <Quiz
+            steps={quizSteps}
+            quiz_title={quizQuestion}
+            quiz_id={parseInt(id)}
+            loggedOut={!validToken}
+            isPremium={isPremium}
+          />
+        </div>
+      </ThemeProvider>
+    </SharedStateProvider>
   );
 }

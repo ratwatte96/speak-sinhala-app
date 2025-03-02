@@ -1,5 +1,4 @@
 import ReadPage from "@/components/ReadPage";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import prisma from "@/lib/prisma";
 import { verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
@@ -11,8 +10,18 @@ import {
 } from "@/utils/random";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import BottomNavbar from "@/components/BottomNavbar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import TopNavbar from "@/components/TopNavBar";
+import type { Metadata } from "next";
+import { SharedStateProvider } from "@/components/StateProvider";
 
 //!Refactor
+
+export const metadata: Metadata = {
+  title: "Learn Sinhala",
+  description: "Website to make learning how to read and speak sinhala fun",
+};
 
 export default async function Read() {
   let units: any;
@@ -65,17 +74,21 @@ export default async function Read() {
   }));
 
   return (
-    <div className="flex min-h-screen flex-col items-center mt-10 pb-24 animate-fadeIn">
+    <SharedStateProvider>
       <ThemeProvider>
-        <ReadPage
-          quizCompletionPercentage={quizCompletionPercentage}
-          decoded={decoded}
-          sinhalaObjects={sinhalaObjects}
-          isPremium={isPremium}
-          units={units}
-          readStatus={readStatus}
-        />
+        <TopNavbar loggedOut={!decoded} isPremium={isPremium} />
+        <div className="flex min-h-screen flex-col items-center pb-24 animate-fadeIn bg-[#EAEAEA] dark:bg-black">
+          <ReadPage
+            quizCompletionPercentage={quizCompletionPercentage}
+            decoded={decoded}
+            sinhalaObjects={sinhalaObjects}
+            isPremium={isPremium}
+            units={units}
+            readStatus={readStatus}
+          />
+        </div>
+        <BottomNavbar />
       </ThemeProvider>
-    </div>
+    </SharedStateProvider>
   );
 }

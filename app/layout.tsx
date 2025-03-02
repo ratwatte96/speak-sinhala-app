@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SharedStateProvider } from "@/components/StateProvider";
 
 export const metadata: Metadata = {
   title: "Learn Sinhala",
@@ -14,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SharedStateProvider>
-        <body className="bg-[#EAEAEA]">{children}</body>
-      </SharedStateProvider>
+      <body>{children}</body>
     </html>
   );
 }
