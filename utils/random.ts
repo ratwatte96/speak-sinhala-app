@@ -98,8 +98,7 @@ export function checkPath(pathname: any) {
     pathname.includes("read") ||
     pathname.includes("speak") ||
     pathname.includes("shop") ||
-    pathname.includes("profile") ||
-    pathname.includes("home")
+    pathname.includes("profile")
   );
 }
 

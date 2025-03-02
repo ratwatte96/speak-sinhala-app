@@ -19,7 +19,7 @@ export default function NoAccessPage() {
             a different quiz.
           </p>
           <button
-            onClick={() => router.push("/read")}
+            onClick={() => router.push("/")}
             className="mt-6 bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-all"
           >
             Go to Homepage

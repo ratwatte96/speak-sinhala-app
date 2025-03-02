@@ -26,7 +26,7 @@ const BottomNavbar = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md px-4 flex justify-around border-t dark:border-gray-500 md:hidden">
+    <nav className="z-20 fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md px-4 flex justify-around border-t dark:border-gray-500 md:hidden">
       {navItems.map((item) => (
         <Link key={item.name} href={item.href}>
           {isLoading && active === item.name ? (

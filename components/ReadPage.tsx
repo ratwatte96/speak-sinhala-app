@@ -1,7 +1,9 @@
-import { CompletionBar } from "./CompletionBar";
-import { CustomQuizForm } from "./CustomQuizForm";
-import Lessons from "./Lessons";
-import { TutorialModal } from "./TutorialModal";
+"use client";
+
+import { useEffect, useState } from "react";
+import Logo from "./Logo";
+import ReadPageMobile from "./ReadPageMobile";
+import ReadPageDesktop from "./ReadPageDesktop";
 
 interface ReadPageProps {
   quizCompletionPercentage: number;
@@ -10,6 +12,7 @@ interface ReadPageProps {
   isPremium: boolean;
   units: any[];
   readStatus: object;
+  userData: any;
 }
 
 export default function ReadPage({
@@ -19,41 +22,74 @@ export default function ReadPage({
   isPremium,
   units,
   readStatus,
+  userData,
 }: ReadPageProps) {
-  let storageName = "firstTime";
-  let tutorialText = [
-    "This site will help you practice reading and speaking Sinhala. During the beta phase, only reading exercises are available.",
-    "Our structured course includes 13 quiz-based units to help you master Sinhala reading. You can start with Unit 1 for free. No sign-up required!",
-    "Access all units for free by signing up. Start learning today and make steady progress on your Sinhala journey!",
-  ];
-  if (decoded) {
-    storageName = "firstLogin";
-    tutorialText = [
-      "Thanks for signing up! Practice daily to improve and maintain your learning streak.",
-      "Now that you're signed up, you'll receive 5 lives each day, but unlimited refills are no longer available.",
-      "You can purchase refills from the shop. During the beta phase, refills are free.",
-      "Premium members get unlimited refills and access to the custom quiz feature. You can upgrade in the shop for free.",
-      "Good luck on your Sinhala learning journey!",
-    ];
-  }
+  const [progress, setProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState<any>(undefined);
+  useEffect(() => {
+    const screenWidth = window.innerWidth;
 
+    // Simulate progress increase over 2 seconds
+    const interval = setInterval(() => {
+      setProgress((prev) => (prev < 100 ? prev + 5 : 100));
+    }, 100);
+
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      clearInterval(interval);
+      if (screenWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
-    <div className="mx-6 mt-10 sm:w-96">
-      <CompletionBar quizPercentage={quizCompletionPercentage} />
-      {decoded && (
-        <CustomQuizForm
-          dropDownLetters={sinhalaObjects}
-          isPremium={isPremium}
-        />
-      )}
-      <div className="mt-2">
-        <Lessons unitData={units} readStatus={readStatus} loggedIn={decoded} />
+    <>
+      <div className="flex flex-col items-center justify-center w-full h-full md:h-screen dark:bg-black">
+        {isMobile === undefined ? (
+          <div className="flex flex-col items-center justify-center min-h-[80vh]">
+            <div className="flex flex-col items-center justify-center ">
+              <Logo width={160} height={120} textSize={"text-5xl"} />
+              <p className="text-sm text-gray-600 mb-4 md:text-lg lg:text-xl dark:text-white mt-2">
+                Please wait a few moments...
+              </p>
+            </div>
+
+            <div className="relative w-60 md:w-80 lg:w-96 h-3 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gray-400 dark:bg-gray-500 transition-all duration-100"
+                style={{ width: `${progress}%` }}
+              ></div>
+
+              <div className="absolute text-xs sm:text-sm inset-0 flex items-center justify-center text-black dark:text-white font-semibold">
+                {progress}%
+              </div>
+            </div>
+          </div>
+        ) : isMobile ? (
+          <ReadPageMobile
+            quizCompletionPercentage={quizCompletionPercentage}
+            decoded={decoded}
+            sinhalaObjects={sinhalaObjects}
+            isPremium={isPremium}
+            units={units}
+            readStatus={readStatus}
+          />
+        ) : (
+          <ReadPageDesktop
+            quizCompletionPercentage={quizCompletionPercentage}
+            decoded={decoded}
+            sinhalaObjects={sinhalaObjects}
+            isPremium={isPremium}
+            units={units}
+            readStatus={readStatus}
+            userData={userData}
+          />
+        )}
       </div>
-      <TutorialModal
-        localStorageName={storageName}
-        tutorialText={tutorialText}
-        title={"Learn Sinhala"}
-      />
-    </div>
+    </>
   );
 }
