@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 
 export const TutorialModal = ({
@@ -14,9 +14,12 @@ export const TutorialModal = ({
   title: string;
   display?: any;
 }) => {
-  const firstTime = localStorage.getItem(localStorageName);
-  const [showModal, setShowModal] = useState(firstTime === null);
+  const [showModal, setShowModal] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  useEffect(() => {
+    const firstTime = localStorage.getItem(localStorageName);
+    setShowModal(firstTime === null);
+  }, []);
 
   return (
     <Modal
