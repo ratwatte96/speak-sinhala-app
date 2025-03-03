@@ -47,15 +47,17 @@ const Quiz: React.FC<QuizProps> = ({
   const [useRefill, setUseRefill] = useState<boolean>(false);
   const [buyRefill, setBuyRefill] = useState<boolean>(false);
   const [refillMessage, setRefillMessage] = useState<string>("");
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const { setSharedState } = useSharedState();
   const pathname = usePathname();
+
   const notSignedUp =
     loggedOut &&
     pathname.includes("quiz") &&
     ["28", "29", "30", "31", "32", "33"].includes(
       pathname.split("/").pop() || "0"
     );
-
   useEffect(() => {
     if (!currentStreak) {
       if (notSignedUp) {
@@ -167,34 +169,51 @@ const Quiz: React.FC<QuizProps> = ({
   }, [lives, useRefill, buyRefill]);
 
   const nextStep = async (isMistake: boolean) => {
-    if (steps !== undefined && currentStep === steps.length - 1) {
-      setShowCalculatingResults(true);
-      setTimeout(async () => {
-        const updatedStreak = await updateStreak();
-        if (
-          typeof currentStreak === "number" &&
-          parseInt(updatedStreak) > currentStreak
-        ) {
-          setCurrentStreak(updatedStreak);
-          setShowStreakUpdated(true);
-        } else {
-          setQuizCompleted(true);
-        }
-        setShowCalculatingResults(false);
-      }, 2000);
-    } else {
-      if (isMistake) {
-        setMistakeCount(mistakeCount + 1);
-        if (mistakeCount !== 3) {
-          const mistakeStep =
-            steps !== undefined ? steps[currentStep] : ({} as Step);
-          let clone: Step = structuredClone(mistakeStep);
-          if (clone.type === "question" && "isMistake" in clone.content)
-            clone.content.isMistake = true;
-          steps?.push(clone);
-        }
+    if (steps !== undefined) {
+      const isFirstQuestionStep =
+        startTime === null && steps[currentStep]?.type === "question";
+      const isLastQuestionStep =
+        steps[currentStep]?.type === "question" &&
+        steps.slice(currentStep + 1).every((step) => step.type !== "question");
+
+      if (isFirstQuestionStep) {
+        setStartTime(Date.now());
       }
-      setCurrentStep((prevStep) => prevStep + 1);
+
+      if (isLastQuestionStep) {
+        const endTime = Date.now();
+        setElapsedTime(endTime - startTime!);
+      }
+
+      if (currentStep === steps.length - 1) {
+        setShowCalculatingResults(true);
+        setTimeout(async () => {
+          const updatedStreak = await updateStreak();
+          if (
+            typeof currentStreak === "number" &&
+            parseInt(updatedStreak) > currentStreak
+          ) {
+            setCurrentStreak(updatedStreak);
+            setShowStreakUpdated(true);
+          } else {
+            setQuizCompleted(true);
+          }
+          setShowCalculatingResults(false);
+        }, 2000);
+      } else {
+        if (isMistake) {
+          setMistakeCount(mistakeCount + 1);
+          if (mistakeCount !== 3) {
+            const mistakeStep =
+              steps !== undefined ? steps[currentStep] : ({} as Step);
+            let clone: Step = structuredClone(mistakeStep);
+            if (clone.type === "question" && "isMistake" in clone.content)
+              clone.content.isMistake = true;
+            steps?.push(clone);
+          }
+        }
+        setCurrentStep((prevStep) => prevStep + 1);
+      }
     }
   };
 
@@ -384,6 +403,8 @@ const Quiz: React.FC<QuizProps> = ({
     <QuizCompletionScreen
       isPerfect={mistakeCount === 0}
       nextQuizId={nextQuizId}
+      elapsedTime={elapsedTime}
+      mistakeCount={mistakeCount}
     />
   ) : (
     <div className="flex flex-col items-center mt-8">

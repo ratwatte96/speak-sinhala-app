@@ -6,13 +6,21 @@ import { useRouter } from "next/navigation";
 interface QuizCompletionScreenProps {
   isPerfect?: boolean;
   nextQuizId: any;
+  elapsedTime: any;
+  mistakeCount: number;
 }
 
 export default function QuizCompletionScreen({
   isPerfect = false,
   nextQuizId,
+  elapsedTime,
+  mistakeCount,
 }: QuizCompletionScreenProps) {
   const router = useRouter();
+
+  const totalSeconds = Math.floor(elapsedTime / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 dark:bg-black">
@@ -36,6 +44,10 @@ export default function QuizCompletionScreen({
         )}
 
         <div className="mt-6 w-full flex flex-col space-y-4">
+          <div className="flex justify-around w-full">
+            <p>{`Mistake Count: ${mistakeCount}`}</p>
+            <p>{`Time Taken: ${minutes}:${seconds}`}</p>
+          </div>
           <button
             onClick={() => window.location.reload()} // Forces a re-render of the page
             className="bg-yellow-500 text-white w-full p-2 rounded-md"
