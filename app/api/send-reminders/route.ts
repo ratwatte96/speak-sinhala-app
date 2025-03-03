@@ -2,29 +2,30 @@ import prisma from "@/lib/prisma";
 import { sendEmail } from "@/utils/email";
 import rateLimit from "express-rate-limit";
 
-const GITHUB_META_URL = "https://api.github.com/meta";
-let githubIpRanges = new Set();
+//! fix ip allow listing
+// const GITHUB_META_URL = "https://api.github.com/meta";
+// let githubIpRanges = new Set();
 
-async function updateGitHubIPs() {
-  try {
-    console.log("Fetching latest GitHub IPs...");
-    const res = await fetch(GITHUB_META_URL);
-    const data = await res.json();
+// async function updateGitHubIPs() {
+//   try {
+//     console.log("Fetching latest GitHub IPs...");
+//     const res = await fetch(GITHUB_META_URL);
+//     const data = await res.json();
 
-    if (data.actions) {
-      githubIpRanges = new Set(data.actions);
-      console.log("Updated GitHub IPs:", Array.from(githubIpRanges));
-    } else {
-      console.warn("GitHub API returned no action IPs, keeping old IP list.");
-    }
-  } catch (error) {
-    console.error("Failed to update GitHub IPs:", error);
-  }
-}
+//     if (data.actions) {
+//       githubIpRanges = new Set(data.actions);
+//       console.log("Updated GitHub IPs:", Array.from(githubIpRanges));
+//     } else {
+//       console.warn("GitHub API returned no action IPs, keeping old IP list.");
+//     }
+//   } catch (error) {
+//     console.error("Failed to update GitHub IPs:", error);
+//   }
+// }
 
-// Run once at startup and then every hour
-updateGitHubIPs();
-setInterval(updateGitHubIPs, 60 * 60 * 1000);
+// // Run once at startup and then every hour
+// updateGitHubIPs();
+// setInterval(updateGitHubIPs, 60 * 60 * 1000);
 
 //! fix rate limiting
 // const limiter = rateLimit({
@@ -39,21 +40,21 @@ export async function POST(req: any) {
   //   const rateLimitResponse = limiter(req);
   //   if (rateLimitResponse) return rateLimitResponse;
 
-  const clientIp =
-    req.headers.get("x-forwarded-for") || req.socket.remoteAddress;
+  //   const clientIp =
+  //     req.headers.get("x-forwarded-for") || req.socket.remoteAddress;
 
-  if (!githubIpRanges.has(clientIp)) {
-    console.warn(`Blocked request from unauthorized IP: ${clientIp}`);
-    return Response.json({ error: "Unauthorized IP" }, { status: 403 });
-  }
+  //   if (!githubIpRanges.has(clientIp)) {
+  //     console.warn(`Blocked request from unauthorized IP: ${clientIp}`);
+  //     return Response.json({ error: "Unauthorized IP" }, { status: 403 });
+  //   }
 
-  const authHeader = req.headers.get("authorization");
-  const SECRET_TOKEN = process.env.GITHUB_ACTIONS_SECRET;
+  //   const authHeader = req.headers.get("authorization");
+  //   const SECRET_TOKEN = process.env.GITHUB_ACTIONS_SECRET;
 
-  if (!authHeader || authHeader !== `Bearer ${SECRET_TOKEN}`) {
-    console.warn(`Unauthorized access attempt from IP: ${clientIp}`);
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  //   if (!authHeader || authHeader !== `Bearer ${SECRET_TOKEN}`) {
+  //     console.warn(`Unauthorized access attempt from IP: ${clientIp}`);
+  //     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  //   }
 
   try {
     const users = await prisma.user.findMany({
