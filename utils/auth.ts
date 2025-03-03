@@ -45,3 +45,17 @@ export function verifyRefreshToken(token: string) {
 export function generateResetToken(): string {
   return crypto.randomBytes(32).toString("hex");
 }
+
+/**
+ * Extracts the access token from cookies.
+ */
+export function extractAccessToken(req: Request): string | null {
+  const cookies = req.headers.get("cookie");
+  if (!cookies) return null;
+
+  const cookieMap = Object.fromEntries(
+    cookies.split("; ").map((cookie) => cookie.split("="))
+  );
+
+  return cookieMap["accessToken"] || null;
+}

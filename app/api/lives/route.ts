@@ -1,4 +1,4 @@
-import { verifyAccessToken } from "@/utils/auth";
+import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
 import { errorWithFile } from "@/utils/logger";
@@ -13,19 +13,7 @@ function isToday(date: Date) {
 }
 
 export async function GET(req: any) {
-  const cookies = req.headers.get("cookie");
-  if (!cookies) {
-    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-  }
-
-  // Parse cookies (basic approach)
-  const cookieArray = cookies
-    .split("; ")
-    .map((cookie: any) => cookie.split("="));
-  const cookieMap = Object.fromEntries(cookieArray);
-
-  const accessToken = cookieMap["accessToken"];
-
+  const accessToken = extractAccessToken(req);
   if (!accessToken) {
     return NextResponse.json(
       { error: "Access token missing" },
@@ -71,18 +59,7 @@ export async function GET(req: any) {
 }
 
 export async function POST(req: any) {
-  const cookies = req.headers.get("cookie");
-  if (!cookies) {
-    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-  }
-
-  // Parse cookies (basic approach)
-  const cookieArray = cookies
-    .split("; ")
-    .map((cookie: any) => cookie.split("="));
-  const cookieMap = Object.fromEntries(cookieArray);
-
-  const accessToken = cookieMap["accessToken"];
+  const accessToken = extractAccessToken(req);
 
   if (!accessToken) {
     return NextResponse.json(

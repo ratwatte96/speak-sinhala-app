@@ -1,25 +1,17 @@
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/utils/email";
-import { generateResetToken, verifyAccessToken } from "@/utils/auth";
+import {
+  extractAccessToken,
+  generateResetToken,
+  verifyAccessToken,
+} from "@/utils/auth";
 import prisma from "@/lib/prisma";
 import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
   let decoded: any;
   try {
-    const cookies = req.headers.get("cookie");
-    if (!cookies) {
-      return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-    }
-
-    // Parse cookies (basic approach)
-    const cookieArray = cookies
-      .split("; ")
-      .map((cookie: any) => cookie.split("="));
-    const cookieMap = Object.fromEntries(cookieArray);
-
-    const accessToken = cookieMap["accessToken"];
-
+    const accessToken = extractAccessToken(req);
     if (!accessToken) {
       return NextResponse.json(
         { error: "Access token missing" },

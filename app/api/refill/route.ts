@@ -1,24 +1,23 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
-import { verifyAccessToken } from "@/utils/auth";
+import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import { errorWithFile } from "@/utils/logger";
 
-//!Refactor
+/**
+ * Fetches user with refills and lives.
+ */
+async function getUserWithRefills(userId: number) {
+  return await prisma.user.findUnique({
+    where: { id: userId },
+    include: { refills: true, lives: true },
+  });
+}
 
-export async function GET(req: any) {
-  const cookies = req.headers.get("cookie");
-  if (!cookies) {
-    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-  }
-
-  // Parse cookies (basic approach)
-  const cookieArray = cookies
-    .split("; ")
-    .map((cookie: any) => cookie.split("="));
-  const cookieMap = Object.fromEntries(cookieArray);
-
-  const accessToken = cookieMap["accessToken"];
-
+/**
+ * GET: Retrieve refill details for a user.
+ */
+export async function GET(req: Request) {
+  const accessToken = extractAccessToken(req);
   if (!accessToken) {
     return NextResponse.json(
       { error: "Access token missing" },
@@ -29,24 +28,25 @@ export async function GET(req: any) {
   let decoded: any;
   try {
     decoded = verifyAccessToken(accessToken);
-    const user: any = await prisma.user.findUnique({
-      where: {
-        id: parseInt(decoded.userId),
-      },
-      include: {
-        refills: true,
-      },
-    });
+    const user = await getUserWithRefills(parseInt(decoded.userId));
+
+    if (!user || user.refills.length === 0) {
+      return NextResponse.json(
+        { error: "No refill records found" },
+        { status: 404 }
+      );
+    }
+
     const refill = await prisma.refill.findUnique({
-      where: {
-        id: user.refills[0].refillId,
-      },
+      where: { id: user.refills[0].refillId },
     });
 
-    return new Response(JSON.stringify(refill), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return refill
+      ? NextResponse.json(refill, { status: 200 })
+      : NextResponse.json(
+          { error: "Refill record not found" },
+          { status: 404 }
+        );
   } catch (error) {
     errorWithFile(error, decoded?.userId);
     return NextResponse.json(
@@ -56,46 +56,28 @@ export async function GET(req: any) {
   }
 }
 
-// TODO: Secure this endpoint properly
+/**
+ * POST: Use a refill to restore lives.
+ */
 export async function POST(req: Request) {
+  const accessToken = extractAccessToken(req);
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Access token missing" },
+      { status: 401 }
+    );
+  }
+
   let decoded: any;
   try {
-    const cookies = req.headers.get("cookie");
-
-    if (!cookies) {
-      return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-    }
-
-    // Parse cookies (basic approach)
-    const cookieArray = cookies
-      .split("; ")
-      .map((cookie: any) => cookie.split("="));
-    const cookieMap = Object.fromEntries(cookieArray);
-
-    const accessToken = cookieMap["accessToken"];
-
-    if (!accessToken) {
-      return NextResponse.json(
-        { error: "Access token missing" },
-        { status: 401 }
-      );
-    }
-
     decoded = verifyAccessToken(accessToken);
-
-    // Fetch user with lives and refills
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(decoded.userId) },
-      include: { lives: true, refills: true },
-    });
+    const user = await getUserWithRefills(parseInt(decoded.userId));
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Ensure user has a refill record
     const userRefill: any = user.refills.length > 0 ? user.refills[0] : null;
-
     if (!userRefill || userRefill.total_refill === 0) {
       return NextResponse.json(
         { error: "Need to buy refill" },
@@ -103,7 +85,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fetch user's lives record
     const lives = await prisma.lives.findUnique({
       where: { id: user.lives[0].livesId },
     });
@@ -115,41 +96,35 @@ export async function POST(req: Request) {
       );
     }
 
-    // Update lives if needed
-    let updatedLives = lives;
-    let updatedRefill: any;
-    if (lives.total_lives !== 5) {
-      updatedLives = await prisma.lives.update({
-        where: { id: lives.id },
-        data: {
-          last_active_time: new Date(),
-          total_lives: 5,
-        },
-      });
-
-      // Decrease total_refill by 1
-      updatedRefill = await prisma.refill.update({
-        where: { id: userRefill.refillId },
-        data: {
-          total_refill: { decrement: 1 },
-        },
-      });
-    } else {
+    if (lives.total_lives === 5) {
       return NextResponse.json(
         { error: "No need to use refill" },
         { status: 400 }
       );
     }
 
-    return new Response(
-      JSON.stringify({
+    // Update lives and decrement refill count
+    const updatedLives = await prisma.lives.update({
+      where: { id: lives.id },
+      data: {
+        last_active_time: new Date(),
+        total_lives: 5,
+      },
+    });
+
+    const updatedRefill = await prisma.refill.update({
+      where: { id: userRefill.refillId },
+      data: {
+        total_refill: { decrement: 1 },
+      },
+    });
+
+    return NextResponse.json(
+      {
         total_lives: updatedLives.total_lives,
         total_refills: updatedRefill.total_refill,
-      }),
-      {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      }
+      },
+      { status: 201 }
     );
   } catch (error) {
     errorWithFile(error, decoded?.userId);

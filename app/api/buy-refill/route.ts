@@ -1,24 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
-import { verifyAccessToken } from "@/utils/auth";
+import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import { updatePremiumStatus } from "@/utils/checkPremium";
 import { errorWithFile } from "@/utils/logger";
 
 export async function POST(req: Request) {
-  const cookies = req.headers.get("cookie");
-
-  if (!cookies) {
-    return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-  }
-
-  // Parse cookies (basic approach)
-  const cookieArray = cookies
-    .split("; ")
-    .map((cookie: any) => cookie.split("="));
-  const cookieMap = Object.fromEntries(cookieArray);
-
-  const accessToken = cookieMap["accessToken"];
-
+  const accessToken = extractAccessToken(req);
   if (!accessToken) {
     return NextResponse.json(
       { error: "Access token missing" },

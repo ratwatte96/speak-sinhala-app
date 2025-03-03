@@ -1,28 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prisma from "../../../lib/prisma";
-import { verifyAccessToken } from "@/utils/auth";
+import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const cookies = req.headers.get("cookie");
-    if (!cookies) {
-      return NextResponse.json({ error: "No cookies found" }, { status: 400 });
-    }
-
-    const cookieArray = cookies
-      .split("; ")
-      .map((cookie: any) => cookie.split("="));
-    const cookieMap = Object.fromEntries(cookieArray);
-
-    const accessToken = cookieMap["accessToken"];
-
+    const accessToken = extractAccessToken(req);
     if (!accessToken) {
       return NextResponse.json(
         { error: "Access token missing" },
         { status: 401 }
       );
     }
+
     const decoded: any = verifyAccessToken(accessToken);
 
     const { currentPassword, newPassword } = await req.json();

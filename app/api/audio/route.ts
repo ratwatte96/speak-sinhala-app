@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import { errorWithFile } from "@/utils/logger";
-import { verifyAccessToken } from "@/utils/auth";
+import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 
 //!Refactor magic numbers?
 
@@ -16,29 +16,23 @@ export async function GET(req: Request) {
       !["28", "29", "30", "31", "32", "33"].includes(quizId) ||
       quizId == null
     ) {
-      const cookies = req.headers.get("cookie");
-      if (!cookies) {
-        return NextResponse.json(
-          { error: "No cookies found" },
-          { status: 400 }
-        );
-      }
-
-      // Parse cookies (basic approach)
-      const cookieArray = cookies
-        .split("; ")
-        .map((cookie: any) => cookie.split("="));
-      const cookieMap = Object.fromEntries(cookieArray);
-
-      const accessToken = cookieMap["accessToken"];
-      decoded = verifyAccessToken(accessToken);
-      if (!decoded) {
+      const accessToken = extractAccessToken(req);
+      if (!accessToken) {
         return NextResponse.json(
           { error: "Access token missing" },
           { status: 401 }
         );
       }
+
+      decoded = verifyAccessToken(accessToken);
+      if (!decoded) {
+        return NextResponse.json(
+          { error: "Invalid access token" },
+          { status: 403 }
+        );
+      }
     }
+
     const audioPath = url.searchParams.get("path");
 
     if (!audioPath) {
