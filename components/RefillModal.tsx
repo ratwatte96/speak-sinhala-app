@@ -25,7 +25,7 @@ const RefillModal: React.FC<RefillModalProps> = ({
       show={show}
       onClose={onClose}
       heading={""}
-      additionalClasses="h-1/2 mt-[50%]"
+      additionalClasses="mt-[20vh] sm:mt-0 sm:h-1/2 h-2/5 sm:h-3/4 mx-4"
     >
       <div>
         <button
