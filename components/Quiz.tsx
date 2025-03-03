@@ -23,6 +23,7 @@ interface QuizProps {
   quiz_id: number;
   loggedOut: boolean;
   isPremium?: boolean;
+  nextQuizId?: any;
 }
 
 const Quiz: React.FC<QuizProps> = ({
@@ -31,6 +32,7 @@ const Quiz: React.FC<QuizProps> = ({
   quiz_id,
   loggedOut,
   isPremium,
+  nextQuizId = "NoNextQuiz",
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
@@ -379,7 +381,10 @@ const Quiz: React.FC<QuizProps> = ({
   ) : showCalculatingResults ? (
     <CalculatingResultsScreen />
   ) : quizCompleted && !showStreakUpdated ? (
-    <QuizCompletionScreen isPerfect={mistakeCount === 0} />
+    <QuizCompletionScreen
+      isPerfect={mistakeCount === 0}
+      nextQuizId={nextQuizId}
+    />
   ) : (
     <div className="flex flex-col items-center mt-8">
       {steps && steps[currentStep].type === "question" && (

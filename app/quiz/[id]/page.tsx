@@ -9,6 +9,7 @@ import { SharedStateProvider } from "@/components/StateProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import TopNavbar from "@/components/TopNavBar";
 import { Metadata } from "next";
+import { getNextQuizId } from "@/utils/random";
 
 //!Refactor
 export const metadata: Metadata = {
@@ -252,7 +253,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
   }
 
   const quizQuestion = quizData!.quiz_name ?? "";
-
+  const nextQuizId = await getNextQuizId(parseInt(id));
   return (
     <SharedStateProvider>
       <ThemeProvider>
@@ -268,6 +269,7 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
             quiz_id={parseInt(id)}
             loggedOut={!validToken}
             isPremium={isPremium}
+            nextQuizId={nextQuizId}
           />
         </div>
       </ThemeProvider>

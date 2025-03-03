@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 
 interface QuizCompletionScreenProps {
   isPerfect?: boolean;
+  nextQuizId: any;
 }
 
 export default function QuizCompletionScreen({
   isPerfect = false,
+  nextQuizId,
 }: QuizCompletionScreenProps) {
   const router = useRouter();
 
@@ -46,6 +48,16 @@ export default function QuizCompletionScreen({
           >
             Go Home
           </button>
+          {nextQuizId !== "NoNextQuiz" && (
+            <button
+              onClick={() =>
+                setTimeout(() => router.push(`/quiz/${nextQuizId}`), 2000)
+              }
+              className="bg-red-500 text-white w-full p-2 rounded-md"
+            >
+              Next Quiz
+            </button>
+          )}
         </div>
       </div>
     </div>
