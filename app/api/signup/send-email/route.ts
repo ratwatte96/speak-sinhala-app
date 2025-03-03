@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
     await sendEmail({
       to: email,
-      subject: "Verify Your Email",
+      subject: "Learn Sinhala: Verify Your Email",
       text: `Click this link to verify your email: ${verificationUrl}`,
     });
 

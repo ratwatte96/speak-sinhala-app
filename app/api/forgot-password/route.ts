@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     // Send reset email
     await sendEmail({
       to: email,
-      subject: "Password Reset Request",
+      subject: "Learn Sinhala: Password Reset Request",
       text: `Click the link to reset your password (This link expires in 1 hour): ${resetUrl}`,
     });
 
