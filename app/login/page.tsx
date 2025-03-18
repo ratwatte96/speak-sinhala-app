@@ -9,10 +9,7 @@ function LoginComponent() {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleLogin = async () => {
     setMessage("");
@@ -34,13 +31,10 @@ function LoginComponent() {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage("Login successful!! Redirecting...");
+        setMessage("Login successful!! Click the start learning button...");
         setEmailOrUsername("");
         setPassword("");
-        if (res.ok) {
-          router.push(callbackUrl);
-          setTimeout(() => window.location.reload(), 2000);
-        }
+        setLoggedIn(true);
       } else {
         setMessage(data.error);
       }
@@ -84,12 +78,23 @@ function LoginComponent() {
                 className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 placeholder:text-sm"
               />
             </div>
-            <button
-              className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
-              onClick={handleLogin}
-            >
-              Login
-            </button>
+            {loggedIn ? (
+              <button
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+                className="mt-4 w-full bg-yellow-600 text-white px-6 py-2 rounded-md hover:bg-yellow-700 transition-all"
+              >
+                Start Learning
+              </button>
+            ) : (
+              <button
+                className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
+                onClick={handleLogin}
+              >
+                Login
+              </button>
+            )}
             {message && <p className="mt-1">{message}</p>}
           </div>
         </div>
