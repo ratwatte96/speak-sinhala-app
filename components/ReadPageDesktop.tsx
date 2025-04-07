@@ -36,7 +36,7 @@ export default function ReadPageDesktop({
                   <button className="btn-action w-40 mb-2">Login</button>
                 </a>
                 <a href="/signup" className="relative z-10">
-                  <button className="btn-secondary w-40">
+                  <button className="btn-secondary bg-yellow-400 w-40">
                     Signup to Unlock
                   </button>
                 </a>
@@ -81,7 +81,7 @@ export default function ReadPageDesktop({
                   <button className="btn-action w-40 mb-2">Login</button>
                 </a>
                 <a href="/signup" className="relative z-10">
-                  <button className="btn-secondary w-40">
+                  <button className="btn-secondary bg-yellow-400 w-40">
                     Signup to Unlock
                   </button>
                 </a>
