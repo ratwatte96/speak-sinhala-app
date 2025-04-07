@@ -419,9 +419,9 @@ const Quiz: React.FC<QuizProps> = ({
             <StreakCounter loggedOut={loggedOut} />
             <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
           </div>
-          <div className="w-full bg-gray-300 dark:bg-gray-200 rounded-full h-2.5 mb-4">
+          <div className="progress-bar-container">
             <div
-              className="bg-skin-accent h-2.5 rounded-full"
+              className="progress-bar-fill"
               style={{ width: `${progress}%` }}
             ></div>
           </div>

@@ -27,19 +27,23 @@ export default function QuizFailedScreen({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 dark:bg-black">
-      <div>
+      <div className="w-full px-4">
         <div className="flex justify-center">
-          <LivesCounter
-            startingLives={lives}
-            setMainLives={setLives}
-            loggedOut={loggedOut}
-          />
-          <StreakCounter loggedOut={loggedOut} />
+          <div className="mr-2">
+            <LivesCounter
+              startingLives={lives}
+              setMainLives={setLives}
+              loggedOut={loggedOut}
+            />
+          </div>
+          <div className="mr-2">
+            <StreakCounter loggedOut={loggedOut} />
+          </div>
           <RefillCounter loggedOut={loggedOut} isPremium={isPremium} />
         </div>
-        <div className="w-80 bg-gray-300 dark:bg-gray-200 rounded-full h-2.5 mb-4">
+        <div className="progress-bar-container">
           <div
-            className="bg-skin-accent h-2.5 rounded-full"
+            className="progress-bar-fill"
             style={{ width: `${progress}%` }}
           ></div>
         </div>

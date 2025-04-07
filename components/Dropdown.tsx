@@ -50,7 +50,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <button
         id={`${id}Button`}
         data-dropdown-toggle={`${id}Dropdown`}
-        className={`flex items-center justify-center  rounded-lg h-8 px-1 py-1 font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-4 sm:py-2 dark:bg-gray-800 dark:text-white ${
+        className={`dropdown-btn-base ${
           buttonTailwindOverride ? buttonTailwindOverride : "w-full"
         }`}
         type="button"
@@ -62,7 +62,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         {selectedItem ? (
           items.find((item) => item.value === selectedItem)?.name
         ) : (
-          <span className="text-gray-500">{buttonLabel}</span>
+          <span className="text-gray-500 dark:text-white">{buttonLabel}</span>
         )}
         {iconEnd && <div className="ml-1.5 mr-[-0.25rem] w-5">{iconEnd}</div>}
       </button>
@@ -71,13 +71,10 @@ const Dropdown: React.FC<DropdownProps> = ({
           id={`${id}Dropdown`}
           className="absolute right-0 top-full z-10 w-full shadow"
         >
-          <ul
-            className="custom-scrollbar max-h-44 overflow-y-auto bg-gray-300 text-sm text-black"
-            aria-labelledby={`${id}Button`}
-          >
+          <ul className="dropdown-list" aria-labelledby={`${id}Button`}>
             {items.map(({ name, value }, index) => (
               <li
-                className={`block break-words dark:border dark:border-solid dark:border-gray-400 py-2 text-center  hover:bg-white/20 cursor-pointer dark:bg-gray-800 dark:text-white ${
+                className={`dropdown-item ${
                   index === 0
                     ? "rounded-t-lg"
                     : index === items.length - 1

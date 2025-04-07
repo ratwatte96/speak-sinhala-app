@@ -24,6 +24,19 @@
     dark:hover:text-green-400 dark:hover:bg-black transition-colors;
   }
 
+  /* Color variant buttons */
+  .btn-yellow {
+    @apply bg-yellow-400 dark:bg-yellow-500 text-black hover:text-white 
+    dark:text-gray-200 dark:hover:border dark:hover:border-yellow-400 
+    dark:hover:text-yellow-400 dark:hover:bg-black transition-colors;
+  }
+
+  .btn-red {
+    @apply bg-red-400 dark:bg-red-500 text-black hover:text-white 
+    dark:text-gray-200 dark:hover:border dark:hover:border-red-400 
+    dark:hover:text-red-400 dark:hover:bg-black transition-colors;
+  }
+
   /* Card container styles */
   .card-container {
     @apply border rounded-lg px-3 pb-3 pt-1 sm:pt-2 shadow-md bg-white 
@@ -47,6 +60,25 @@
     focus:outline-none focus:ring-2 focus:ring-green-500 
     dark:bg-gray-800 dark:border-gray-600 dark:text-white 
     placeholder:text-gray-500 dark:placeholder:text-white;
+  }
+
+  /* Dropdown button base */
+  .dropdown-btn-base {
+    @apply flex items-center justify-center rounded-lg h-8 px-1 py-1 font-medium 
+    focus:z-10 focus:outline-none focus:ring-4 focus:ring-green-500  bg-gray-300 sm:px-4 sm:py-2 
+    dark:bg-gray-800 dark:text-white transition-transform transform 
+    hover:scale-105 hover:shadow-lg;
+  }
+
+  /* Dropdown list container */
+  .dropdown-list {
+    @apply max-h-44 overflow-y-auto bg-gray-300 text-sm text-black;
+  }
+
+  /* Dropdown list item */
+  .dropdown-item {
+    @apply block break-words dark:border dark:border-solid dark:border-gray-400 
+    py-2 text-center hover:bg-white/20 cursor-pointer dark:bg-gray-800 dark:text-white;
   }
 
   /* Primary action button */
@@ -80,6 +112,16 @@
   /* Card text */
   .card-text {
     @apply mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300;
+  }
+
+  /* Progress bar container */
+  .progress-bar-container {
+    @apply w-full bg-gray-300 dark:bg-gray-200 rounded-full h-2.5 mb-4;
+  }
+
+  /* Progress bar fill */
+  .progress-bar-fill {
+    @apply bg-skin-accent h-2.5 rounded-full;
   }
 
   /* Blurred content container */

@@ -160,13 +160,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
               <div className="mt-4 flex space-x-2">
                 <button
                   onClick={handleForgotPassword}
-                  className="bg-yellow-400 dark:bg-yellow-500 text-black hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-yellow-400 dark:hover:text-yellow-400 dark:hover:bg-black w-full p-2 rounded-md"
+                  className="btn-yellow w-full p-2 rounded-md"
                 >
                   {sendingEmail ? "Sending" : "Send Reset Email"}
                 </button>
                 <button
                   onClick={() => setIsForgotPassword(false)}
-                  className="bg-red-400 dark:bg-red-500 text-black hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-red-400 dark:hover:text-red-400 dark:hover:bg-black w-full p-2 rounded-md"
+                  className="btn-red w-full p-2 rounded-md"
                 >
                   Back
                 </button>
@@ -180,21 +180,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
                   placeholder="Enter Current Password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full p-2 border rounded-md text-center"
+                  className="form-input"
                 />
                 <input
                   type="password"
                   placeholder="Enter New Password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full p-2 border rounded-md text-center mt-2"
+                  className="form-input mt-2"
                 />
                 <input
                   type="password"
                   placeholder="Confirm New Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-2 border rounded-md text-center mt-2"
+                  className="form-input mt-2"
                 />
               </div>
               {message && (
@@ -202,14 +202,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
               )}
               <div className="mt-4 flex space-x-2">
                 <button
-                  className="bg-green-500 dark:bg-green-600 text-black hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black w-1/2 p-2 rounded-md"
+                  className="btn-primary w-1/2 p-2 rounded-md"
                   onClick={handleChangePassword}
                 >
                   {changingPassword ? "Updating..." : "Update Password"}
                 </button>
                 <button
                   onClick={() => setIsForgotPassword(true)}
-                  className="bg-yellow-400 dark:bg-yellow-500 text-black hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-yellow-400 dark:hover:text-yellow-400 dark:hover:bg-black w-1/2 p-2 rounded-md"
+                  className="btn-yellow w-1/2 p-2 rounded-md"
                 >
                   Forgot Password
                 </button>
