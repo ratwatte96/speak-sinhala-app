@@ -22,16 +22,16 @@ export const CookieBanner = () => {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-solid border-gray-200 dark:border-gray-600 p-4 shadow-lg z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-black border-t border-solid border-gray-200 dark:border-gray-700 p-4 shadow-lg z-50">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-sm text-gray-700 dark:text-gray-300">
           We use cookies and local storage to enhance your learning experience.
           By using Learn Sinhala, you agree to our{" "}
           <Link
-            href="/cookie-policy"
+            href="/privacy-policy"
             className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline"
           >
-            Cookie Policy
+            Privacy Policy
           </Link>
           .
         </div>
