@@ -43,7 +43,6 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
                           audioPath={`/audioClips/${sound}.mp3`}
                           display_text={sinhala}
                           onClick={() => {}}
-                          additionalClasses="text-5xl bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
                         />
                         <div className="mt-1">
                           {englishWord ? (

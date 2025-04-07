@@ -28,19 +28,19 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson, quizId }) => {
   };
 
   const statusIcons = {
-    complete: <CheckCircle className="text-green-500" size={24} />, // Reduced size
-    incomplete: <XCircle className="text-red-500" size={24} />, // Reduced size
-    locked: <Lock className="text-black dark:text-white" size={24} />, // Reduced size
+    complete: <CheckCircle className="text-green-500" size={24} />,
+    incomplete: <XCircle className="text-red-500" size={24} />,
+    locked: <Lock className="text-black dark:text-white" size={24} />,
   };
 
   return (
-    <div className="border rounded-lg px-3 pb-3 pt-1 sm:pt-2 shadow-md bg-white flex justify-between mx-auto mb-3 dark:bg-black dark:border dark:border-solid dark:border-gray-600">
+    <div className="card-container flex justify-between mx-auto mb-3">
       <div className="w-3/4">
         <h2 className="text-base">{lesson.quizName}</h2>
         <p className="text-gray-600 dark:text-gray-400 text-sm">
           Type: {lesson.type}
         </p>
-        <p className="text-gray-600 dark:text-gray-400 text-sm  w-5/6">
+        <p className="text-gray-600 dark:text-gray-400 text-sm w-5/6">
           Content: {lesson.content}
         </p>
         <p className="text-gray-500 mt-1 text-xs w-5/6">{lesson.description}</p>
@@ -68,7 +68,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson, quizId }) => {
         {lesson.status !== "locked" && (
           <button
             onClick={() => handleRouting(lesson.quizId)}
-            className="bg-green-500 text-sm dark:bg-green-600 text-black p-1 mt-1 rounded-md w-28 text-black hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black"
+            className="btn-primary text-sm mt-1 w-28"
           >
             {isLoading ? "Loading..." : "Start"}
           </button>

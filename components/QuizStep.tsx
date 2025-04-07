@@ -174,7 +174,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
                     onEnd={handleAudioEnd}
                     display_text={answer.buttonLabel}
                     onClick={() => selectAnswer(answer.value)}
-                    additionalClasses={`text-5xl bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg mb-2 
+                    additionalClasses={`mb-2 
                       ${
                         selectedAnswer === answer.value
                           ? "text-skin-accent border-skin-accent20 bg-rose-500/20 dark:border-skin-accent20 dark:bg-rose-500/20"

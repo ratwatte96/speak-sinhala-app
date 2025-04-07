@@ -35,7 +35,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
   };
 
   return (
-    <div className="flex pb-4 justify-between items-end border rounded-lg p-3 shadow-md bg-white flex dark:bg-black dark:border dark:border-solid dark:border-gray-600 mx-auto my-3">
+    <div className="card-container flex justify-between items-end mx-auto my-3">
       <div className="w-2/5">
         <h2 className="text-lg">Custom Quiz</h2>
         <p className="text-gray-500 text-xs/4">
@@ -63,7 +63,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
             />
           </div>
           <button
-            className="flex items-center justify-center bg-green-500 dark:bg-green-600 ml-2 p-1 h-8 rounded-md text-xs font-medium text-black focus:z-10 focus:outline-none focus:ring-4 hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black w-2/5"
+            className="btn-primary ml-2 h-8 text-xs font-medium w-2/5"
             onClick={handleRouting}
             disabled={isLoading}
           >

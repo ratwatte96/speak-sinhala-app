@@ -21,6 +21,9 @@ interface AudioPlayerProps {
   isHard?: boolean;
 }
 
+const BASE_AUDIO_PLAYER_CLASSES =
+  "cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center bg-white dark:bg-black dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg";
+
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioPath,
   onEnd,
@@ -106,8 +109,8 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
-      className={`relative rounded-lg border-2 p-4 flex flex-col min-w-32 justify-center min-h-28 sm:min-h-28 ${
-        isPressed ? "" : additionalClasses
+      className={`relative rounded-lg border-2 p-4 flex flex-col min-w-32 justify-center min-h-28 sm:min-h-28 text-5xl ${
+        isPressed ? "" : `${BASE_AUDIO_PLAYER_CLASSES} ${additionalClasses}`
       }`}
       onClick={togglePlay}
       disabled={disabledOveride || playing}
