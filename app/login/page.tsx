@@ -45,37 +45,31 @@ function LoginComponent() {
 
   return (
     <ThemeProvider>
-      <main className="flex justify-center items-centers min-h-screen p-24 bg-gray-100 dark:bg-black">
+      <main className="page-container">
         <div className="flex flex-col justify-center items-center">
           <Logo width={120} height={80} textSize={"text-3xl"} />
-          <div className="p-6 bg-white shadow-lg w-80 rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 mt-6">
-            <h1 className="text-xl font-semibold text-gray-700 dark:text-white">
-              Login
-            </h1>
+          <div className="auth-card">
+            <h1 className="card-heading">Login</h1>
             <div className="mt-4 text-left">
-              <label className="block text-gray-700 dark:text-gray-300 text-sm">
-                Username or Email
-              </label>
+              <label className="form-label">Username or Email</label>
               <input
                 type="email"
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
                 placeholder="Enter your username/email"
                 required
-                className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 mb-2 placeholder:text-sm"
+                className="form-input mb-2"
               />
             </div>
             <div className="mt-4 text-left">
-              <label className="block text-gray-700 dark:text-gray-300 text-sm">
-                Password
-              </label>
+              <label className="form-label">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
-                className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1 placeholder:text-sm"
+                className="form-input"
               />
             </div>
             {loggedIn ? (
@@ -83,19 +77,16 @@ function LoginComponent() {
                 onClick={() => {
                   window.location.href = "/";
                 }}
-                className="mt-4 w-full bg-yellow-600 text-white px-6 py-2 rounded-md hover:bg-yellow-700 transition-all"
+                className="btn-secondary mt-4"
               >
                 Start Learning
               </button>
             ) : (
-              <button
-                className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
-                onClick={handleLogin}
-              >
+              <button className="btn-action mt-4" onClick={handleLogin}>
                 Login
               </button>
             )}
-            {message && <p className="mt-1">{message}</p>}
+            {message && <p className="card-text">{message}</p>}
           </div>
         </div>
       </main>

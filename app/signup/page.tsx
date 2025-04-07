@@ -89,45 +89,37 @@ export default function Signup() {
 
   return (
     <ThemeProvider>
-      <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-gray-50 dark:bg-black">
+      <main className="page-container">
         <Logo width={120} height={80} textSize={"text-3xl"} />
-        <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg dark:bg-black dark:border dark:border-solid dark:border-gray-400 text-center w-80 mt-6">
-          <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-            Sign Up
-          </h1>
+        <div className="auth-card">
+          <h1 className="card-heading">Sign Up</h1>
 
           <div className="mt-4 text-left">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Username
-            </label>
+            <label className="form-label">Username</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Choose a username"
               required
-              className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1"
+              className="form-input"
             />
           </div>
 
           <div className="mt-4 text-left">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Email
-            </label>
+            <label className="form-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1"
+              className="form-input"
             />
           </div>
 
           <div className="mt-4 text-left">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Gender
-            </label>
+            <label className="form-label">Gender</label>
             <Dropdown
               id={"gender"}
               buttonLabel={"Select Gender"}
@@ -141,36 +133,34 @@ export default function Signup() {
           </div>
 
           <div className="mt-4 text-left">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Password
-            </label>
+            <label className="form-label">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
-              className="w-full p-2 dark:border dark:border-solid dark:border-gray-400 bg-gray-200 dark:bg-black placeholder:text-gray-500 dark:placeholder:text-white rounded-md text-center mt-1"
+              className="form-input"
             />
           </div>
 
-          <small className="text-gray-500 dark:text-gray-400 mt-2 block">
+          <small className="card-text mt-2 block">
             Password must be at least 8 characters long and include at least one
             uppercase letter, one number, and one special character.
           </small>
 
           <button
             onClick={handleSignup}
-            className={`mt-4 w-full ${
-              loading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"
-            } text-white px-6 py-2 rounded-md transition-all`}
+            className={`${loading ? "btn-secondary" : "btn-action"} mt-4`}
             disabled={loading}
           >
             {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
           {message && (
-            <p className="mt-4 text-red-600 dark:text-red-400">{message}</p>
+            <p className="card-text mt-4 text-red-600 dark:text-red-400">
+              {message}
+            </p>
           )}
         </div>
       </main>
