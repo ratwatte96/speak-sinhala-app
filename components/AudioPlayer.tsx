@@ -22,7 +22,7 @@ interface AudioPlayerProps {
 }
 
 const BASE_AUDIO_PLAYER_CLASSES =
-  "cursor-pointer p-4 rounded-lg shadow-md flex-col-center bg-white dark:bg-black dark-base-border dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg";
+  "cursor-pointer p-4 rounded-lg shadow-md flex-col-center bg-white dark:bg-black dark-base-border dark:border-gray-600 hover-transition";
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioPath,

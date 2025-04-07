@@ -145,7 +145,7 @@ export const PairsQuestionStep: React.FC<PairsQuestionStepProps> = ({
                   selectSound(pair.sound);
                   checkPair(pair.sound, "sound");
                 }}
-                className={`dark:bg-black text-3xl flex-col-center justify-center min-w-32 min-h-28  cursor-pointer mb-4 p-4 rounded-lg shadow-md flex-col-center dark-base-border dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg ${
+                className={`dark:bg-black text-3xl justify-center min-w-32 min-h-28  cursor-pointer mb-4 p-4 rounded-lg shadow-md flex-col-center dark-base-border dark:border-gray-600 hover-transition ${
                   completePairs.current.includes(pair.sound)
                     ? "text-gray-600 border-skin-base border-b-4 bg-gray-400"
                     : selectedSound === pair.sound

@@ -161,6 +161,10 @@
   .dark-base-border {
     @apply dark:border dark:border-solid;
   }
+
+  .hover-transition {
+    @apply transition-transform transform hover:scale-105 hover:shadow-lg;
+  }
 }
 
 /* CSS RESET TEMPLATE STARTS  */

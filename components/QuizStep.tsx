@@ -111,7 +111,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
             }
             extra_text={questionType == 5 ? question_word : undefined}
             extraa_text={questionType == 5 ? correctAnswer : undefined}
-            additionalClasses="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark-base-border dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
+            additionalClasses="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark-base-border dark:border-gray-600 hover-transition"
           />
         ) : (
           <p className="text-black dark:text-white text-5xl mb-4">

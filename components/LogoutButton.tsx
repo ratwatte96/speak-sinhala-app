@@ -11,7 +11,7 @@ export default function LogoutButton({ loggedIn }: { loggedIn: boolean }) {
 
   return (
     <button
-      className="p-2 rounded-md dark:text-white transition-transform transform hover:scale-105 hover:shadow-lg"
+      className="p-2 rounded-md dark:text-white hover-transition"
       onClick={handleRouting}
     >
       {loggedIn ? "Logout" : "Login"}
