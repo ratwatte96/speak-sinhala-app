@@ -139,11 +139,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
             </p>
           )}
           <div className="flex justify-between mt-4">
-            <div className="flex flex-col justify-around bg-gray-300 dark:bg-black dark:border dark:border-solid dark:border-gray-600 p-2 rounded-md w-1/2 mx-1 text-center">
+            <div className="flex flex-col justify-around bg-gray-300 dark:bg-black dark-base-border dark:border-gray-600 p-2 rounded-md w-1/2 mx-1 text-center">
               <p className="text-sm">Reading Completion</p>
               <p className="text-lg font-bold">{`${userData.readPercentage}%`}</p>
             </div>
-            <div className="relative bg-gray-300 dark:bg-black dark:border dark:border-solid dark:border-gray-600 p-2 rounded-md w-1/2 mx-1 text-center">
+            <div className="relative bg-gray-300 dark:bg-black dark-base-border dark:border-gray-600 p-2 rounded-md w-1/2 mx-1 text-center">
               <p className="text-sm">Speaking Completion</p>
               <p className="text-lg font-bold">0%</p>
               <div className="absolute bottom-0 right-0 bg-yellow-500 text-[7px] text-black px-1.5 py-0.5 rounded-bl-sm shadow-md">

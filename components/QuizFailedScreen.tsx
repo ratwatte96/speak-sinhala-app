@@ -48,7 +48,7 @@ export default function QuizFailedScreen({
           ></div>
         </div>
       </div>
-      <div className="flex-col-center bg-white p-8 rounded-2xl shadow-lg dark:bg-black dark:border dark:border-solid dark:border-gray-600">
+      <div className="flex-col-center bg-white p-8 rounded-2xl shadow-lg dark:bg-black dark-base-border dark:border-gray-600">
         {/* Red Cross Icon for Failure */}
         <XCircle className="text-red-500 w-24 h-24 mb-6" />
 

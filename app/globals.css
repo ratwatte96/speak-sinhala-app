@@ -157,6 +157,10 @@
   .flex-col-center {
     @apply flex flex-col items-center;
   }
+
+  .dark-base-border {
+    @apply dark:border dark:border-solid;
+  }
 }
 
 /* CSS RESET TEMPLATE STARTS  */

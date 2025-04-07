@@ -115,7 +115,7 @@ const Shop = () => {
           .map((item, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
+              className="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark-base-border dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
               onClick={() => {
                 setShowRefillModal(true);
                 setRefillTotal(item.amount);
@@ -138,7 +138,7 @@ const Shop = () => {
           .map((item, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
+              className="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark-base-border dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
               onClick={() => {
                 setPremiumType(
                   item.amount === 1

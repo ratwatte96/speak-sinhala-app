@@ -29,7 +29,7 @@ export const TutorialModal = ({
       additionalClasses="h-screen w-screen flex items-center justify-center"
       removeClose={true}
     >
-      <div className="bg-white dark:bg-black dark:border dark:border-solid dark:border-gray-600 p-6 rounded-lg shadow-lg max-w-lg text-center w-full">
+      <div className="bg-white dark:bg-black dark-base-border dark:border-gray-600 p-6 rounded-lg shadow-lg max-w-lg text-center w-full">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {title}
         </h1>
