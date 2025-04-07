@@ -26,7 +26,7 @@ export const TutorialModal = ({
       show={showModal}
       onClose={() => setShowModal(false)}
       heading=""
-      additionalClasses="h-screen w-screen flex items-center justify-center"
+      additionalClasses="h-screen w-screen flex-center"
       removeClose={true}
     >
       <div className="bg-white dark:bg-black dark-base-border dark:border-gray-600 p-6 rounded-lg shadow-lg max-w-lg text-center w-full">

@@ -64,7 +64,7 @@ export default function ReadPage({
                 style={{ width: `${progress}%` }}
               ></div>
 
-              <div className="absolute text-xs sm:text-sm inset-0 flex items-center justify-center text-black dark:text-white font-semibold">
+              <div className="absolute text-xs sm:text-sm inset-0 flex-center text-black dark:text-white font-semibold">
                 {progress}%
               </div>
             </div>

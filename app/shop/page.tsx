@@ -36,7 +36,7 @@ export default async function ShopPage() {
         <div className="flex min-h-screen flex-col  bg-[#EAEAEA] dark:bg-black animate-fadeIn">
           <div className="mx-6 mt-4">
             {!decoded && (
-              <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
+              <div className="absolute inset-0 flex-center dark:border-x dark:border-solid dark:border-gray-600">
                 <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
                 <div className="flex flex-col">
                   <a href="/login" className="relative z-10">

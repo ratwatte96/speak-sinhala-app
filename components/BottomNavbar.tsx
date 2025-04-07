@@ -30,7 +30,7 @@ const BottomNavbar = () => {
       {navItems.map((item) => (
         <Link key={item.name} href={item.href}>
           {isLoading && active === item.name ? (
-            <div className="w-[25vw] flex items-center justify-center h-full">
+            <div className="w-[25vw] flex-center h-full">
               <LoaderCircle className="text-green-500 w-full animate-spin" />
             </div>
           ) : (

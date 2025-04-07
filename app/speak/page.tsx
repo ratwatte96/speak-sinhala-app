@@ -39,12 +39,12 @@ export default async function Speak() {
                 style={{ width: `0%` }}
               ></div>
 
-              <div className="absolute inset-0 flex items-center justify-center text-xs text-black dark:text-white font-semibold">
+              <div className="absolute inset-0 flex-center text-xs text-black dark:text-white font-semibold">
                 0%
               </div>
             </div>
 
-            <div className="text-center h-96 flex items-center justify-center text-lg">
+            <div className="text-center h-96 flex-center text-lg">
               🎤 Speak section coming soon!
             </div>
           </div>

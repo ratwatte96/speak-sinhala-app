@@ -156,7 +156,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
         <button
           key="confirm-button"
           onClick={() => nextStep(false)}
-          className="flex items-center justify-center bg-green-500 dark:bg-green-600 ml- p-1 h-8 rounded-md font-medium text-black focus:z-10 focus:outline-none focus:ring-4 hover:text-white dark:text-gray-200 dark:hover:border dark:hover:border-green-400 dark:hover:text-green-400 dark:hover:bg-black w-2/5"
+          className="btn-primary flex-center h-8 w-2/5 font-medium focus:ring-4"
         >
           Start Quiz
         </button>

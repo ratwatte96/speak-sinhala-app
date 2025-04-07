@@ -35,7 +35,7 @@ export const CompletionBar: React.FC<CompletionBarProps> = ({
         style={{ width: `${Math.floor(percentageComplete ?? 0)}%` }}
       ></div>
 
-      <div className="absolute inset-0 flex items-center justify-center text-xs text-black dark:text-white font-semibold">
+      <div className="absolute inset-0 flex-center text-xs text-black dark:text-white font-semibold">
         {Math.floor(percentageComplete ?? 0)}%
       </div>
     </div>
