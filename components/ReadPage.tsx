@@ -48,10 +48,10 @@ export default function ReadPage({
   }, []);
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full h-full md:h-screen dark:bg-black">
+      <div className="flex-col-center justify-center w-full h-full md:h-screen dark:bg-black">
         {isMobile === undefined ? (
-          <div className="flex flex-col items-center justify-center min-h-[80vh]">
-            <div className="flex flex-col items-center justify-center ">
+          <div className="flex-col-center justify-center min-h-[80vh]">
+            <div className="flex-col-center justify-center ">
               <Logo width={160} height={120} textSize={"text-5xl"} />
               <p className="text-sm text-gray-600 mb-4 md:text-lg lg:text-xl dark:text-white mt-2">
                 Please wait a few moments...

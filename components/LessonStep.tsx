@@ -16,7 +16,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
       {data.map(({ text, infoDisplayType, info }: any, i: number) => (
         <div key={i} className="flex mt-4 justify-center">
           {infoDisplayType === "list" ? (
-            <div className="flex flex-col items-center text-skin-base w-full">
+            <div className="flex-col-center text-skin-base w-full">
               <p>{text}</p>
               <div className="mt-4">
                 <p>{info.text}</p>
@@ -75,7 +75,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
           )}
         </div>
       ))}
-      {/* <p className="flex flex-col items-center text-skin-base w-full">
+      {/* <p className="flex-col-center text-skin-base w-full">
         Unfortunately using the words &apos;this&apos; and &apos;that&apos; are
         more complicated in sinhala than in english.
         <div className="mt-4">
@@ -95,7 +95,7 @@ export const LessonStep: React.FC<LessonStepProps> = ({ nextStep, data }) => {
           </ul>
         </div>
       </p>
-      <p className="flex flex-col items-center text-skin-base w-full mt-4">
+      <p className="flex-col-center text-skin-base w-full mt-4">
         <div className="mt-4">
           Each of these four word has 3 variations to refer to a person, a thing
           or an animal:

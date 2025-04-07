@@ -153,6 +153,10 @@
   .text-error {
     @apply text-red-600 dark:text-red-400;
   }
+
+  .flex-col-center {
+    @apply flex flex-col items-center;
+  }
 }
 
 /* CSS RESET TEMPLATE STARTS  */

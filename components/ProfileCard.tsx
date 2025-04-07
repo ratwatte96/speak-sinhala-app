@@ -109,7 +109,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
 
   return (
     <div className="flex flex-col h-auto mb-20">
-      <div className="flex flex-col items-center h-auto">
+      <div className="flex-col-center h-auto">
         <div className="rounded-lg text-center ">
           <div className="relative w-[80px] h-[80px] mx-auto">
             <Image

@@ -26,7 +26,7 @@ export default function QuizFailedScreen({
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 dark:bg-black">
+    <div className="flex-col-center justify-center min-h-screen p-6 dark:bg-black">
       <div className="w-full px-4">
         <div className="flex justify-center">
           <div className="mr-2">
@@ -48,7 +48,7 @@ export default function QuizFailedScreen({
           ></div>
         </div>
       </div>
-      <div className="flex flex-col items-center bg-white p-8 rounded-2xl shadow-lg dark:bg-black dark:border dark:border-solid dark:border-gray-600">
+      <div className="flex-col-center bg-white p-8 rounded-2xl shadow-lg dark:bg-black dark:border dark:border-solid dark:border-gray-600">
         {/* Red Cross Icon for Failure */}
         <XCircle className="text-red-500 w-24 h-24 mb-6" />
 

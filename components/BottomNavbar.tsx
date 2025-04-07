@@ -35,7 +35,7 @@ const BottomNavbar = () => {
             </div>
           ) : (
             <div
-              className={`flex flex-col items-center cursor-pointer transition-colors duration-200 w-[25vw] pt-4 pb-3 ${
+              className={`flex-col-center cursor-pointer transition-colors duration-200 w-[25vw] pt-4 pb-3 ${
                 active === item.name
                   ? "text-green-500"
                   : "text-black dark:text-white"

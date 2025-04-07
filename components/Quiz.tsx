@@ -407,7 +407,7 @@ const Quiz: React.FC<QuizProps> = ({
       mistakeCount={mistakeCount}
     />
   ) : (
-    <div className="flex flex-col items-center mt-8">
+    <div className="flex-col-center mt-8">
       {steps && steps[currentStep].type === "question" && (
         <>
           <div className="flex justify-around w-40">

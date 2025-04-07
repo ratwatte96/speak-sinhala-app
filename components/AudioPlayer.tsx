@@ -22,7 +22,7 @@ interface AudioPlayerProps {
 }
 
 const BASE_AUDIO_PLAYER_CLASSES =
-  "cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center bg-white dark:bg-black dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg";
+  "cursor-pointer p-4 rounded-lg shadow-md flex-col-center bg-white dark:bg-black dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg";
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioPath,
@@ -116,7 +116,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       disabled={disabledOveride || playing}
     >
       {display_text ? (
-        <div className="flex flex-col items-center sm:w-full">
+        <div className="flex-col-center sm:w-full">
           <span>{display_text}</span>
           {extraa_text && <p className="text-skin-base">{extraa_text}</p>}
           {extra_text && <p className="text-skin-base">{extra_text}</p>}

@@ -45,7 +45,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ lesson, quizId }) => {
         </p>
         <p className="text-gray-500 mt-1 text-xs w-5/6">{lesson.description}</p>
       </div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex-col-center justify-center">
         <p className="mb-1 sm:w-32 text-center text-sm">
           {lesson.isPerfect ? "Perfect 🏆" : "Not Perfect 🤏"}
         </p>

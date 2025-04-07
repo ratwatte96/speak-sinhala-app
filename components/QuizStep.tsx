@@ -111,7 +111,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
             }
             extra_text={questionType == 5 ? question_word : undefined}
             extraa_text={questionType == 5 ? correctAnswer : undefined}
-            additionalClasses="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex flex-col items-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
+            additionalClasses="bg-white dark:bg-black cursor-pointer p-4 rounded-lg shadow-md flex-col-center dark:border dark:border-solid dark:border-gray-600 transition-transform transform hover:scale-105 hover:shadow-lg"
           />
         ) : (
           <p className="text-black dark:text-white text-5xl mb-4">
@@ -156,7 +156,7 @@ export const QuizStep: React.FC<QuizStepProps> = ({
               <div
                 key={answer.id}
                 onClick={() => selectAnswer(answer.value)}
-                className={`cursor-pointer hover:text-skin-accent flex flex-col items-center w-full my-1 rounded-lg border border-solid border-skin-base dark:border-gray-500 px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
+                className={`cursor-pointer hover:text-skin-accent flex-col-center w-full my-1 rounded-lg border border-solid border-skin-base dark:border-gray-500 px-3 py-1 text-xs focus:outline-none sm:ml-2 sm:w-40 sm:text-base ${
                   selectedAnswer === answer.value
                     ? "text-skin-accent"
                     : "text-black dark:text-white"

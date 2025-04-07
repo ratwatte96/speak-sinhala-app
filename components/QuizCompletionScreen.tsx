@@ -23,8 +23,8 @@ export default function QuizCompletionScreen({
   const seconds = (totalSeconds % 60).toString().padStart(2, "0");
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 dark:bg-black">
-      <div className="flex flex-col items-center bg-white p-8 rounded-2xl shadow-lg dark:bg-black dark:border dark:border-solid dark:border-gray-600">
+    <div className="flex-col-center justify-center min-h-screen p-6 dark:bg-black">
+      <div className="flex-col-center bg-white p-8 rounded-2xl shadow-lg dark:bg-black dark:border dark:border-solid dark:border-gray-600">
         {isPerfect ? (
           <Star className="text-yellow-500 w-24 h-24 mb-6" />
         ) : (

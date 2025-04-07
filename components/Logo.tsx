@@ -5,7 +5,7 @@ const outfit = Outfit({ subsets: ["latin"] });
 export default function Logo({ width, height, textSize }: any) {
   return (
     <a href="/" className="relative">
-      <div className="flex flex-col items-center">
+      <div className="flex-col-center">
         <Image
           src="/Flag_of_Sri_Lanka.svg.png"
           alt="Sri Lankan Flag"
