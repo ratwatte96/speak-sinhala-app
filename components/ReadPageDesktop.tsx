@@ -25,31 +25,25 @@ export default function ReadPageDesktop({
   userData,
 }: ReadPageDesktopProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-[#EAEAEA] dark:bg-black ">
+    <div className="flex min-h-screen flex-col bg-[#EAEAEA] dark:bg-black">
       <div className="mx-4 flex flex-col md:flex-row justify-around max-h-[100vh] mt-10">
         <div className="relative w-full pl-8 pr-12">
           {!decoded && (
-            <div className="absolute inset-0 flex items-center justify-center dark:border dark:border-solid dark:border-gray-600">
-              <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
+            <div className="overlay-container">
+              <div className="overlay-bg"></div>
               <div className="flex flex-col">
                 <a href="/login" className="relative z-10">
-                  <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
-                    Login
-                  </button>
+                  <button className="btn-action w-40 mb-2">Login</button>
                 </a>
                 <a href="/signup" className="relative z-10">
-                  <button className="bg-yellow-400 text-white px-2 py-1 rounded-lg font-semibold w-40">
+                  <button className="btn-secondary w-40">
                     Signup to Unlock
                   </button>
                 </a>
               </div>
             </div>
           )}
-          <div
-            className={`${
-              !decoded ? "blur-md pointer-events-none opacity-70" : ""
-            }`}
-          >
+          <div className={!decoded ? "blurred-content" : ""}>
             <Shop />
           </div>
         </div>
@@ -80,27 +74,21 @@ export default function ReadPageDesktop({
         </div>
         <div className="relative w-full flex justify-center pl-12 pr-8">
           {!decoded && (
-            <div className="absolute inset-0 flex items-center justify-center dark:border-x dark:border-solid dark:border-gray-600">
-              <div className="absolute inset-0 bg-black opacity-10 rounded-lg"></div>
+            <div className="overlay-container">
+              <div className="overlay-bg"></div>
               <div className="flex flex-col">
                 <a href="/login" className="relative z-10">
-                  <button className="bg-green-600 text-white px-2 py-1 rounded-lg font-semibold w-40 mb-2">
-                    Login
-                  </button>
+                  <button className="btn-action w-40 mb-2">Login</button>
                 </a>
                 <a href="/signup" className="relative z-10">
-                  <button className="bg-yellow-400 text-white px-2 py-1 rounded-lg font-semibold w-40">
+                  <button className="btn-secondary w-40">
                     Signup to Unlock
                   </button>
                 </a>
               </div>
             </div>
           )}
-          <div
-            className={`${
-              !decoded ? "blur-md pointer-events-none opacity-70" : ""
-            }`}
-          >
+          <div className={!decoded ? "blurred-content" : ""}>
             <ProfileCard
               userData={
                 userData ?? {

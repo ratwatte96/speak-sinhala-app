@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -36,36 +37,33 @@ export default function ResendVerification() {
 
   return (
     <ThemeProvider>
-      <div className="flex flex-col min-h-screen items-center justify-center bg-gray-50 dark:bg-black">
+      <div className="page-container">
         <Logo width={120} height={80} textSize={"text-3xl"} />
-        <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80 mt-6">
-          <h1 className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white">
-            Resend Verification Email
-          </h1>
-          <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+        <div className="auth-card">
+          <h1 className="card-heading">Resend Verification Email</h1>
+          <p className="card-text">
             Enter your email to receive a new verification link.
           </p>
           <form onSubmit={handleSubmit} className="mt-4">
             <input
               type="email"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              className="form-input"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button
-              type="submit"
-              className="mt-4 w-full bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all"
-            >
+            <button type="submit" className="btn-action mt-4">
               Resend Email
             </button>
           </form>
           {message && (
-            <p className="mt-4 text-green-600 dark:text-green-400">{message}</p>
+            <p className="card-text text-green-600 dark:text-green-400">
+              {message}
+            </p>
           )}
           {error && (
-            <p className="mt-4 text-red-600 dark:text-red-400">{error}</p>
+            <p className="card-text text-red-600 dark:text-red-400">{error}</p>
           )}
         </div>
       </div>

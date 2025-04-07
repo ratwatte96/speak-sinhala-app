@@ -81,6 +81,36 @@
   .card-text {
     @apply mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300;
   }
+
+  /* Blurred content container */
+  .blurred-content {
+    @apply blur-md pointer-events-none opacity-70;
+  }
+
+  /* Overlay container */
+  .overlay-container {
+    @apply absolute inset-0 flex items-center justify-center dark:border dark:border-solid dark:border-gray-600;
+  }
+
+  /* Overlay background */
+  .overlay-bg {
+    @apply absolute inset-0 bg-black opacity-10 rounded-lg;
+  }
+
+  /* Flex center container */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  /* Success text */
+  .text-success {
+    @apply text-green-600 dark:text-green-500;
+  }
+
+  /* Error text */
+  .text-error {
+    @apply text-red-600 dark:text-red-400;
+  }
 }
 
 /* CSS RESET TEMPLATE STARTS  */

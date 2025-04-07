@@ -62,38 +62,31 @@ const ResetPasswordComponent = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-gray-50 dark:bg-black">
+    <div className="page-container">
       <Logo width={120} height={80} textSize={"text-3xl"} />
-      <div className="p-6 bg-white shadow-lg rounded-lg text-center dark:bg-black dark:border dark:border-solid dark:border-gray-400 w-80 mt-6">
-        <h2 className="text-md sm:text-xl font-semibold text-gray-800 dark:text-white">
-          Reset Password
-        </h2>
+      <div className="auth-card">
+        <h2 className="card-heading">Reset Password</h2>
         <div className="mt-4">
           <input
             type="password"
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="form-input"
           />
           <input
             type="password"
             placeholder="Confirm New Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md text-center mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="form-input mt-2"
           />
         </div>
         {message && (
-          <p className="text-sm mt-2 text-red-600 dark:text-red-400">
-            {message}
-          </p>
+          <p className="card-text text-red-600 dark:text-red-400">{message}</p>
         )}
         <div className="mt-4">
-          <button
-            onClick={handleResetPassword}
-            className="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-all"
-          >
+          <button onClick={handleResetPassword} className="btn-action">
             Reset Password
           </button>
         </div>

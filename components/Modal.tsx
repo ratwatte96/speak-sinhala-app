@@ -31,7 +31,7 @@ const Modal = ({
       onClick={handleBackgroundClick}
     >
       <div
-        className={`fade-in-quick relative h-3/4 rounded-md border bg-[#eaeaea] dark:bg-black p-5 shadow-lg sm:top-20 sm:mx-auto sm:w-2/5 ${additionalClasses}`}
+        className={`fade-in-quick relative h-3/4 card-container p-5 sm:top-20 sm:mx-auto sm:w-2/5 ${additionalClasses}`}
       >
         <div className="absolute left-0 top-0 p-4">
           {!removeClose && (
@@ -44,11 +44,9 @@ const Modal = ({
           )}
         </div>
         <div className="flex flex-col justify-center items-center h-full">
-          <h3 className="text-2xl font-medium leading-6 text-skin-base">
-            {heading}
-          </h3>
+          <h3 className="card-heading">{heading}</h3>
           <div className="pb-3">
-            <div className="text-lg text-skin-base">{children}</div>
+            <div className="card-text">{children}</div>
           </div>
         </div>
       </div>
