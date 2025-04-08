@@ -1,5 +1,8 @@
 import prisma from "@/lib/prisma";
 import { sendEmail } from "@/utils/email";
+import { errorWithFile } from "@/utils/logger";
+import { getQuizCompletionPercentage } from "@/utils/random";
+import { NextResponse } from "next/server";
 import rateLimit from "express-rate-limit";
 
 //! fix ip allow listing
@@ -59,26 +62,59 @@ export async function POST(req: any) {
   try {
     const users = await prisma.user.findMany({
       where: { emailReminders: true },
-      select: { email: true },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+      },
     });
 
     if (!users.length) {
-      return Response.json({ message: "No users opted in for reminders." });
+      return NextResponse.json({ message: "No users opted in for reminders." });
     }
 
     await Promise.all(
-      users.map((user) =>
-        sendEmail({
+      users.map(async (user) => {
+        const readPercentage = Math.floor(
+          await getQuizCompletionPercentage(user.id)
+        );
+
+        const emailText = `
+Hello ${user.username}!
+
+🎯 Daily Sinhala Learning Reminder
+
+Your Progress:
+📚 Reading Progress: ${readPercentage}%
+🗣️ Speaking Progress: Coming Soon!
+
+Remember: Just 5 minutes of practice each day can make a big difference in learning Sinhala.
+
+Ready to continue your learning journey?
+➡️ Click here to start today's lesson: ${process.env.API_URL}
+
+Keep up the great work!
+
+Best regards,
+Learn Sinhala Team
+`;
+
+        return sendEmail({
           to: user.email,
-          subject: "Learn Sinhala: Keep Practicing",
-          text: `5 minutes a day is all you need to get better at Sinhala. ${process.env.API_URL}`,
-        })
-      )
+          subject: "Learn Sinhala: Time for Your Daily Practice! 🇱🇰",
+          text: emailText,
+        });
+      })
     );
 
-    return Response.json({ message: `Emails sent to ${users.length} users.` });
+    return NextResponse.json({
+      message: `Emails sent to ${users.length} users.`,
+    });
   } catch (error) {
-    console.error("Error sending emails:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    errorWithFile(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

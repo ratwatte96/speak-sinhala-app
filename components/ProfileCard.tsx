@@ -21,6 +21,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailReminders, setEmailReminders] = useState(userData.emailReminders);
+  const [updatingPreference, setUpdatingPreference] = useState(false);
+  const [preferenceMessage, setPreferenceMessage] = useState("");
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -99,6 +102,31 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
     }
   };
 
+  const handleEmailReminderToggle = async () => {
+    setUpdatingPreference(true);
+    try {
+      const response = await fetchWithToken("/api/update-email-preference", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emailReminders: !emailReminders }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setEmailReminders(!emailReminders);
+        setPreferenceMessage("Email preference updated successfully!");
+        setTimeout(() => setPreferenceMessage(""), 3000);
+      } else {
+        setPreferenceMessage(data.error || "Failed to update preference");
+        setTimeout(() => setPreferenceMessage(""), 3000);
+      }
+    } catch (error) {
+      setPreferenceMessage("Error updating preference");
+      setTimeout(() => setPreferenceMessage(""), 3000);
+    }
+    setUpdatingPreference(false);
+  };
+
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("en-US", {
       month: "short",
@@ -151,6 +179,33 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
               </div>
             </div>
           </div>
+          {/* Email Reminder Toggle */}
+          <div className="mt-4 flex items-center justify-between bg-gray-300 dark:bg-black dark-base-border dark:border-gray-600 p-4 rounded-md">
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-medium">Daily Email Reminders</span>
+              <span className="text-xs text-gray-500">
+                Get daily practice reminders
+              </span>
+            </div>
+            <button
+              onClick={handleEmailReminderToggle}
+              disabled={updatingPreference}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                emailReminders ? "bg-green-500" : "bg-gray-400"
+              }`}
+              role="switch"
+              aria-checked={emailReminders}
+            >
+              <span
+                className={`${
+                  emailReminders ? "translate-x-6" : "translate-x-1"
+                } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+              />
+            </button>
+          </div>
+          {preferenceMessage && (
+            <p className="text-sm text-green-500 mt-2">{preferenceMessage}</p>
+          )}
           {/* Change Password Form */}
           {isForgotPassword ? (
             <div className="mt-4">
