@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import { errorWithFile, logWithFile } from "@/utils/logger";
+import { calculateXP, getSriLankaDayAnchor } from "../../lib/experience-points";
+import type { QuizType } from "../../lib/experience-points/types";
 
 //!Refactor
 
@@ -16,17 +18,31 @@ export async function POST(req: any) {
   }
 
   let decoded: any;
+  let xpData:
+    | { awarded: number; dailyTotal: number; totalXP: number }
+    | undefined;
+
   try {
     decoded = verifyAccessToken(accessToken);
 
     const { quiz_id, perfect_score } = await req.json();
 
+    // Get quiz details including type
+    const quiz = await prisma.quiz.findUnique({
+      where: { id: quiz_id },
+      select: { type: true },
+    });
+
+    if (!quiz?.type) {
+      return NextResponse.json({ error: "Invalid quiz type" }, { status: 400 });
+    }
+
     const unit = await prisma.quizesOnUnits.findFirst({
       where: {
-        quizId: quiz_id, // Find the row where the given quiz exists
+        quizId: quiz_id,
       },
       include: {
-        unit: true, // Include the unit details
+        unit: true,
       },
     });
     const unitId: any = unit?.unit.id;
@@ -61,6 +77,7 @@ export async function POST(req: any) {
 
     //! update this when we add the speak quizes
     if (record.status !== "complete") {
+      // Update quiz status
       await prisma.usersOnQuizes.updateMany({
         where: {
           userId: parseInt(decoded.userId),
@@ -68,11 +85,68 @@ export async function POST(req: any) {
         },
         data: {
           status: "complete",
+          completionCount: {
+            increment: 1,
+          },
         },
       });
 
+      // Check if user already has XP for today
+      const today = getSriLankaDayAnchor();
+      const existingXP = await prisma.experiencePoints.findUnique({
+        where: {
+          userId_date: {
+            userId: parseInt(decoded.userId),
+            date: today,
+          },
+        },
+      });
+
+      // Calculate and award XP
+      const xpToAward = calculateXP({
+        quizType: quiz.type as QuizType,
+        isPerfectScore: perfect_score,
+        isFirstCompletionOfDay: !existingXP,
+      });
+
+      // Update or create daily XP record and update total XP
+      const [dailyXP, updatedUser] = await prisma.$transaction([
+        prisma.experiencePoints.upsert({
+          where: {
+            userId_date: {
+              userId: parseInt(decoded.userId),
+              date: today,
+            },
+          },
+          create: {
+            userId: parseInt(decoded.userId),
+            date: today,
+            amount: xpToAward,
+          },
+          update: {
+            amount: {
+              increment: xpToAward,
+            },
+          },
+        }),
+        prisma.user.update({
+          where: { id: parseInt(decoded.userId) },
+          data: {
+            totalExperiencePoints: {
+              increment: xpToAward,
+            },
+          },
+        }),
+      ]);
+
+      xpData = {
+        awarded: xpToAward,
+        dailyTotal: dailyXP.amount,
+        totalXP: updatedUser.totalExperiencePoints,
+      };
+
       //! be vary of the hundred once adding other units
-      if (unitId ?? 100 <= user.readStatus) {
+      if ((unitId ?? 100) <= user.readStatus) {
         const quizes = await prisma.quizesOnUnits.findMany({
           where: { unitId: unitId },
           select: { quizId: true },
@@ -156,10 +230,16 @@ export async function POST(req: any) {
       }
     }
 
-    return new Response(JSON.stringify({ status: "Successfully Updated" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        status: "Successfully Updated",
+        xp: xpData,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     errorWithFile(error, decoded?.userId);
     return NextResponse.json(
