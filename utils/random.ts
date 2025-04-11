@@ -83,6 +83,7 @@ export async function getUserData(user: any) {
       premiumEndDate: user.premiumEndDate,
       gender: user.gender,
       emailReminders: user.emailReminders,
+      totalExperiencePoints: user.totalExperiencePoints,
     };
   } catch (error) {
     errorWithFile(error, user.id);

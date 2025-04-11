@@ -6,6 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { fetchWithToken } from "@/utils/fetch";
 import { Star } from "lucide-react";
+import XPStats from "./XPStats";
 
 interface ProfileCardProps {
   userData: any;
@@ -179,6 +180,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
               </div>
             </div>
           </div>
+          <XPStats totalXP={userData.totalExperiencePoints} />
           {/* Email Reminder Toggle */}
           <div className="mt-4 flex items-center justify-between bg-gray-300 dark:bg-black dark-base-border dark:border-gray-600 p-4 rounded-md">
             <div className="flex flex-col items-start">
