@@ -2,12 +2,16 @@
 
 import { CheckCircle, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+import XPDisplay from "./XPDisplay";
 
 interface QuizCompletionScreenProps {
   isPerfect?: boolean;
   nextQuizId: any;
   elapsedTime: any;
   mistakeCount: number;
+  xpEarned?: number;
+  dailyTotal?: number;
+  quizType?: string;
 }
 
 export default function QuizCompletionScreen({
@@ -15,6 +19,9 @@ export default function QuizCompletionScreen({
   nextQuizId,
   elapsedTime,
   mistakeCount,
+  xpEarned = 0,
+  dailyTotal = 0,
+  quizType = "quiz",
 }: QuizCompletionScreenProps) {
   const router = useRouter();
 
@@ -48,6 +55,12 @@ export default function QuizCompletionScreen({
             <p>{`Mistake Count: ${mistakeCount}`}</p>
             <p>{`Time Taken: ${minutes}:${seconds}`}</p>
           </div>
+          <XPDisplay
+            xpEarned={xpEarned}
+            dailyTotal={dailyTotal}
+            quizType={quizType}
+            isPerfect={isPerfect}
+          />
           <button
             onClick={() => window.location.reload()} // Forces a re-render of the page
             className="bg-yellow-500 text-white w-full p-2 rounded-md"
