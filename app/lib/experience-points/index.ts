@@ -4,10 +4,12 @@ import { QuizType, XPCalculationParams } from "./types";
 
 // XP values for different quiz types
 export const XP_BY_TYPE: Record<QuizType, number> = {
-  read: 8,
-  speak: 12,
-  quiz: 10,
-  "custom-quiz": 15,
+  "Accent Practice": 12,
+  "New Accents": 15,
+  "New Letters": 10,
+  "New Rule": 12,
+  "Unit Review": 20,
+  "Unit Test": 25,
 };
 
 // Perfect score bonus XP

@@ -10,7 +10,13 @@ export interface UseXPReturn {
   updateXP: (amount: number) => Promise<void>;
 }
 
-export type QuizType = "read" | "speak" | "quiz" | "custom-quiz";
+export type QuizType =
+  | "Accent Practice"
+  | "New Accents"
+  | "New Letters"
+  | "New Rule"
+  | "Unit Review"
+  | "Unit Test";
 
 export interface XPValues {
   read: number;

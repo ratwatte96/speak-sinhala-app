@@ -75,6 +75,60 @@ export async function POST(req: any) {
       });
     }
 
+    // Check if user already has XP for today
+    const today = getSriLankaDayAnchor();
+    const existingXP = await prisma.experiencePoints.findUnique({
+      where: {
+        userId_date: {
+          userId: parseInt(decoded.userId),
+          date: today,
+        },
+      },
+    });
+
+    // Calculate and award XP
+    const xpToAward = calculateXP({
+      quizType: quiz.type as QuizType,
+      isPerfectScore: perfect_score,
+      isFirstCompletionOfDay: !existingXP,
+    });
+
+    // Update or create daily XP record and update total XP
+    const [dailyXP, updatedUser] = await prisma.$transaction([
+      prisma.experiencePoints.upsert({
+        where: {
+          userId_date: {
+            userId: parseInt(decoded.userId),
+            date: today,
+          },
+        },
+        create: {
+          userId: parseInt(decoded.userId),
+          date: today,
+          amount: xpToAward,
+        },
+        update: {
+          amount: {
+            increment: xpToAward,
+          },
+        },
+      }),
+      prisma.user.update({
+        where: { id: parseInt(decoded.userId) },
+        data: {
+          totalExperiencePoints: {
+            increment: xpToAward,
+          },
+        },
+      }),
+    ]);
+
+    xpData = {
+      awarded: xpToAward,
+      dailyTotal: dailyXP.amount,
+      totalXP: updatedUser.totalExperiencePoints,
+    };
+
     //! update this when we add the speak quizes
     if (record.status !== "complete") {
       // Update quiz status
@@ -90,60 +144,6 @@ export async function POST(req: any) {
           },
         },
       });
-
-      // Check if user already has XP for today
-      const today = getSriLankaDayAnchor();
-      const existingXP = await prisma.experiencePoints.findUnique({
-        where: {
-          userId_date: {
-            userId: parseInt(decoded.userId),
-            date: today,
-          },
-        },
-      });
-
-      // Calculate and award XP
-      const xpToAward = calculateXP({
-        quizType: quiz.type as QuizType,
-        isPerfectScore: perfect_score,
-        isFirstCompletionOfDay: !existingXP,
-      });
-
-      // Update or create daily XP record and update total XP
-      const [dailyXP, updatedUser] = await prisma.$transaction([
-        prisma.experiencePoints.upsert({
-          where: {
-            userId_date: {
-              userId: parseInt(decoded.userId),
-              date: today,
-            },
-          },
-          create: {
-            userId: parseInt(decoded.userId),
-            date: today,
-            amount: xpToAward,
-          },
-          update: {
-            amount: {
-              increment: xpToAward,
-            },
-          },
-        }),
-        prisma.user.update({
-          where: { id: parseInt(decoded.userId) },
-          data: {
-            totalExperiencePoints: {
-              increment: xpToAward,
-            },
-          },
-        }),
-      ]);
-
-      xpData = {
-        awarded: xpToAward,
-        dailyTotal: dailyXP.amount,
-        totalXP: updatedUser.totalExperiencePoints,
-      };
 
       //! be vary of the hundred once adding other units
       if ((unitId ?? 100) <= user.readStatus) {

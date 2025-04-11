@@ -52,6 +52,8 @@ const Quiz: React.FC<QuizProps> = ({
   const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const [xpEarned, setXpEarned] = useState<number>(0);
   const [dailyXpTotal, setDailyXpTotal] = useState<number>(0);
+  const [xpUpdated, setXpUpdated] = useState<boolean>(false);
+
   const { setSharedState } = useSharedState();
   const pathname = usePathname();
   const calculateXP = useQuizXPCalculator();
@@ -312,7 +314,7 @@ const Quiz: React.FC<QuizProps> = ({
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       }
     } else {
-      if (!pathname.includes("custom-quiz")) {
+      if (!pathname.includes("custom-quiz") && !xpUpdated) {
         try {
           fetchWithToken("/api/updateQuizStatus", {
             method: "POST",
@@ -327,16 +329,9 @@ const Quiz: React.FC<QuizProps> = ({
             .then((res) => res.json())
             .then((statusData) => {
               if (statusData.xp) {
-                const quizType = pathname.includes("custom-quiz")
-                  ? "custom-quiz"
-                  : "quiz";
-                const calculatedXP = calculateXP(
-                  quizType,
-                  mistakeCount === 0,
-                  !statusData.xp.existingXP
-                );
-                setXpEarned(calculatedXP);
+                setXpEarned(statusData.xp.xpEarned);
                 setDailyXpTotal(statusData.xp.dailyTotal);
+                setXpUpdated(true);
               }
             });
         } catch (error: any) {
