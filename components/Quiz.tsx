@@ -16,6 +16,7 @@ import StreakUpdateScreen from "./StreakUpdatedScreen";
 import { TutorialModal } from "./TutorialModal";
 import { errorWithFile } from "@/utils/logger";
 import CalculatingResultsScreen from "./CalculatingResultsScreen";
+import { useQuizXPCalculator } from "../app/lib/experience-points/hooks";
 
 interface QuizProps {
   steps?: Step[];
@@ -49,8 +50,11 @@ const Quiz: React.FC<QuizProps> = ({
   const [refillMessage, setRefillMessage] = useState<string>("");
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number | null>(null);
+  const [xpEarned, setXpEarned] = useState<number>(0);
+  const [dailyXpTotal, setDailyXpTotal] = useState<number>(0);
   const { setSharedState } = useSharedState();
   const pathname = usePathname();
+  const calculateXP = useQuizXPCalculator();
 
   const notSignedUp =
     loggedOut &&
@@ -261,9 +265,7 @@ const Quiz: React.FC<QuizProps> = ({
     }
   };
 
-  //! maybe combine updateStatus and updateStreak
   const updateStatus = () => {
-    //! need to make sure nobody can just hit this endpoint
     if (notSignedUp) {
       const storedData = localStorage.getItem("quizProgress");
       if (!storedData) {
@@ -323,7 +325,20 @@ const Quiz: React.FC<QuizProps> = ({
             }),
           })
             .then((res) => res.json())
-            .then((statusData) => {});
+            .then((statusData) => {
+              if (statusData.xp) {
+                const quizType = pathname.includes("custom-quiz")
+                  ? "custom-quiz"
+                  : "quiz";
+                const calculatedXP = calculateXP(
+                  quizType,
+                  mistakeCount === 0,
+                  !statusData.xp.existingXP
+                );
+                setXpEarned(calculatedXP);
+                setDailyXpTotal(statusData.xp.dailyTotal);
+              }
+            });
         } catch (error: any) {
           errorWithFile(error);
         }
@@ -405,6 +420,9 @@ const Quiz: React.FC<QuizProps> = ({
       nextQuizId={nextQuizId}
       elapsedTime={elapsedTime}
       mistakeCount={mistakeCount}
+      xpEarned={xpEarned}
+      dailyTotal={dailyXpTotal}
+      quizType={pathname.includes("custom-quiz") ? "custom-quiz" : "quiz"}
     />
   ) : (
     <div className="flex-col-center mt-8">

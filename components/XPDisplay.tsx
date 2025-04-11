@@ -1,5 +1,7 @@
 "use client";
 
+import { XP_VALUES } from "../app/lib/experience-points/hooks";
+
 interface XPDisplayProps {
   xpEarned: number;
   dailyTotal: number;
@@ -14,14 +16,8 @@ export default function XPDisplay({
   isPerfect = false,
 }: XPDisplayProps) {
   const baseXP =
-    {
-      read: 8,
-      speak: 12,
-      quiz: 10,
-      "custom-quiz": 15,
-    }[quizType] || 10;
-
-  const perfectBonus = isPerfect ? 5 : 0;
+    XP_VALUES[quizType as keyof typeof XP_VALUES] || XP_VALUES.quiz;
+  const perfectBonus = isPerfect ? XP_VALUES.perfectScore : 0;
   const totalXP = xpEarned + perfectBonus;
 
   return (
@@ -29,7 +25,11 @@ export default function XPDisplay({
       <div className="text-2xl font-bold text-yellow-500">+{totalXP} XP</div>
       <div className="text-sm text-gray-600 dark:text-gray-400">
         Base: {baseXP} XP
-        {isPerfect && <span className="ml-2">Perfect Bonus: +5 XP</span>}
+        {isPerfect && (
+          <span className="ml-2">
+            Perfect Bonus: +{XP_VALUES.perfectScore} XP
+          </span>
+        )}
       </div>
       <div className="text-sm text-gray-600 dark:text-gray-400">
         Daily Total: {dailyTotal} XP
