@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { fetchWithToken } from "@/utils/fetch";
 import { errorWithFile } from "@/utils/logger";
 import { XPData, UseXPReturn, QuizType, XPValues } from "./types";
@@ -8,6 +8,23 @@ import {
   SUBSEQUENT_COMPLETION_MULTIPLIER,
 } from "./index";
 import { getTotalLocalXP, getDailyLocalXP } from "@/utils/localStorageXP";
+import { useSharedState } from "@/components/StateProvider";
+
+export const useXPState = () => {
+  const { sharedState, setSharedState } = useSharedState();
+
+  const updateXPState = useCallback(
+    (dailyXP: number, totalXP: number) => {
+      setSharedState("xp", { dailyXP, totalXP });
+    },
+    [setSharedState]
+  );
+
+  return {
+    xpState: sharedState.xp,
+    updateXPState,
+  };
+};
 
 export const useXP = (): UseXPReturn => {
   const [xpData, setXPData] = useState<XPData>({
@@ -103,14 +120,11 @@ export const useQuizXPCalculator = () => {
 };
 
 export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
-  const [xpData, setXPData] = useState<XPData>({
-    dailyXP: 0,
-    totalXP: 0,
-  });
+  const { xpState, updateXPState } = useXPState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchXPData = async () => {
+  const fetchXPData = useCallback(async () => {
     try {
       if (isLoggedIn) {
         const response = await fetchWithToken("/api/experience-points");
@@ -120,19 +134,13 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
           throw new Error(data.error || "Failed to fetch XP data");
         }
 
-        setXPData({
-          dailyXP: data.dailyXP,
-          totalXP: data.totalXP,
-        });
+        updateXPState(data.dailyXP, data.totalXP);
       } else {
         // Get XP from localStorage
         const totalXP = getTotalLocalXP();
         const dailyXP = getDailyLocalXP();
 
-        setXPData({
-          dailyXP,
-          totalXP,
-        });
+        updateXPState(dailyXP, totalXP);
       }
       setError(null);
     } catch (err: any) {
@@ -141,54 +149,51 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoggedIn, updateXPState]);
 
-  const updateXP = async (amount: number) => {
-    try {
-      if (isLoggedIn) {
-        const response = await fetchWithToken("/api/experience-points", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ amount }),
-        });
+  const updateXP = useCallback(
+    async (amount: number) => {
+      try {
+        if (isLoggedIn) {
+          const response = await fetchWithToken("/api/experience-points", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ amount }),
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (!response.ok) {
-          throw new Error(data.error || "Failed to update XP");
+          if (!response.ok) {
+            throw new Error(data.error || "Failed to update XP");
+          }
+
+          updateXPState(data.dailyXP, data.totalXP);
+        } else {
+          // For non-logged-in users, XP updates are handled directly by Quiz component
+          // This hook only needs to refresh the display
+          const totalXP = getTotalLocalXP();
+          const dailyXP = getDailyLocalXP();
+
+          updateXPState(dailyXP, totalXP);
         }
-
-        setXPData({
-          dailyXP: data.dailyXP,
-          totalXP: data.totalXP,
-        });
-      } else {
-        // For non-logged-in users, XP updates are handled directly by Quiz component
-        // This hook only needs to refresh the display
-        const totalXP = getTotalLocalXP();
-        const dailyXP = getDailyLocalXP();
-
-        setXPData({
-          dailyXP,
-          totalXP,
-        });
+        setError(null);
+      } catch (err: any) {
+        errorWithFile(err);
+        setError(err.message || "Failed to update XP");
+        throw err;
       }
-      setError(null);
-    } catch (err: any) {
-      errorWithFile(err);
-      setError(err.message || "Failed to update XP");
-      throw err;
-    }
-  };
+    },
+    [isLoggedIn, updateXPState]
+  );
 
   useEffect(() => {
     fetchXPData();
-  }, [isLoggedIn]);
+  }, [fetchXPData]);
 
   return {
-    xpData,
+    xpData: xpState,
     isLoading,
     error,
     updateXP,
