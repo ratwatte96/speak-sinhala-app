@@ -7,6 +7,7 @@ import {
   PERFECT_SCORE_BONUS,
   SUBSEQUENT_COMPLETION_MULTIPLIER,
 } from "./index";
+import { getTotalLocalXP, getDailyLocalXP } from "@/utils/localStorageXP";
 
 export const useXP = (): UseXPReturn => {
   const [xpData, setXPData] = useState<XPData>({
@@ -99,4 +100,97 @@ export const useQuizXPCalculator = () => {
   };
 
   return calculateXP;
+};
+
+export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
+  const [xpData, setXPData] = useState<XPData>({
+    dailyXP: 0,
+    totalXP: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchXPData = async () => {
+    try {
+      if (isLoggedIn) {
+        const response = await fetchWithToken("/api/experience-points");
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to fetch XP data");
+        }
+
+        setXPData({
+          dailyXP: data.dailyXP,
+          totalXP: data.totalXP,
+        });
+      } else {
+        // Get XP from localStorage
+        const totalXP = getTotalLocalXP();
+        const dailyXP = getDailyLocalXP();
+
+        setXPData({
+          dailyXP,
+          totalXP,
+        });
+      }
+      setError(null);
+    } catch (err: any) {
+      errorWithFile(err);
+      setError(err.message || "Failed to fetch XP data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateXP = async (amount: number) => {
+    try {
+      if (isLoggedIn) {
+        const response = await fetchWithToken("/api/experience-points", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to update XP");
+        }
+
+        setXPData({
+          dailyXP: data.dailyXP,
+          totalXP: data.totalXP,
+        });
+      } else {
+        // For non-logged-in users, XP updates are handled directly by Quiz component
+        // This hook only needs to refresh the display
+        const totalXP = getTotalLocalXP();
+        const dailyXP = getDailyLocalXP();
+
+        setXPData({
+          dailyXP,
+          totalXP,
+        });
+      }
+      setError(null);
+    } catch (err: any) {
+      errorWithFile(err);
+      setError(err.message || "Failed to update XP");
+      throw err;
+    }
+  };
+
+  useEffect(() => {
+    fetchXPData();
+  }, [isLoggedIn]);
+
+  return {
+    xpData,
+    isLoading,
+    error,
+    updateXP,
+  };
 };

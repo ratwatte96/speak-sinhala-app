@@ -439,6 +439,7 @@ const Quiz: React.FC<QuizProps> = ({
       mistakeCount={mistakeCount}
       xpEarned={xpEarned}
       dailyTotal={dailyXpTotal}
+      isLoggedIn={!notSignedUp}
     />
   ) : showCompletionScreen && !xpUpdated ? (
     <CalculatingResultsScreen />

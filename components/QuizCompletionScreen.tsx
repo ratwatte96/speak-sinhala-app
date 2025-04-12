@@ -11,6 +11,7 @@ interface QuizCompletionScreenProps {
   mistakeCount: number;
   xpEarned?: number;
   dailyTotal?: number;
+  isLoggedIn?: boolean;
 }
 
 export default function QuizCompletionScreen({
@@ -20,6 +21,7 @@ export default function QuizCompletionScreen({
   mistakeCount,
   xpEarned = 0,
   dailyTotal = 0,
+  isLoggedIn = false,
 }: QuizCompletionScreenProps) {
   const router = useRouter();
 
@@ -57,6 +59,7 @@ export default function QuizCompletionScreen({
             xpEarned={xpEarned}
             dailyTotal={dailyTotal}
             isPerfect={isPerfect}
+            isLoggedIn={isLoggedIn}
           />
           <button
             onClick={() => window.location.reload()} // Forces a re-render of the page

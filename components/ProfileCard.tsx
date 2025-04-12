@@ -158,8 +158,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
               />
             )}
           </div>
-          <h2 className="text-lg font-bold mt-4">{userData.username}</h2>
-          <p className="text-gray-500 text-sm">{userData.email}</p>
+          <div className="flex flex-col items-center">
+            <h2 className="text-xl font-semibold">{userData.username}</h2>
+            <p className="text-gray-500">{userData.email}</p>
+          </div>
           {isPremium && (
             <p className="text-sm text-gray-500">
               {userData.premiumEndDate
@@ -180,7 +182,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userData, isPremium }) => {
               </div>
             </div>
           </div>
-          <XPStats totalXP={userData.totalExperiencePoints} />
+          <XPStats isLoggedIn={true} />
           {/* Email Reminder Toggle */}
           <div className="mt-4 flex items-center justify-between bg-gray-300 dark:bg-black dark-base-border dark:border-gray-600 p-4 rounded-md">
             <div className="flex flex-col items-start">
