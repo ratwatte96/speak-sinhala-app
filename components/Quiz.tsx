@@ -17,6 +17,8 @@ import { TutorialModal } from "./TutorialModal";
 import { errorWithFile } from "@/utils/logger";
 import CalculatingResultsScreen from "./CalculatingResultsScreen";
 import { useQuizXPCalculator } from "../app/lib/experience-points/hooks";
+import { updateLocalXP, getDailyLocalXP } from "@/utils/localStorageXP";
+import { QuizType } from "@/app/lib/experience-points/types";
 
 interface QuizProps {
   steps?: Step[];
@@ -285,13 +287,7 @@ const Quiz: React.FC<QuizProps> = ({
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
       } else {
         const { quizes, expiry } = JSON.parse(storedData);
-        //! should i remove local storage?
-        // if (Date.now() > expiry) {
-        //   localStorage.removeItem("quizProgress"); // Remove expired data
-        //   return [];
-        // }
 
-        // Prevent duplicate quizId entries
         const newQuiz = {
           quizId: quiz_id,
           status: "complete",
@@ -312,6 +308,32 @@ const Quiz: React.FC<QuizProps> = ({
           expiry: Date.now() + 7 * 24 * 60 * 60 * 1000,
         };
         localStorage.setItem("quizProgress", JSON.stringify(dataToStore));
+      }
+
+      // Calculate and store XP for non-logged-in users
+      if (!xpUpdated) {
+        try {
+          const quizType: QuizType = pathname.includes("speak")
+            ? "New Accents"
+            : pathname.includes("read")
+            ? "New Letters"
+            : pathname.includes("custom-quiz")
+            ? "Unit Test"
+            : "New Rule";
+
+          // Check if this is the first completion of the day
+          const dailyXP = getDailyLocalXP();
+          const isFirstCompletionOfDay = dailyXP === 0;
+
+          const xpData = updateLocalXP(
+            calculateXP(quizType, mistakeCount === 0, isFirstCompletionOfDay)
+          );
+          setXpEarned(xpData.awarded);
+          setDailyXpTotal(xpData.dailyTotal);
+          setXpUpdated(true);
+        } catch (error: any) {
+          errorWithFile(error);
+        }
       }
     } else {
       if (!pathname.includes("custom-quiz") && !xpUpdated) {
