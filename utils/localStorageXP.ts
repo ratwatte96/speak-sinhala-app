@@ -1,13 +1,17 @@
 import { toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
 import {
+  XP_BY_TYPE,
   PERFECT_SCORE_BONUS,
   SUBSEQUENT_COMPLETION_MULTIPLIER,
+  isValidQuizType,
 } from "@/app/lib/experience-points";
+import type { QuizType } from "@/app/lib/experience-points/types";
 
 interface DailyXP {
   date: string; // YYYY-MM-DD format
   amount: number;
+  completedQuizTypes: QuizType[]; // Track which quiz types were completed today
 }
 
 interface LocalStorageXP {
@@ -48,23 +52,80 @@ export function getLocalXP(): LocalStorageXP {
     return getLocalXP();
   }
 
+  // Migrate old data structure if needed
+  if (data.dailyXP.some((entry) => !entry.completedQuizTypes)) {
+    data.dailyXP = data.dailyXP.map((entry) => ({
+      ...entry,
+      completedQuizTypes: [],
+    }));
+    localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
+  }
+
   return data;
 }
 
-// Update XP for the current day
-export function updateLocalXP(xpAmount: number): {
-  awarded: number;
-  dailyTotal: number;
-} {
+// Calculate XP for a quiz completion
+export function calculateLocalXP(
+  quizType: QuizType,
+  isPerfectScore: boolean
+): number {
+  if (!isValidQuizType(quizType)) {
+    throw new Error(`Invalid quiz type: ${quizType}`);
+  }
+
   const data = getLocalXP();
   const today = getSriLankaDayAnchor().toISOString().split("T")[0];
+  const todayEntry = data.dailyXP.find((entry) => entry.date === today);
+  const isFirstCompletionOfDay =
+    !todayEntry?.completedQuizTypes.includes(quizType);
+
+  // Base XP from quiz type
+  let xpAmount = XP_BY_TYPE[quizType];
+
+  // Add perfect score bonus if applicable
+  if (isPerfectScore) {
+    xpAmount += PERFECT_SCORE_BONUS;
+  }
+
+  // Apply diminishing returns for subsequent completions
+  if (!isFirstCompletionOfDay) {
+    xpAmount = Math.floor(xpAmount * SUBSEQUENT_COMPLETION_MULTIPLIER);
+  }
+
+  return xpAmount;
+}
+
+// Update XP for the current day
+export function updateLocalXP(
+  quizType: QuizType,
+  isPerfectScore: boolean
+): {
+  awarded: number;
+  dailyTotal: number;
+  totalXP: number;
+} {
+  if (!isValidQuizType(quizType)) {
+    throw new Error(`Invalid quiz type: ${quizType}`);
+  }
+
+  const data = getLocalXP();
+  const today = getSriLankaDayAnchor().toISOString().split("T")[0];
+  const xpAmount = calculateLocalXP(quizType, isPerfectScore);
 
   // Find or create today's entry
-  const todayEntry = data.dailyXP.find((entry) => entry.date === today);
+  let todayEntry = data.dailyXP.find((entry) => entry.date === today);
   if (todayEntry) {
     todayEntry.amount += xpAmount;
+    if (!todayEntry.completedQuizTypes.includes(quizType)) {
+      todayEntry.completedQuizTypes.push(quizType);
+    }
   } else {
-    data.dailyXP.push({ date: today, amount: xpAmount });
+    todayEntry = {
+      date: today,
+      amount: xpAmount,
+      completedQuizTypes: [quizType],
+    };
+    data.dailyXP.push(todayEntry);
   }
 
   // Update total XP
@@ -76,10 +137,11 @@ export function updateLocalXP(xpAmount: number): {
   // Store updated data
   localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
 
-  // Return awarded XP and daily total
-  const dailyTotal =
-    data.dailyXP.find((entry) => entry.date === today)?.amount || 0;
-  return { awarded: xpAmount, dailyTotal };
+  return {
+    awarded: xpAmount,
+    dailyTotal: todayEntry.amount,
+    totalXP: data.totalXP,
+  };
 }
 
 // Clear XP data (used after migration)
@@ -94,23 +156,42 @@ export function getTotalLocalXP(): number {
 
 // Get daily XP for a specific date
 export function getDailyLocalXP(
-  date: string = getSriLankaDayAnchor().toISOString().split("T")[0]
+  date = getSriLankaDayAnchor().toISOString().split("T")[0]
 ): number {
   const data = getLocalXP();
-  return data.dailyXP.find((entry) => entry.date === date)?.amount || 0;
+  return data.dailyXP.find((entry) => entry.date === date)?.amount ?? 0;
 }
 
 // Validate XP data structure
-export function validateLocalXPData(data: any): data is LocalStorageXP {
+export function validateLocalXPData(data: unknown): data is LocalStorageXP {
   if (!data || typeof data !== "object") return false;
-  if (!Array.isArray(data.dailyXP)) return false;
-  if (typeof data.totalXP !== "number") return false;
-  if (typeof data.expiry !== "number") return false;
 
-  return data.dailyXP.every(
-    (entry: any) =>
-      typeof entry === "object" &&
-      typeof entry.date === "string" &&
-      typeof entry.amount === "number"
+  const xpData = data as Record<string, unknown>;
+
+  if (!Array.isArray(xpData.dailyXP)) return false;
+  if (typeof xpData.totalXP !== "number") return false;
+  if (typeof xpData.expiry !== "number") return false;
+
+  return xpData.dailyXP.every((entry: unknown) => {
+    if (typeof entry !== "object" || !entry) return false;
+    const dailyEntry = entry as Record<string, unknown>;
+
+    return (
+      typeof dailyEntry.date === "string" &&
+      typeof dailyEntry.amount === "number" &&
+      Array.isArray(dailyEntry.completedQuizTypes) &&
+      dailyEntry.completedQuizTypes.every(
+        (type: unknown) => typeof type === "string" && isValidQuizType(type)
+      )
+    );
+  });
+}
+
+// Get completed quiz types for today
+export function getTodayCompletedQuizTypes(): QuizType[] {
+  const data = getLocalXP();
+  const today = getSriLankaDayAnchor().toISOString().split("T")[0];
+  return (
+    data.dailyXP.find((entry) => entry.date === today)?.completedQuizTypes ?? []
   );
 }
