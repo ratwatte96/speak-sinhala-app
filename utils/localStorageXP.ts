@@ -8,13 +8,13 @@ import {
 } from "@/app/lib/experience-points";
 import type { QuizType } from "@/app/lib/experience-points/types";
 
-interface DailyXP {
+export interface DailyXP {
   date: string; // YYYY-MM-DD format
   amount: number;
   completedQuizTypes: QuizType[]; // Track which quiz types were completed today
 }
 
-interface LocalStorageXP {
+export interface LocalStorageXP {
   dailyXP: DailyXP[];
   totalXP: number;
   expiry: number;

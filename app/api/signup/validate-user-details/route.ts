@@ -1,5 +1,9 @@
 import prisma from "@/lib/prisma";
 import { errorWithFile } from "@/utils/logger";
+import { validateLocalXPData } from "@/utils/localStorageXP";
+import { isValidQuizType } from "@/app/lib/experience-points";
+import { getSriLankaDayAnchor } from "@/app/lib/experience-points";
+import type { LocalStorageXP } from "@/utils/localStorageXP";
 
 // Precompile regex patterns once
 const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
@@ -11,8 +15,17 @@ const passwordCriteria = {
   specialChar: (password: string) => /[!@#$%^&*(),.?":{}|<>]/.test(password),
 };
 
+interface SignupRequestBody {
+  username: string;
+  email: string;
+  password: string;
+  gender: string;
+  localXP?: LocalStorageXP;
+}
+
 export async function POST(req: Request) {
-  const { username, email, password, gender } = await req.json();
+  const body = (await req.json()) as SignupRequestBody;
+  const { username, email, password, gender, localXP } = body;
 
   // Input Validation
   if (!username || !email || !password || !gender) {
@@ -74,6 +87,44 @@ export async function POST(req: Request) {
       }),
       { status: 400 }
     );
+  }
+
+  // Add XP validation if localXP data is present
+  if (localXP && localXP.dailyXP) {
+    // Validate data structure using existing utility
+    if (!validateLocalXPData(localXP)) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid XP data structure",
+          field: "localXP",
+          message: "The XP data structure is invalid or corrupted.",
+        }),
+        { status: 400 }
+      );
+    }
+
+    // Validate dates and amounts
+    const today = getSriLankaDayAnchor();
+    const invalidEntry = localXP.dailyXP.find((entry) => {
+      const entryDate = new Date(entry.date);
+      return (
+        entryDate > today || // Future date
+        entry.amount < 0 || // Negative XP
+        entry.amount > 1000 || // Unreasonably high XP
+        !entry.completedQuizTypes?.every((type) => isValidQuizType(type)) // Invalid quiz types
+      );
+    });
+
+    if (invalidEntry) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid XP data",
+          field: "localXP",
+          message: "XP data contains invalid dates, amounts, or quiz types.",
+        }),
+        { status: 400 }
+      );
+    }
   }
 
   try {

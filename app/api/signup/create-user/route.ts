@@ -1,19 +1,29 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import type { LocalStorageXP, DailyXP } from "@/utils/localStorageXP";
+
+interface SignupRequestBody {
+  username: string;
+  email: string;
+  password: string;
+  gender: string;
+  streak?: string;
+  localXP?: LocalStorageXP;
+}
 
 export async function POST(req: Request) {
-  const { username, email, password, gender, streak } = await req.json();
+  const body = (await req.json()) as SignupRequestBody;
+  const { username, email, password, gender, streak, localXP } = body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = crypto.randomBytes(32).toString("hex");
-
     const currentStreak = streak ? parseInt(streak) : 0;
 
-    // Perform all operations in a single transaction
-    const [user, lives, streakRecord, refill] = await prisma.$transaction([
-      // Create User
+    // Create base transaction operations
+    const baseTransactionOperations = [
+      // Create User first to get the ID
       prisma.user.create({
         data: {
           username,
@@ -21,34 +31,49 @@ export async function POST(req: Request) {
           password: hashedPassword,
           verificationToken,
           gender,
+          totalExperiencePoints: localXP?.totalXP ?? 0,
         },
       }),
-
-      // Create Lives
       prisma.lives.create({
         data: {
           total_lives: 5,
           last_active_time: new Date(),
         },
       }),
-
-      // Create Streak
       prisma.streak.create({
         data: {
           current_streak: currentStreak,
           last_active_date: new Date(),
         },
       }),
-
-      // Create Refill
       prisma.refill.create({
         data: {
           total_refill: 0,
         },
       }),
-    ]);
+    ];
 
-    // Associate User with Lives, Streak, and Refill in a single batch insert
+    // Execute first transaction to get user and other records
+    const [user, lives, streakRecord, refill] = await prisma.$transaction(
+      baseTransactionOperations
+    );
+
+    // Create XP entries if they exist
+    if (localXP?.dailyXP?.length) {
+      await prisma.$transaction(
+        localXP.dailyXP.map((entry: DailyXP) =>
+          prisma.experiencePoints.create({
+            data: {
+              userId: user.id,
+              date: new Date(entry.date),
+              amount: entry.amount,
+            },
+          })
+        )
+      );
+    }
+
+    // Create associations
     await prisma.$transaction([
       prisma.livesOnUsers.create({
         data: { userId: user.id, livesId: lives.id },
