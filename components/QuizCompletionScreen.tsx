@@ -11,7 +11,6 @@ interface QuizCompletionScreenProps {
   mistakeCount: number;
   xpEarned?: number;
   dailyTotal?: number;
-  quizType?: string;
 }
 
 export default function QuizCompletionScreen({
@@ -21,7 +20,6 @@ export default function QuizCompletionScreen({
   mistakeCount,
   xpEarned = 0,
   dailyTotal = 0,
-  quizType = "quiz",
 }: QuizCompletionScreenProps) {
   const router = useRouter();
 
@@ -58,7 +56,6 @@ export default function QuizCompletionScreen({
           <XPDisplay
             xpEarned={xpEarned}
             dailyTotal={dailyTotal}
-            quizType={quizType}
             isPerfect={isPerfect}
           />
           <button

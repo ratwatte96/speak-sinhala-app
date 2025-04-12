@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import { fetchWithToken } from "@/utils/fetch";
 import { errorWithFile } from "@/utils/logger";
 import { XPData, UseXPReturn, QuizType, XPValues } from "./types";
+import {
+  XP_BY_TYPE,
+  PERFECT_SCORE_BONUS,
+  SUBSEQUENT_COMPLETION_MULTIPLIER,
+} from "./index";
 
 export const useXP = (): UseXPReturn => {
   const [xpData, setXPData] = useState<XPData>({
@@ -73,16 +78,6 @@ export const useXP = (): UseXPReturn => {
   };
 };
 
-// Constants for XP values by quiz type and bonuses
-export const XP_VALUES: XPValues = {
-  read: 8,
-  speak: 12,
-  quiz: 10,
-  "custom-quiz": 15,
-  perfectScore: 5,
-  subsequentCompletion: 0.25,
-};
-
 // Helper hook to calculate XP for a quiz completion
 export const useQuizXPCalculator = () => {
   const calculateXP = (
@@ -90,14 +85,14 @@ export const useQuizXPCalculator = () => {
     isPerfectScore: boolean,
     isFirstCompletion: boolean
   ): number => {
-    let baseXP = XP_VALUES[quizType];
+    let baseXP = XP_BY_TYPE[quizType];
 
     if (!isFirstCompletion) {
-      baseXP = Math.floor(baseXP * XP_VALUES.subsequentCompletion);
+      baseXP = Math.floor(baseXP * SUBSEQUENT_COMPLETION_MULTIPLIER);
     }
 
     if (isPerfectScore) {
-      baseXP += XP_VALUES.perfectScore;
+      baseXP += PERFECT_SCORE_BONUS;
     }
 
     return baseXP;

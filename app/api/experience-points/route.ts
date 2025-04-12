@@ -4,14 +4,7 @@ import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import { errorWithFile } from "@/utils/logger";
 import { toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
-
-// Constants for XP values
-const XP_BY_TYPE = {
-  read: 8,
-  speak: 12,
-  quiz: 10,
-  "custom-quiz": 15,
-};
+import { XP_BY_TYPE } from "@/app/lib/experience-points";
 
 // Get start of day in Sri Lanka time (UTC+5:30)
 function getSriLankaDayAnchor(): Date {

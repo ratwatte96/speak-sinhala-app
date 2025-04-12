@@ -86,12 +86,17 @@ export async function POST(req: any) {
       },
     });
 
+    console.log("quiz.type", quiz.type);
+    console.log("perfect_score", perfect_score);
+    console.log("existingXP", existingXP);
     // Calculate and award XP
     const xpToAward = calculateXP({
       quizType: quiz.type as QuizType,
       isPerfectScore: perfect_score,
       isFirstCompletionOfDay: !existingXP,
     });
+
+    console.log("xpToAward", xpToAward);
 
     // Update or create daily XP record and update total XP
     const [dailyXP, updatedUser] = await prisma.$transaction([

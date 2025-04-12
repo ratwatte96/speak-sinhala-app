@@ -329,7 +329,7 @@ const Quiz: React.FC<QuizProps> = ({
             .then((res) => res.json())
             .then((statusData) => {
               if (statusData.xp) {
-                setXpEarned(statusData.xp.xpEarned);
+                setXpEarned(statusData.xp.awarded);
                 setDailyXpTotal(statusData.xp.dailyTotal);
                 setXpUpdated(true);
               }
@@ -374,6 +374,8 @@ const Quiz: React.FC<QuizProps> = ({
 
   const progress = steps !== undefined ? (currentStep / steps.length) * 100 : 0;
 
+  const showCompletionScreen = quizCompleted && !showStreakUpdated;
+
   return quizFailed ? (
     <>
       <QuizFailedScreen
@@ -409,7 +411,7 @@ const Quiz: React.FC<QuizProps> = ({
     />
   ) : showCalculatingResults ? (
     <CalculatingResultsScreen />
-  ) : quizCompleted && !showStreakUpdated ? (
+  ) : showCompletionScreen && xpUpdated ? (
     <QuizCompletionScreen
       isPerfect={mistakeCount === 0}
       nextQuizId={nextQuizId}
@@ -417,8 +419,9 @@ const Quiz: React.FC<QuizProps> = ({
       mistakeCount={mistakeCount}
       xpEarned={xpEarned}
       dailyTotal={dailyXpTotal}
-      quizType={pathname.includes("custom-quiz") ? "custom-quiz" : "quiz"}
     />
+  ) : showCompletionScreen && !xpUpdated ? (
+    <CalculatingResultsScreen />
   ) : (
     <div className="flex-col-center mt-8">
       {steps && steps[currentStep].type === "question" && (
