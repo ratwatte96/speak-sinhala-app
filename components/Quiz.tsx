@@ -435,7 +435,7 @@ const Quiz: React.FC<QuizProps> = ({
     <QuizCompletionScreen
       isPerfect={mistakeCount === 0}
       nextQuizId={nextQuizId}
-      elapsedTime={elapsedTime}
+      elapsedTime={elapsedTime || 0}
       mistakeCount={mistakeCount}
       xpEarned={xpEarned}
       dailyTotal={dailyXpTotal}
