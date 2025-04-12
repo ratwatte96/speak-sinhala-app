@@ -7,6 +7,10 @@ import {
   isValidQuizType,
 } from "@/app/lib/experience-points";
 import type { QuizType } from "@/app/lib/experience-points/types";
+import {
+  LocalStorageError,
+  handleLocalStorageError,
+} from "./localStorageError";
 
 export interface DailyXP {
   date: string; // YYYY-MM-DD format
@@ -25,43 +29,70 @@ const EXPIRY_DAYS = 7;
 
 // Get start of day in Sri Lanka time (UTC+5:30)
 function getSriLankaDayAnchor(): Date {
-  const tz = "Asia/Colombo";
-  const now = new Date();
-  const zoned = toZonedTime(now, tz);
-  const start = startOfDay(zoned);
-  return new Date(start.toISOString());
+  try {
+    const tz = "Asia/Colombo";
+    const now = new Date();
+    const zoned = toZonedTime(now, tz);
+    const start = startOfDay(zoned);
+    return new Date(start.toISOString());
+  } catch (error) {
+    throw new LocalStorageError(
+      "Failed to calculate Sri Lanka timezone",
+      "TIMEZONE_ERROR"
+    );
+  }
 }
 
 // Initialize or get XP data
 export function getLocalXP(): LocalStorageXP {
-  const storedData = localStorage.getItem(XP_STORAGE_KEY);
-  if (!storedData) {
-    const expiry = Date.now() + EXPIRY_DAYS * 24 * 60 * 60 * 1000;
-    const initialData: LocalStorageXP = {
-      dailyXP: [],
-      totalXP: 0,
-      expiry,
-    };
-    localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(initialData));
-    return initialData;
-  }
+  try {
+    const storedData = localStorage.getItem(XP_STORAGE_KEY);
+    if (!storedData) {
+      const expiry = Date.now() + EXPIRY_DAYS * 24 * 60 * 60 * 1000;
+      const initialData: LocalStorageXP = {
+        dailyXP: [],
+        totalXP: 0,
+        expiry,
+      };
+      localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(initialData));
+      return initialData;
+    }
 
-  const data = JSON.parse(storedData) as LocalStorageXP;
-  if (Date.now() > data.expiry) {
-    localStorage.removeItem(XP_STORAGE_KEY);
-    return getLocalXP();
-  }
+    let data: unknown;
+    try {
+      data = JSON.parse(storedData);
+    } catch {
+      throw new LocalStorageError(
+        "Failed to parse stored XP data",
+        "INVALID_DATA"
+      );
+    }
 
-  // Migrate old data structure if needed
-  if (data.dailyXP.some((entry) => !entry.completedQuizTypes)) {
-    data.dailyXP = data.dailyXP.map((entry) => ({
-      ...entry,
-      completedQuizTypes: [],
-    }));
-    localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
-  }
+    if (!validateLocalXPData(data)) {
+      throw new LocalStorageError(
+        "Invalid XP data structure",
+        "INVALID_STRUCTURE"
+      );
+    }
 
-  return data;
+    if (Date.now() > data.expiry) {
+      localStorage.removeItem(XP_STORAGE_KEY);
+      return getLocalXP();
+    }
+
+    // Migrate old data structure if needed
+    if (data.dailyXP.some((entry) => !entry.completedQuizTypes)) {
+      data.dailyXP = data.dailyXP.map((entry) => ({
+        ...entry,
+        completedQuizTypes: [],
+      }));
+      localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
+    }
+
+    return data;
+  } catch (error) {
+    return handleLocalStorageError(error);
+  }
 }
 
 // Calculate XP for a quiz completion
@@ -70,7 +101,10 @@ export function calculateLocalXP(
   isPerfectScore: boolean
 ): number {
   if (!isValidQuizType(quizType)) {
-    throw new Error(`Invalid quiz type: ${quizType}`);
+    throw new LocalStorageError(
+      `Invalid quiz type: ${quizType}`,
+      "INVALID_QUIZ_TYPE"
+    );
   }
 
   const data = getLocalXP();
@@ -104,44 +138,60 @@ export function updateLocalXP(
   dailyTotal: number;
   totalXP: number;
 } {
-  if (!isValidQuizType(quizType)) {
-    throw new Error(`Invalid quiz type: ${quizType}`);
-  }
-
-  const data = getLocalXP();
-  const today = getSriLankaDayAnchor().toISOString().split("T")[0];
-  const xpAmount = calculateLocalXP(quizType, isPerfectScore);
-
-  // Find or create today's entry
-  let todayEntry = data.dailyXP.find((entry) => entry.date === today);
-  if (todayEntry) {
-    todayEntry.amount += xpAmount;
-    if (!todayEntry.completedQuizTypes.includes(quizType)) {
-      todayEntry.completedQuizTypes.push(quizType);
+  try {
+    if (!isValidQuizType(quizType)) {
+      throw new LocalStorageError(
+        `Invalid quiz type: ${quizType}`,
+        "INVALID_QUIZ_TYPE"
+      );
     }
-  } else {
-    todayEntry = {
-      date: today,
-      amount: xpAmount,
-      completedQuizTypes: [quizType],
+
+    const data = getLocalXP();
+    const today = getSriLankaDayAnchor().toISOString().split("T")[0];
+    const xpAmount = calculateLocalXP(quizType, isPerfectScore);
+
+    // Find or create today's entry
+    let todayEntry = data.dailyXP.find((entry) => entry.date === today);
+    if (todayEntry) {
+      todayEntry.amount += xpAmount;
+      if (!todayEntry.completedQuizTypes.includes(quizType)) {
+        todayEntry.completedQuizTypes.push(quizType);
+      }
+    } else {
+      todayEntry = {
+        date: today,
+        amount: xpAmount,
+        completedQuizTypes: [quizType],
+      };
+      data.dailyXP.push(todayEntry);
+    }
+
+    // Update total XP
+    data.totalXP += xpAmount;
+
+    // Refresh expiry
+    data.expiry = Date.now() + EXPIRY_DAYS * 24 * 60 * 60 * 1000;
+
+    try {
+      localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+      if (error instanceof Error && error.name === "QuotaExceededError") {
+        // Try to free up space by removing old entries
+        data.dailyXP = data.dailyXP.slice(-30); // Keep only last 30 days
+        localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
+      } else {
+        throw error;
+      }
+    }
+
+    return {
+      awarded: xpAmount,
+      dailyTotal: todayEntry.amount,
+      totalXP: data.totalXP,
     };
-    data.dailyXP.push(todayEntry);
+  } catch (error) {
+    return handleLocalStorageError(error);
   }
-
-  // Update total XP
-  data.totalXP += xpAmount;
-
-  // Refresh expiry
-  data.expiry = Date.now() + EXPIRY_DAYS * 24 * 60 * 60 * 1000;
-
-  // Store updated data
-  localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data));
-
-  return {
-    awarded: xpAmount,
-    dailyTotal: todayEntry.amount,
-    totalXP: data.totalXP,
-  };
 }
 
 // Clear XP data (used after migration)
