@@ -73,16 +73,25 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create associations
+    // Create relationships in a separate transaction
     await prisma.$transaction([
       prisma.livesOnUsers.create({
-        data: { userId: user.id, livesId: lives.id },
+        data: {
+          livesId: lives.id,
+          userId: user.id,
+        },
       }),
       prisma.streaksOnUsers.create({
-        data: { userId: user.id, streaksId: streakRecord.id },
+        data: {
+          streaksId: streakRecord.id,
+          userId: user.id,
+        },
       }),
       prisma.refillsOnUsers.create({
-        data: { userId: user.id, refillId: refill.id },
+        data: {
+          refillId: refill.id,
+          userId: user.id,
+        },
       }),
     ]);
 
@@ -90,10 +99,16 @@ export async function POST(req: Request) {
       JSON.stringify({ userId: user.id, verificationToken }),
       { status: 201 }
     );
-  } catch (error) {
-    console.error("User creation failed:", error);
-    return new Response(JSON.stringify({ error: "User creation failed" }), {
-      status: 500,
-    });
+  } catch (error: any) {
+    console.error("Error creating user:", error);
+    return new Response(
+      JSON.stringify({
+        error:
+          error.code === "P2002"
+            ? "Email already exists"
+            : "Failed to create user",
+      }),
+      { status: 400 }
+    );
   }
 }

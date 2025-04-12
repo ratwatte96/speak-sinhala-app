@@ -89,41 +89,51 @@ export async function POST(req: Request) {
     );
   }
 
-  // Add XP validation if localXP data is present
-  if (localXP && localXP.dailyXP) {
-    // Validate data structure using existing utility
+  // Validate XP data if provided
+  if (localXP) {
     if (!validateLocalXPData(localXP)) {
       return new Response(
         JSON.stringify({
           error: "Invalid XP data structure",
           field: "localXP",
-          message: "The XP data structure is invalid or corrupted.",
         }),
         { status: 400 }
       );
     }
 
-    // Validate dates and amounts
-    const today = getSriLankaDayAnchor();
-    const invalidEntry = localXP.dailyXP.find((entry) => {
-      const entryDate = new Date(entry.date);
-      return (
-        entryDate > today || // Future date
-        entry.amount < 0 || // Negative XP
-        entry.amount > 1000 || // Unreasonably high XP
-        !entry.completedQuizTypes?.every((type) => isValidQuizType(type)) // Invalid quiz types
-      );
-    });
+    // Validate XP amounts and dates
+    const today = getSriLankaDayAnchor().toISOString().split("T")[0];
+    for (const entry of localXP.dailyXP) {
+      if (entry.date > today) {
+        return new Response(
+          JSON.stringify({
+            error: "Invalid XP data: future dates not allowed",
+            field: "localXP",
+          }),
+          { status: 400 }
+        );
+      }
 
-    if (invalidEntry) {
-      return new Response(
-        JSON.stringify({
-          error: "Invalid XP data",
-          field: "localXP",
-          message: "XP data contains invalid dates, amounts, or quiz types.",
-        }),
-        { status: 400 }
-      );
+      if (entry.amount < 0 || entry.amount > 1000) {
+        return new Response(
+          JSON.stringify({
+            error: "Invalid XP amount",
+            field: "localXP",
+          }),
+          { status: 400 }
+        );
+      }
+
+      // Validate quiz types
+      if (!entry.completedQuizTypes.every(isValidQuizType)) {
+        return new Response(
+          JSON.stringify({
+            error: "Invalid quiz type in XP data",
+            field: "localXP",
+          }),
+          { status: 400 }
+        );
+      }
     }
   }
 

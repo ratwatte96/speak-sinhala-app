@@ -5,6 +5,7 @@ import Logo from "@/components/Logo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { getLocalXP } from "@/utils/localStorageXP";
 
 export default function Signup() {
   const router = useRouter();
@@ -20,10 +21,12 @@ export default function Signup() {
     setLoading(true);
     try {
       setMessage("Validating details...");
+      const localXP = getLocalXP();
+
       const validateRes = await fetch("/api/signup/validate-user-details", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password, gender }),
+        body: JSON.stringify({ username, email, password, gender, localXP }),
       });
 
       if (!validateRes.ok) {
@@ -40,6 +43,7 @@ export default function Signup() {
           password,
           gender,
           streak: localStorage.getItem("streak"),
+          localXP,
         }),
       });
 
@@ -73,6 +77,9 @@ export default function Signup() {
       if (!emailRes.ok) {
         throw new Error((await emailRes.json()).error);
       }
+
+      // Clear local XP data after successful signup
+      localStorage.removeItem("localXP");
 
       setMessage("Signup successful! Redirecting...");
       setTimeout(() => router.push("/login"), 2000);
