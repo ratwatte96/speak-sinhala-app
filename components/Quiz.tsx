@@ -325,9 +325,7 @@ const Quiz: React.FC<QuizProps> = ({
           const dailyXP = getDailyLocalXP();
           const isFirstCompletionOfDay = dailyXP === 0;
 
-          const xpData = updateLocalXP(
-            calculateXP(quizType, mistakeCount === 0, isFirstCompletionOfDay)
-          );
+          const xpData = updateLocalXP(quizType, mistakeCount === 0);
           setXpEarned(xpData.awarded);
           setDailyXpTotal(xpData.dailyTotal);
           setXpUpdated(true);
