@@ -38,9 +38,7 @@ const Quiz: React.FC<QuizProps> = ({
   nextQuizId = "NoNextQuiz",
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [quizCompleted, setQuizCompleted] = useState(
-    process.env.QUIZ_DEBUG === "true"
-  );
+  const [quizCompleted, setQuizCompleted] = useState(true);
   const [quizFailed, setQuizFailed] = useState(false);
   const [currentStreak, setCurrentStreak] = useState<any>(undefined);
   const [showStreakUpdated, setShowStreakUpdated] = useState(false);
