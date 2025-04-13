@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { fetchWithToken } from "@/utils/fetch";
 import { errorWithFile } from "@/utils/logger";
 import { XPData, UseXPReturn, QuizType, XPValues } from "./types";
@@ -9,6 +9,17 @@ import {
 } from "./index";
 import { getTotalLocalXP, getDailyLocalXP } from "@/utils/localStorageXP";
 import { useSharedState } from "@/components/StateProvider";
+import { toZonedTime } from "date-fns-tz";
+import { startOfDay } from "date-fns";
+
+// Helper to get Sri Lanka day anchor - matching the server implementation
+const getSriLankaDayAnchor = (): Date => {
+  const tz = "Asia/Colombo";
+  const now = new Date();
+  const zoned = toZonedTime(now, tz);
+  const start = startOfDay(zoned);
+  return new Date(start.toISOString());
+};
 
 export const useXPState = () => {
   const { sharedState, setSharedState } = useSharedState();
@@ -124,7 +135,54 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Refs to track previous values and state
+  const prevXPRef = useRef<XPData | null>(null);
+  const prevDayRef = useRef<Date | null>(null);
+  const isMountedRef = useRef(false);
+
+  const shouldFetchData = useCallback(() => {
+    // Always fetch on first mount
+    if (!isMountedRef.current) {
+      isMountedRef.current = true;
+      return true;
+    }
+
+    // If not logged in, no need to fetch
+    if (!isLoggedIn) {
+      return false;
+    }
+
+    // If we don't have previous data, we should fetch
+    if (!prevXPRef.current) {
+      return true;
+    }
+
+    // Check if day has changed (for daily XP reset)
+    const currentSLDay = getSriLankaDayAnchor();
+    if (
+      !prevDayRef.current ||
+      prevDayRef.current.getTime() !== currentSLDay.getTime()
+    ) {
+      return true;
+    }
+
+    // Check if XP values have changed
+    if (
+      prevXPRef.current.dailyXP !== xpState.dailyXP ||
+      prevXPRef.current.totalXP !== xpState.totalXP
+    ) {
+      return true;
+    }
+
+    return false;
+  }, [isLoggedIn, xpState.dailyXP, xpState.totalXP]);
+
   const fetchXPData = useCallback(async () => {
+    if (!shouldFetchData()) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       if (isLoggedIn) {
         const response = await fetchWithToken("/api/experience-points");
@@ -135,12 +193,20 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
         }
 
         updateXPState(data.dailyXP, data.totalXP);
+
+        // Update refs after successful fetch
+        prevXPRef.current = { dailyXP: data.dailyXP, totalXP: data.totalXP };
+        prevDayRef.current = getSriLankaDayAnchor();
       } else {
         // Get XP from localStorage
         const totalXP = getTotalLocalXP();
         const dailyXP = getDailyLocalXP();
 
         updateXPState(dailyXP, totalXP);
+
+        // Update refs for local storage data
+        prevXPRef.current = { dailyXP, totalXP };
+        prevDayRef.current = getSriLankaDayAnchor();
       }
       setError(null);
     } catch (err: any) {
@@ -149,7 +215,7 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoggedIn, updateXPState]);
+  }, [isLoggedIn, updateXPState, shouldFetchData]);
 
   const updateXP = useCallback(
     async (amount: number) => {
@@ -170,13 +236,19 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
           }
 
           updateXPState(data.dailyXP, data.totalXP);
+
+          // Update refs after XP update
+          prevXPRef.current = { dailyXP: data.dailyXP, totalXP: data.totalXP };
+          prevDayRef.current = getSriLankaDayAnchor();
         } else {
-          // For non-logged-in users, XP updates are handled directly by Quiz component
-          // This hook only needs to refresh the display
           const totalXP = getTotalLocalXP();
           const dailyXP = getDailyLocalXP();
 
           updateXPState(dailyXP, totalXP);
+
+          // Update refs for local storage data
+          prevXPRef.current = { dailyXP, totalXP };
+          prevDayRef.current = getSriLankaDayAnchor();
         }
         setError(null);
       } catch (err: any) {

@@ -86,9 +86,6 @@ export async function POST(req: any) {
       },
     });
 
-    console.log("quiz.type", quiz.type);
-    console.log("perfect_score", perfect_score);
-    console.log("existingXP", existingXP);
     // Calculate and award XP
     const xpToAward = calculateXP({
       quizType: quiz.type as QuizType,
