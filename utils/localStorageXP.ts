@@ -126,14 +126,14 @@ export function calculateLocalXP(
   // Base XP from quiz type
   let xpAmount = XP_BY_TYPE[quizType];
 
-  // Add perfect score bonus if applicable
-  if (isPerfectScore) {
-    xpAmount += PERFECT_SCORE_BONUS;
-  }
-
-  // Apply diminishing returns for subsequent completions
+  // Apply diminishing returns for subsequent completions first
   if (!isFirstCompletionOfDay) {
     xpAmount = Math.floor(xpAmount * SUBSEQUENT_COMPLETION_MULTIPLIER);
+  }
+
+  // Add perfect score bonus after diminishing returns
+  if (isPerfectScore) {
+    xpAmount += PERFECT_SCORE_BONUS;
   }
 
   return xpAmount;
