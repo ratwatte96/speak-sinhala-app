@@ -140,6 +140,12 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
   const prevDayRef = useRef<Date | null>(null);
   const isMountedRef = useRef(false);
 
+  // Update refs when xpState changes
+  useEffect(() => {
+    prevXPRef.current = { dailyXP: xpState.dailyXP, totalXP: xpState.totalXP };
+    prevDayRef.current = getSriLankaDayAnchor();
+  }, [xpState.dailyXP, xpState.totalXP]);
+
   const shouldFetchData = useCallback(() => {
     // Always fetch on first mount
     if (!isMountedRef.current) {
