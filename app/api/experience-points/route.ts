@@ -12,7 +12,10 @@ function getSriLankaDayAnchor(): Date {
   const now = new Date();
   const zoned = toZonedTime(now, tz);
   const start = startOfDay(zoned);
-  return new Date(start.toISOString());
+  // Convert start of day in Sri Lanka to UTC without losing the date
+  return new Date(
+    Date.UTC(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0, 0)
+  );
 }
 
 export async function GET(req: Request) {
@@ -41,6 +44,7 @@ export async function GET(req: Request) {
 
     // Get user's XP for today
     const today = getSriLankaDayAnchor();
+    console.log("today", today);
     const dailyXP = await prisma.experiencePoints.findUnique({
       where: {
         userId_date: {

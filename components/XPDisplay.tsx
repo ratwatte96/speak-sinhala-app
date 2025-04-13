@@ -6,20 +6,17 @@ import { XPErrorBoundary } from "./XPErrorBoundary";
 
 interface XPDisplayProps {
   xpEarned: number;
-  dailyTotal: number;
   isPerfect?: boolean;
   isLoggedIn?: boolean;
 }
 
 export default function XPDisplay({
   xpEarned,
-  dailyTotal,
   isPerfect = false,
   isLoggedIn = false,
 }: XPDisplayProps) {
   const { xpData, isLoading, error } = useUnifiedXP(isLoggedIn);
-  const perfectBonus = isPerfect ? PERFECT_SCORE_BONUS : 0;
-  const totalXP = xpEarned + perfectBonus;
+  const totalXP = xpEarned;
 
   const content = (
     <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-gray-100 dark:bg-gray-800">

@@ -34,7 +34,17 @@ function getSriLankaDayAnchor(): Date {
     const now = new Date();
     const zoned = toZonedTime(now, tz);
     const start = startOfDay(zoned);
-    return new Date(start.toISOString());
+    return new Date(
+      Date.UTC(
+        start.getFullYear(),
+        start.getMonth(),
+        start.getDate(),
+        0,
+        0,
+        0,
+        0
+      )
+    );
   } catch (error) {
     throw new LocalStorageError(
       "Failed to calculate Sri Lanka timezone",

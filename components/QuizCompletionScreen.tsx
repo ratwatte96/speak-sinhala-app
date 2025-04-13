@@ -20,7 +20,6 @@ export default function QuizCompletionScreen({
   elapsedTime,
   mistakeCount,
   xpEarned = 0,
-  dailyTotal = 0,
   isLoggedIn = false,
 }: QuizCompletionScreenProps) {
   const router = useRouter();
@@ -83,7 +82,6 @@ export default function QuizCompletionScreen({
 
           <XPDisplay
             xpEarned={xpEarned}
-            dailyTotal={dailyTotal}
             isPerfect={isPerfect}
             isLoggedIn={isLoggedIn}
           />

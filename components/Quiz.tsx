@@ -53,7 +53,6 @@ const Quiz: React.FC<QuizProps> = ({
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number | null>(null);
   const [xpEarned, setXpEarned] = useState<number>(0);
-  const [dailyXpTotal, setDailyXpTotal] = useState<number>(0);
   const [xpUpdated, setXpUpdated] = useState<boolean>(false);
 
   const { setSharedState } = useSharedState();
@@ -327,7 +326,6 @@ const Quiz: React.FC<QuizProps> = ({
 
           const xpData = updateLocalXP(quizType, mistakeCount === 0);
           setXpEarned(xpData.awarded);
-          setDailyXpTotal(xpData.dailyTotal);
           setXpUpdated(true);
         } catch (error: any) {
           errorWithFile(error);
@@ -350,7 +348,6 @@ const Quiz: React.FC<QuizProps> = ({
             .then((statusData) => {
               if (statusData.xp) {
                 setXpEarned(statusData.xp.awarded);
-                setDailyXpTotal(statusData.xp.dailyTotal);
                 setXpUpdated(true);
               }
             });
@@ -438,7 +435,6 @@ const Quiz: React.FC<QuizProps> = ({
       elapsedTime={elapsedTime || 0}
       mistakeCount={mistakeCount}
       xpEarned={xpEarned}
-      dailyTotal={dailyXpTotal}
       isLoggedIn={!notSignedUp}
     />
   ) : showCompletionScreen && !xpUpdated ? (

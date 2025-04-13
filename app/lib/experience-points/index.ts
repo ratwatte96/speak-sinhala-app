@@ -26,7 +26,9 @@ export function getSriLankaDayAnchor(): Date {
   const now = new Date();
   const zoned = toZonedTime(now, tz);
   const start = startOfDay(zoned);
-  return new Date(start.toISOString());
+  return new Date(
+    Date.UTC(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0, 0)
+  );
 }
 
 /**
@@ -40,14 +42,13 @@ export function calculateXP({
   // Base XP from quiz type
   let xpAmount = XP_BY_TYPE[quizType];
 
-  // Add perfect score bonus if applicable
-  if (isPerfectScore) {
-    xpAmount += PERFECT_SCORE_BONUS;
-  }
-
   // Apply diminishing returns for subsequent completions
   if (!isFirstCompletionOfDay) {
     xpAmount = Math.floor(xpAmount * SUBSEQUENT_COMPLETION_MULTIPLIER);
+  }
+  // Add perfect score bonus if applicable
+  if (isPerfectScore) {
+    xpAmount += PERFECT_SCORE_BONUS;
   }
 
   return xpAmount;
