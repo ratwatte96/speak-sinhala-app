@@ -28,6 +28,7 @@ model User {
   refills RefillsOnUsers[]
   experiencePoints ExperiencePoints[]
   totalExperiencePoints Int @default(0)
+  leaderboardEntries LeaderboardEntry[]
 
   createdAt DateTime @default(now())
   readStatus Int @default(1)
@@ -220,4 +221,28 @@ model ExperiencePoints {
   amount    Int      @default(0)
 
   @@unique([userId, date])
+}
+
+model LeaderboardEntry {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id])
+  leaderboardId Int
+  rank      Int
+  score     Int
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, leaderboardId])
+}
+
+model Leaderboard {
+  id        Int      @id @default(autoincrement())
+  type      String   // 'daily' or 'allTime'
+  date      DateTime // For daily leaderboards, this is the date for which the leaderboard is valid
+  entries   LeaderboardEntry[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([type, date])
 }
