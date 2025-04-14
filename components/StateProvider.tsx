@@ -5,6 +5,8 @@ import { createContext, useState, useContext, ReactNode } from "react";
 type XPState = {
   dailyXP: number;
   totalXP: number;
+  dailyRank: number | null;
+  allTimeRank: number | null;
 };
 
 // Define the shape of the shared state
@@ -32,6 +34,8 @@ export const SharedStateProvider = ({ children }: { children: ReactNode }) => {
     xp: {
       dailyXP: 0,
       totalXP: 0,
+      dailyRank: null,
+      allTimeRank: null,
     },
   });
 

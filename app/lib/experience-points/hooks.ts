@@ -11,6 +11,7 @@ import { getTotalLocalXP, getDailyLocalXP } from "@/utils/localStorageXP";
 import { useSharedState } from "@/components/StateProvider";
 import { toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
+import { updateRankings } from "@/app/lib/leaderboard/service";
 
 // Helper to get Sri Lanka day anchor - matching the server implementation
 const getSriLankaDayAnchor = (): Date => {
@@ -25,8 +26,13 @@ export const useXPState = () => {
   const { sharedState, setSharedState } = useSharedState();
 
   const updateXPState = useCallback(
-    (dailyXP: number, totalXP: number) => {
-      setSharedState("xp", { dailyXP, totalXP });
+    (
+      dailyXP: number,
+      totalXP: number,
+      dailyRank: number | null = null,
+      allTimeRank: number | null = null
+    ) => {
+      setSharedState("xp", { dailyXP, totalXP, dailyRank, allTimeRank });
     },
     [setSharedState]
   );
@@ -41,6 +47,8 @@ export const useXP = (): UseXPReturn => {
   const [xpData, setXPData] = useState<XPData>({
     dailyXP: 0,
     totalXP: 0,
+    dailyRank: null,
+    allTimeRank: null,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +65,8 @@ export const useXP = (): UseXPReturn => {
       setXPData({
         dailyXP: data.dailyXP,
         totalXP: data.totalXP,
+        dailyRank: data.dailyRank,
+        allTimeRank: data.allTimeRank,
       });
       setError(null);
     } catch (err: any) {
@@ -86,12 +96,17 @@ export const useXP = (): UseXPReturn => {
       setXPData({
         dailyXP: data.dailyXP,
         totalXP: data.totalXP,
+        dailyRank: data.dailyRank,
+        allTimeRank: data.allTimeRank,
       });
       setError(null);
+
+      // Update leaderboard rankings
+      await Promise.all([updateRankings("daily"), updateRankings("allTime")]);
     } catch (err: any) {
       errorWithFile(err);
       setError(err.message || "Failed to update XP");
-      throw err; // Re-throw to let the caller handle the error
+      throw err;
     }
   };
 
@@ -142,9 +157,19 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
 
   // Update refs when xpState changes
   useEffect(() => {
-    prevXPRef.current = { dailyXP: xpState.dailyXP, totalXP: xpState.totalXP };
+    prevXPRef.current = {
+      dailyXP: xpState.dailyXP,
+      totalXP: xpState.totalXP,
+      dailyRank: xpState.dailyRank ?? null,
+      allTimeRank: xpState.allTimeRank ?? null,
+    };
     prevDayRef.current = getSriLankaDayAnchor();
-  }, [xpState.dailyXP, xpState.totalXP]);
+  }, [
+    xpState.dailyXP,
+    xpState.totalXP,
+    xpState.dailyRank,
+    xpState.allTimeRank,
+  ]);
 
   const shouldFetchData = useCallback(() => {
     // Always fetch on first mount
@@ -198,20 +223,35 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
           throw new Error(data.error || "Failed to fetch XP data");
         }
 
-        updateXPState(data.dailyXP, data.totalXP);
+        updateXPState(
+          data.dailyXP,
+          data.totalXP,
+          data.dailyRank,
+          data.allTimeRank
+        );
 
         // Update refs after successful fetch
-        prevXPRef.current = { dailyXP: data.dailyXP, totalXP: data.totalXP };
+        prevXPRef.current = {
+          dailyXP: data.dailyXP,
+          totalXP: data.totalXP,
+          dailyRank: data.dailyRank,
+          allTimeRank: data.allTimeRank,
+        };
         prevDayRef.current = getSriLankaDayAnchor();
       } else {
         // Get XP from localStorage
         const totalXP = getTotalLocalXP();
         const dailyXP = getDailyLocalXP();
 
-        updateXPState(dailyXP, totalXP);
+        updateXPState(dailyXP, totalXP, null, null);
 
         // Update refs for local storage data
-        prevXPRef.current = { dailyXP, totalXP };
+        prevXPRef.current = {
+          dailyXP,
+          totalXP,
+          dailyRank: null,
+          allTimeRank: null,
+        };
         prevDayRef.current = getSriLankaDayAnchor();
       }
       setError(null);
@@ -241,19 +281,34 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
             throw new Error(data.error || "Failed to update XP");
           }
 
-          updateXPState(data.dailyXP, data.totalXP);
+          updateXPState(
+            data.dailyXP,
+            data.totalXP,
+            data.dailyRank,
+            data.allTimeRank
+          );
 
           // Update refs after XP update
-          prevXPRef.current = { dailyXP: data.dailyXP, totalXP: data.totalXP };
+          prevXPRef.current = {
+            dailyXP: data.dailyXP,
+            totalXP: data.totalXP,
+            dailyRank: data.dailyRank,
+            allTimeRank: data.allTimeRank,
+          };
           prevDayRef.current = getSriLankaDayAnchor();
         } else {
           const totalXP = getTotalLocalXP();
           const dailyXP = getDailyLocalXP();
 
-          updateXPState(dailyXP, totalXP);
+          updateXPState(dailyXP, totalXP, null, null);
 
           // Update refs for local storage data
-          prevXPRef.current = { dailyXP, totalXP };
+          prevXPRef.current = {
+            dailyXP,
+            totalXP,
+            dailyRank: null,
+            allTimeRank: null,
+          };
           prevDayRef.current = getSriLankaDayAnchor();
         }
         setError(null);
@@ -271,7 +326,12 @@ export const useUnifiedXP = (isLoggedIn: boolean): UseXPReturn => {
   }, [fetchXPData]);
 
   return {
-    xpData: xpState,
+    xpData: {
+      dailyXP: xpState.dailyXP,
+      totalXP: xpState.totalXP,
+      dailyRank: xpState.dailyRank ?? null,
+      allTimeRank: xpState.allTimeRank ?? null,
+    },
     isLoading,
     error,
     updateXP,

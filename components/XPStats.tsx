@@ -2,6 +2,7 @@
 
 import { useUnifiedXP } from "../app/lib/experience-points/hooks";
 import { XPErrorBoundary } from "./XPErrorBoundary";
+import { Trophy } from "lucide-react";
 
 interface XPStatsProps {
   isLoggedIn?: boolean;
@@ -17,6 +18,22 @@ export default function XPStats({ isLoggedIn = false }: XPStatsProps) {
         <span className="text-xs text-gray-500">
           Track your learning progress
         </span>
+        {isLoggedIn && xpData.dailyRank !== null && (
+          <div className="flex items-center gap-1 mt-1">
+            <Trophy size={12} className="text-yellow-500" />
+            <span className="text-xs text-gray-500">
+              #{xpData.dailyRank} Today
+            </span>
+          </div>
+        )}
+        {isLoggedIn && xpData.allTimeRank !== null && (
+          <div className="flex items-center gap-1">
+            <Trophy size={12} className="text-purple-500" />
+            <span className="text-xs text-gray-500">
+              #{xpData.allTimeRank} All-Time
+            </span>
+          </div>
+        )}
       </div>
       <div className="flex flex-col items-end">
         {error ? (

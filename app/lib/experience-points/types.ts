@@ -1,6 +1,8 @@
 export interface XPData {
   dailyXP: number;
   totalXP: number;
+  dailyRank: number | null;
+  allTimeRank: number | null;
 }
 
 export interface UseXPReturn {

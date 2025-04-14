@@ -3,6 +3,7 @@
 import { PERFECT_SCORE_BONUS } from "../app/lib/experience-points/index";
 import { useUnifiedXP } from "../app/lib/experience-points/hooks";
 import { XPErrorBoundary } from "./XPErrorBoundary";
+import { Trophy } from "lucide-react";
 
 interface XPDisplayProps {
   xpEarned: number;
@@ -47,6 +48,22 @@ export default function XPDisplay({
           <div className="text-sm text-gray-600 dark:text-gray-400">
             Total XP: {xpData.totalXP} XP
           </div>
+          {isLoggedIn && xpData.dailyRank !== null && (
+            <div className="flex items-center gap-2 mt-2">
+              <Trophy size={16} className="text-yellow-500" />
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Daily Rank: #{xpData.dailyRank}
+              </div>
+            </div>
+          )}
+          {isLoggedIn && xpData.allTimeRank !== null && (
+            <div className="flex items-center gap-2">
+              <Trophy size={16} className="text-purple-500" />
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                All-Time Rank: #{xpData.allTimeRank}
+              </div>
+            </div>
+          )}
           {!isLoggedIn && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
               Sign up to save your progress permanently!

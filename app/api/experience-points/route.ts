@@ -5,6 +5,12 @@ import { errorWithFile } from "@/utils/logger";
 import { toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
 import { XP_BY_TYPE } from "@/app/lib/experience-points";
+import { getUserRank, updateRankings } from "@/app/lib/leaderboard/service";
+
+interface DecodedToken {
+  userId: string;
+  [key: string]: any;
+}
 
 // Get start of day in Sri Lanka time (UTC+5:30)
 function getSriLankaDayAnchor(): Date {
@@ -27,24 +33,12 @@ export async function GET(req: Request) {
     );
   }
 
-  let decoded: any;
   try {
-    decoded = verifyAccessToken(accessToken);
+    const decoded = verifyAccessToken(accessToken) as DecodedToken;
     const userId = parseInt(decoded.userId);
-
-    // Get user's total XP
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { totalExperiencePoints: true },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    // Get user's XP for today
     const today = getSriLankaDayAnchor();
-    console.log("today", today);
+
+    // Get daily XP
     const dailyXP = await prisma.experiencePoints.findUnique({
       where: {
         userId_date: {
@@ -52,16 +46,39 @@ export async function GET(req: Request) {
           date: today,
         },
       },
+      select: {
+        amount: true,
+      },
     });
 
+    // Get user with total XP
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        totalExperiencePoints: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Get user's ranks
+    const [dailyRank, allTimeRank] = await Promise.all([
+      getUserRank(userId, "daily"),
+      getUserRank(userId, "allTime"),
+    ]);
+
     return NextResponse.json({
+      dailyXP: dailyXP?.amount ?? 0,
       totalXP: user.totalExperiencePoints,
-      dailyXP: dailyXP?.amount || 0,
+      dailyRank,
+      allTimeRank,
     });
   } catch (error) {
-    errorWithFile(error, decoded?.userId);
+    errorWithFile(error);
     return NextResponse.json(
-      { error: "Failed to fetch experience points" },
+      { error: "Failed to fetch XP data" },
       { status: 500 }
     );
   }
@@ -76,9 +93,8 @@ export async function POST(req: Request) {
     );
   }
 
-  let decoded: any;
   try {
-    decoded = verifyAccessToken(accessToken);
+    const decoded = verifyAccessToken(accessToken) as DecodedToken;
     const { quizType, isPerfectScore } = await req.json();
     const userId = parseInt(decoded.userId);
 
@@ -142,16 +158,23 @@ export async function POST(req: Request) {
       }),
     ]);
 
+    // Update leaderboard rankings
+    await Promise.all([updateRankings("daily"), updateRankings("allTime")]);
+
+    // Get updated ranks
+    const [dailyRank, allTimeRank] = await Promise.all([
+      getUserRank(userId, "daily"),
+      getUserRank(userId, "allTime"),
+    ]);
+
     return NextResponse.json({
-      awarded: xpAmount,
-      dailyTotal: dailyXP.amount,
+      dailyXP: dailyXP.amount,
       totalXP: updatedUser.totalExperiencePoints,
+      dailyRank,
+      allTimeRank,
     });
   } catch (error) {
-    errorWithFile(error, decoded?.userId);
-    return NextResponse.json(
-      { error: "Failed to award experience points" },
-      { status: 500 }
-    );
+    errorWithFile(error);
+    return NextResponse.json({ error: "Failed to update XP" }, { status: 500 });
   }
 }
