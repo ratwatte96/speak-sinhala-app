@@ -125,6 +125,11 @@ export async function getLeaderboardData(
       userId: true,
       rank: true,
       score: true,
+      user: {
+        select: {
+          username: true,
+        },
+      },
     },
     orderBy: { rank: "asc" },
     skip: (page - 1) * pageSize,
@@ -148,7 +153,12 @@ export async function getLeaderboardData(
   }
 
   return {
-    entries,
+    entries: entries.map((entry) => ({
+      userId: entry.userId,
+      username: entry.user.username,
+      rank: entry.rank,
+      score: entry.score,
+    })),
     userRank,
     totalParticipants,
   };
