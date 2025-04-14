@@ -4,6 +4,7 @@ import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import { errorWithFile, logWithFile } from "@/utils/logger";
 import { calculateXP, getSriLankaDayAnchor } from "../../lib/experience-points";
 import type { QuizType } from "../../lib/experience-points/types";
+import { getUserRank, updateRankings } from "@/app/lib/leaderboard/service";
 
 //!Refactor
 
@@ -19,7 +20,13 @@ export async function POST(req: any) {
 
   let decoded: any;
   let xpData:
-    | { awarded: number; dailyTotal: number; totalXP: number }
+    | {
+        awarded: number;
+        dailyTotal: number;
+        totalXP: number;
+        dailyRank: number | null;
+        allTimeRank: number | null;
+      }
     | undefined;
 
   try {
@@ -125,10 +132,21 @@ export async function POST(req: any) {
       }),
     ]);
 
+    // Update leaderboard rankings
+    await Promise.all([updateRankings("daily"), updateRankings("allTime")]);
+
+    // Get updated ranks
+    const [dailyRank, allTimeRank] = await Promise.all([
+      getUserRank(parseInt(decoded.userId), "daily"),
+      getUserRank(parseInt(decoded.userId), "allTime"),
+    ]);
+
     xpData = {
       awarded: xpToAward,
       dailyTotal: dailyXP.amount,
       totalXP: updatedUser.totalExperiencePoints,
+      dailyRank,
+      allTimeRank,
     };
 
     //! update this when we add the speak quizes

@@ -61,28 +61,34 @@ export async function updateRankings(type: LeaderboardType): Promise<void> {
     }));
 
   // Update leaderboard entries in a transaction
-  await prisma.$transaction(
-    rankings.map((entry) =>
-      prisma.leaderboardEntry.upsert({
-        where: {
-          userId_leaderboardId: {
+  try {
+    await prisma.$transaction(
+      rankings.map((entry) =>
+        prisma.leaderboardEntry.upsert({
+          where: {
+            userId_leaderboardId: {
+              userId: entry.userId,
+              leaderboardId: leaderboard.id,
+            },
+          },
+          create: {
             userId: entry.userId,
             leaderboardId: leaderboard.id,
+            rank: entry.rank,
+            score: entry.score,
           },
-        },
-        create: {
-          userId: entry.userId,
-          leaderboardId: leaderboard.id,
-          rank: entry.rank,
-          score: entry.score,
-        },
-        update: {
-          rank: entry.rank,
-          score: entry.score,
-        },
-      })
-    )
-  );
+          update: {
+            rank: entry.rank,
+            score: entry.score,
+          },
+        })
+      )
+    );
+    console.log(`[DEBUG] Successfully updated leaderboard entries`);
+  } catch (error) {
+    console.error(`[ERROR] Failed to update leaderboard entries:`, error);
+    throw error;
+  }
 }
 
 export async function getUserRank(

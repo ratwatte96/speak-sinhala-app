@@ -28,16 +28,16 @@ const BottomNavbar = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <nav className="z-20 fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md px-4 flex justify-around border-t dark:border-gray-500 md:hidden">
+    <nav className="z-20 fixed bottom-0 left-0 w-full bg-white dark:bg-black shadow-md flex justify-around border-t dark:border-gray-500 md:hidden">
       {navItems.map((item) => (
         <Link key={item.name} href={item.href}>
           {isLoading && active === item.name ? (
-            <div className="w-[25vw] flex-center h-full">
+            <div className="w-[20vw] flex-center h-full">
               <LoaderCircle className="text-green-500 w-full animate-spin" />
             </div>
           ) : (
             <div
-              className={`flex-col-center cursor-pointer transition-colors duration-200 w-[25vw] pt-4 pb-3 ${
+              className={`flex-col-center cursor-pointer transition-colors duration-200 w-[20vw] pt-4 pb-3 ${
                 active === item.name
                   ? "text-green-500"
                   : "text-black dark:text-white"
