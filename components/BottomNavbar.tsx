@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   Settings,
   LoaderCircle,
+  Trophy,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -17,6 +18,7 @@ const BottomNavbar = () => {
     { name: "Read", icon: <BookOpen />, href: "/read" },
     { name: "Speak", icon: <MessageSquare />, href: "/speak" },
     { name: "Shop", icon: <ShoppingCart />, href: "/shop" },
+    { name: "Leaderboard", icon: <Trophy />, href: "/leaderboard" },
     { name: "Profile", icon: <Settings />, href: "/profile" },
   ];
 
