@@ -2,6 +2,7 @@ export type LeaderboardType = "daily" | "allTime";
 
 export interface LeaderboardEntry {
   userId: number;
+  username: string;
   rank: number;
   score: number;
 }
