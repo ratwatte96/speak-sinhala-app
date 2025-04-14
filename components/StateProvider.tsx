@@ -9,14 +9,21 @@ type XPState = {
   allTimeRank: number | null;
 };
 
+// Define leaderboard state type
+type LeaderboardState = {
+  dailyRank: number | null;
+  allTimeRank: number | null;
+};
+
 // Define the shape of the shared state
 type SharedStateType = {
   lives: number;
   refills: number;
   xp: XPState;
+  leaderboard: LeaderboardState;
 };
 
-type SharedStateValue = number | XPState;
+type SharedStateValue = number | XPState | LeaderboardState;
 
 type SharedStateContextType = {
   sharedState: SharedStateType;
@@ -34,6 +41,10 @@ export const SharedStateProvider = ({ children }: { children: ReactNode }) => {
     xp: {
       dailyXP: 0,
       totalXP: 0,
+      dailyRank: null,
+      allTimeRank: null,
+    },
+    leaderboard: {
       dailyRank: null,
       allTimeRank: null,
     },
