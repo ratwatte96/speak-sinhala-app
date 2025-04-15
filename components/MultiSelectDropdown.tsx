@@ -60,7 +60,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       <button
         id={`${id}Button`}
         data-dropdown-toggle={`${id}Dropdown`}
-        className={`flex-center rounded-lg border h-8 border-gray-200 px-1 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-4 sm:py-2 dark:bg-black dark-base-border dark:border-gray-600 dark:text-white hover-transition ${
+        className={`flex-center rounded-lg border h-8 border-gray-200 px-1 py-1 text-xs font-medium focus:z-10 focus:outline-none focus:ring-4 bg-gray-300 sm:px-2 sm:py-2 dark:bg-black dark-base-border dark:border-gray-600 dark:text-white hover-transition ${
           buttonTailwindOveride ? buttonTailwindOveride : "w-full"
         }`}
         type="button"
@@ -73,9 +73,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
         )}
         {buttonLabel}
         {iconEnd && (
-          <div className="ml-1.5 mr-[-0.25rem] w-5 text-skin-accent">
-            {iconEnd}
-          </div>
+          <div className="ml-1.5 mr-[-0.25rem] mt-0.5 w-4">{iconEnd}</div>
         )}
       </button>
       {showItems && (

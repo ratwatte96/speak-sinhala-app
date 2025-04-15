@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 import MultiSelectDropdown from "@/components/MultiSelectDropdown";
 import { useRouter } from "next/navigation";
-// import ChevronDownIcon from "../../public/chevron-down.svg";
-// import FilterIcon from "../../public/filter.svg";
+import { ChevronDown } from "lucide-react";
 
 interface CustomQuizProps {
   dropDownLetters: Array<{ name: string; value: string }>;
@@ -58,8 +57,7 @@ export const CustomQuizForm: React.FC<CustomQuizProps> = ({
               items={dropDownLetters}
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
-              // iconStart={<FilterIcon />}
-              // iconEnd={<ChevronDownIcon />}
+              iconEnd={<ChevronDown size={18} />}
             />
           </div>
           <button

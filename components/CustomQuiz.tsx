@@ -2,8 +2,6 @@ import Quiz from "./Quiz";
 import prisma from "@/lib/prisma";
 import { errorWithFile } from "@/utils/logger";
 import { redirect } from "next/navigation";
-// import ChevronDownIcon from "../../public/chevron-down.svg";
-// import FilterIcon from "../../public/filter.svg";
 
 //!Refactor
 
