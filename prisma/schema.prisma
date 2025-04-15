@@ -29,6 +29,8 @@ model User {
   experiencePoints ExperiencePoints[]
   totalExperiencePoints Int @default(0)
   leaderboardEntries LeaderboardEntry[]
+  achievements UserAchievement[]
+  achievementProgress AchievementProgress[]
 
   createdAt DateTime @default(now())
   readStatus Int @default(1)
@@ -245,4 +247,47 @@ model Leaderboard {
   updatedAt DateTime @updatedAt
 
   @@unique([type, date])
+}
+
+model Achievement {
+  id          Int               @id @default(autoincrement())
+  name        String
+  description String
+  type        String           // 'daily', 'streak', 'xp', 'quiz'
+  heartReward Int              @default(1)
+  requirement Int              // e.g., XP needed or streak days required
+  resetType   String           // 'daily' or 'permanent'
+  users       UserAchievement[]
+  progress    AchievementProgress[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model UserAchievement {
+  id            Int         @id @default(autoincrement())
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  achievementId Int
+  completed     Boolean     @default(false)
+  claimed       Boolean     @default(false)
+  completedAt   DateTime?
+  claimedAt     DateTime?
+  heartsAwarded Int         @default(0)
+
+  @@unique([userId, achievementId])
+}
+
+model AchievementProgress {
+  id            Int         @id @default(autoincrement())
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  achievementId Int
+  currentValue  Int         @default(0)
+  targetValue   Int
+  lastUpdated   DateTime    @default(now())
+  lastReset     DateTime?   // For daily achievements
+
+  @@unique([userId, achievementId])
 }
