@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import { errorWithFile } from "@/utils/logger";
+import {
+  updateProgress,
+  checkAchievements,
+} from "@/app/lib/achievements/service";
+import type { AchievementServiceResponse } from "@/app/lib/achievements/types";
 
 //!Refactor
 
@@ -105,6 +110,8 @@ export async function POST(req: any) {
     });
 
     let newStreak: any = streak;
+    let achievementResults: AchievementServiceResponse | undefined;
+
     if (
       isToday(new Date(streak!.last_active_date)) &&
       streak!.current_streak === 0
@@ -130,12 +137,37 @@ export async function POST(req: any) {
           current_streak: streak!.current_streak + 1,
         },
       });
+
+      // Update streak milestone achievements
+      const streakAchievements = await prisma.achievement.findMany({
+        where: {
+          type: "streak",
+        },
+      });
+
+      for (const achievement of streakAchievements) {
+        await updateProgress({
+          userId: parseInt(decoded.userId),
+          achievementId: achievement.id,
+          currentValue: newStreak.current_streak,
+          targetValue: achievement.requirement,
+        });
+      }
+
+      // Check achievements and award hearts if needed
+      achievementResults = await checkAchievements(parseInt(decoded.userId));
     }
 
-    return new Response(JSON.stringify(newStreak), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        ...newStreak,
+        achievements: achievementResults,
+      }),
+      {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     errorWithFile(error, decoded?.userId);
     return NextResponse.json(

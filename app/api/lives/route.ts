@@ -2,6 +2,7 @@ import { extractAccessToken, verifyAccessToken } from "@/utils/auth";
 import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
 import { errorWithFile } from "@/utils/logger";
+import { checkAchievements } from "@/app/lib/achievements/service";
 
 function isToday(date: Date) {
   const today = new Date();
@@ -97,6 +98,22 @@ export async function POST(req: any) {
           total_lives: lives!.total_lives - 1,
         },
       });
+
+      // Check achievements after lives are updated
+      const achievementResults = await checkAchievements(
+        parseInt(decoded.userId)
+      );
+
+      return new Response(
+        JSON.stringify({
+          ...newLives,
+          achievements: achievementResults,
+        }),
+        {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
     return new Response(JSON.stringify(newLives), {
       status: 201,

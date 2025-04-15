@@ -5,6 +5,10 @@ import { errorWithFile, logWithFile } from "@/utils/logger";
 import { calculateXP, getSriLankaDayAnchor } from "../../lib/experience-points";
 import type { QuizType } from "../../lib/experience-points/types";
 import { getUserRank, updateRankings } from "@/app/lib/leaderboard/service";
+import {
+  checkAchievements,
+  updateProgress,
+} from "@/app/lib/achievements/service";
 
 //!Refactor
 
@@ -148,6 +152,40 @@ export async function POST(req: any) {
       dailyRank,
       allTimeRank,
     };
+
+    // Update achievement progress for quiz completion and perfect score
+    const quizAchievements = await prisma.achievement.findMany({
+      where: {
+        type: "quiz",
+      },
+    });
+
+    for (const achievement of quizAchievements) {
+      if (achievement.resetType === "daily") {
+        // Update daily quiz completion progress
+        await updateProgress({
+          userId: parseInt(decoded.userId),
+          achievementId: achievement.id,
+          currentValue: record.completionCount + 1,
+          targetValue: achievement.requirement,
+        });
+      }
+
+      if (perfect_score && !record.perfect_score) {
+        // Update perfect score achievement progress
+        await updateProgress({
+          userId: parseInt(decoded.userId),
+          achievementId: achievement.id,
+          currentValue: 1,
+          targetValue: 1,
+        });
+      }
+    }
+
+    // Check achievements and award hearts if needed
+    const achievementResults = await checkAchievements(
+      parseInt(decoded.userId)
+    );
 
     //! update this when we add the speak quizes
     if (record.status !== "complete") {

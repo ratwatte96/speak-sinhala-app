@@ -6,6 +6,10 @@ import { toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
 import { XP_BY_TYPE } from "@/app/lib/experience-points";
 import { getUserRank, updateRankings } from "@/app/lib/leaderboard/service";
+import {
+  updateProgress,
+  checkAchievements,
+} from "@/app/lib/achievements/service";
 
 interface DecodedToken {
   userId: string;
@@ -158,6 +162,36 @@ export async function POST(req: Request) {
       }),
     ]);
 
+    // Update XP milestone achievements
+    const xpAchievements = await prisma.achievement.findMany({
+      where: {
+        type: "xp",
+      },
+    });
+
+    for (const achievement of xpAchievements) {
+      if (achievement.resetType === "daily") {
+        // Update daily XP milestone progress
+        await updateProgress({
+          userId,
+          achievementId: achievement.id,
+          currentValue: dailyXP.amount,
+          targetValue: achievement.requirement,
+        });
+      } else {
+        // Update total XP milestone progress
+        await updateProgress({
+          userId,
+          achievementId: achievement.id,
+          currentValue: updatedUser.totalExperiencePoints,
+          targetValue: achievement.requirement,
+        });
+      }
+    }
+
+    // Check achievements and award hearts if needed
+    const achievementResults = await checkAchievements(userId);
+
     // Update leaderboard rankings
     await Promise.all([updateRankings("daily"), updateRankings("allTime")]);
 
@@ -172,6 +206,8 @@ export async function POST(req: Request) {
       totalXP: updatedUser.totalExperiencePoints,
       dailyRank,
       allTimeRank,
+      xpAwarded: xpAmount,
+      achievements: achievementResults,
     });
   } catch (error) {
     errorWithFile(error);
