@@ -15,15 +15,23 @@ type LeaderboardState = {
   allTimeRank: number | null;
 };
 
+// Define achievement state type
+type AchievementState = {
+  available: any[];
+  completed: any[];
+  inProgress: any[];
+};
+
 // Define the shape of the shared state
 type SharedStateType = {
   lives: number;
   refills: number;
   xp: XPState;
   leaderboard: LeaderboardState;
+  achievements: AchievementState;
 };
 
-type SharedStateValue = number | XPState | LeaderboardState;
+type SharedStateValue = number | XPState | LeaderboardState | AchievementState;
 
 type SharedStateContextType = {
   sharedState: SharedStateType;
@@ -47,6 +55,11 @@ export const SharedStateProvider = ({ children }: { children: ReactNode }) => {
     leaderboard: {
       dailyRank: null,
       allTimeRank: null,
+    },
+    achievements: {
+      available: [],
+      completed: [],
+      inProgress: [],
     },
   });
 
